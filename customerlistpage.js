@@ -58,7 +58,11 @@ function listDatainList(data) {
     }
 
     // Sett counter
-    const counter = parentElement.querySelector(".counter");
+    const counter = listContainer.parentElement.querySelector(".counter");
+    if (!counter) {
+        console.error("Ingen '.counter' funnet i containerens forelder.");
+        return;
+    }
     counter.textContent = data.length + " stk.";
     counter.style.display = "block";
 

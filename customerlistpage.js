@@ -75,12 +75,34 @@ function listDatainList(data) {
         //sett adress
         const address = itemElement.querySelector('.customeraddress');
         if (address) address.textContent = item.address || "Ukjent adresse";
-        // Sett telefon
+      
+        // Sett telefon som klikkbar lenke
         const phone = itemElement.querySelector('.customerphone');
-        if (phone) phone.textContent = item.phone || "Ukjent telefon";
-        // Sett e-post
+        if (phone) {
+            const number = item.phone || "Ukjent telefon";
+            if (item.phone) {
+                phone.innerHTML = `<a href="tel:${item.phone}">${number}</a>`;
+            } else {
+                phone.textContent = number;
+            }
+        }
+
+        // Sett e-post som klikkbar lenke
         const email = itemElement.querySelector('.customeremail');
-        if (email) email.textContent = item.email || "Ukjent e-post";
+        if (email) {
+            const mail = item.email || "Ukjent e-post";
+            if (item.email) {
+                email.innerHTML = `<a href="mailto:${item.email}">${mail}</a>`;
+            } else {
+                email.textContent = mail;
+            }
+        }
+
+
+
+
+
+
         //set post address
         const postAddress = itemElement.querySelector('.customerpostaddress');
         let postAddressText = item.postaddress || "Ukjent postadresse";
@@ -90,7 +112,7 @@ function listDatainList(data) {
         if (postAddress) postAddress.textContent = postAddressText;
 
         //list Anlegg
-        console.log("Anlegg:", item.anlegg);
+        console.log("Anlegg:", item.system);
 
         // Legg til klikk-event for åpning
         const button = itemElement.querySelector('.opencustomer');

@@ -19,11 +19,18 @@ cdnScripts.reduce((promise, script) => {
 }, Promise.resolve()).then(() => {
     console.log("All scripts loaded");
     MemberStack.onReady.then(function(member) {
+        
         if (member.loggedIn){
-         console.log("Member is logged in");
+            console.log("Member is logged in");
+            const listpagetabbutton = document.getElementById("listpagetabbutton");
+            listpagetabbutton.click();
+
         }else{
             console.log("Member is not logged in");
+            const logginpagetabbutton = document.getElementById("logginpagetabbutton");
+            logginpagetabbutton.click();
         }
+
     });
 
 }).catch(error => {

@@ -58,7 +58,7 @@ function listDatainList(data) {
     }
 
     // Sett counter
-    const counter = parentElement.listContainer.querySelector(".counter");
+    const counter = parentElement.querySelector(".counter");
     counter.textContent = data.length + " stk.";
     counter.style.display = "block";
 

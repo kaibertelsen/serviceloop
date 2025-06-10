@@ -29,7 +29,7 @@ function responsClient(data) {
     gClient = data.fields;
     gCustomer = [];
     if(gClient?.customerjson){
-        gCustomer = convertJSONArrayToObject(gClient.customerjson);
+        gCustomer = parseItemJson(gClient.customerjson);
     }
     
     //start kundelisten
@@ -38,6 +38,15 @@ function responsClient(data) {
     
 }
 
+function parseItemJson(jsonArray) {
+    try {
+      return jsonArray.map(item => JSON.parse(item));
+    } catch (error) {
+      console.error("Feil ved parsing av customerjson:", error);
+      return [];
+    }
+  }
+  
 
 function convertJSONArrayToObject(array) {
     let result = [];

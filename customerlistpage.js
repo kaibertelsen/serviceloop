@@ -1,6 +1,7 @@
 
 function startCustomerListPage(customers) {
     // Initialize the customer list page
+    listCustomers(customers);
    
 }
 

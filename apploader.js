@@ -23,12 +23,12 @@ cdnScripts.reduce((promise, script) => {
         if (member.loggedIn){
             console.log("Member is logged in");
             const listpagetabbutton = document.getElementById("listpagetabbutton");
-            listpagetabbutton.click();
+            //listpagetabbutton.click();
 
         }else{
             console.log("Member is not logged in");
             const logginpagetabbutton = document.getElementById("logginpagetabbutton");
-            logginpagetabbutton.click();
+            //logginpagetabbutton.click();
         }
 
     });

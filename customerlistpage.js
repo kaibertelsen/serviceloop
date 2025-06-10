@@ -118,8 +118,8 @@ function listDatainList(data) {
 
         //set post address
         const postAddress = itemElement.querySelector('.customerpostaddress');
-        let postAddressText = item.postaddress || "Ukjent postadresse";
-        if (item.postcode && item.postaddress) {
+        let postAddressText = item.city || "Ukjent postadresse";
+        if (item.postcode && item.city) {
             postAddressText += `, ${item.postcode}`;
         }
         if (postAddress) postAddress.textContent = postAddressText;

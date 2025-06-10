@@ -20,9 +20,9 @@ cdnScripts.reduce((promise, script) => {
     console.log("All scripts loaded");
     MemberStack.onReady.then(function(member) {
         if (member.loggedIn){
-         
+         console.log("Member is logged in");
         }else{
-     
+            console.log("Member is not logged in");
         }
     });
 

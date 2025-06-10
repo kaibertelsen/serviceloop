@@ -140,13 +140,11 @@ function listSystemInCustomer(data, element) {
     // Sørg for at vi har en array (selv om det bare er ett system)
     const systemArray = Array.isArray(data.system) ? data.system : [data.system];
 
-    systemArray.forEach(systemName => {
-        if (!systemName) return;
-        
+    systemArray.forEach(system => {
+       
         const itemElement = systemElementLibrary.cloneNode(true);
         const name = itemElement.querySelector('.systemname');
-        if (name) name.textContent = systemName || "Ukjent system";
-
+        if (name) name.textContent = system.name|| "Ukjent system";
         systemList.appendChild(itemElement);
     });
 

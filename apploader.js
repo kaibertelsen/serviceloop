@@ -10,7 +10,9 @@ function loadScript(url) {
 
 // Liste over CDN-URL-er som skal lastes inn
 const cdnScripts = [
-    "https://kaibertelsen.github.io/serviceloop/startup.js"
+    "https://kaibertelsen.github.io/serviceloop/startup.js",
+    "https://kaibertelsen.github.io/serviceloop/apicom.js",
+
 ];
 
 // Laste inn alle skriptene sekvensielt
@@ -24,6 +26,7 @@ cdnScripts.reduce((promise, script) => {
             console.log("Member is logged in");
             const listpagetabbutton = document.getElementById("listpagetabbutton");
             //listpagetabbutton.click();
+            startup(member);
 
         }else{
             console.log("Member is not logged in");

@@ -1,35 +1,39 @@
 
+
+
 function startCustomerListPage(customers) {
     // Initialize the customer list page
     listCustomers(customers);
    
 }
 
+document.getElementById("customerCategory").addEventListener("change", () => listCustomers(gCustomer));
+document.getElementById("customerSearchfield").addEventListener("input", () => listCustomers(gCustomer));
 
 function listCustomers(customers) {
-  
+    const categorySelector = document.getElementById("customerCategory");
+    const searchInput = document.getElementById("customerSearchfield");
 
-    //filtrer på kategori
+    const selectedCategory = categorySelector ? categorySelector.value.trim().toLowerCase() : "";
+    const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
+    // Filtrering
+    let filtered = customers.filter(customer => {
+        const matchesCategory = selectedCategory === "" || (customer.category && customer.category.toLowerCase() === selectedCategory);
+        const matchesSearch = searchTerm === "" || (customer.name && customer.name.toLowerCase().includes(searchTerm));
+        return matchesCategory && matchesSearch;
+    });
 
+    // Sortering
+    filtered.sort((a, b) => {
+        const nameA = (a.name || "").toLowerCase();
+        const nameB = (b.name || "").toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
 
-    //filtrer på søkeord
-
-
-
-    // Sorter kundene etter navn
-
-
-
-    //lag liste
-    listDatainList(customers);
-
-
+    // Bygg listen
+    listDatainList(filtered);
 }
-
-
-
-
 
 
 

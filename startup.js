@@ -1,5 +1,6 @@
 var gUser = null; // Global variable to store user data
-
+var gCustomer = []; // Global variable to store customer data
+var gClient = null; // Global variable to store client data
 
 function startup(member) {
     console.log("Startup function called with member:", member);

@@ -8,32 +8,45 @@ function startCustomerListPage(customers) {
 }
 
 document.getElementById("customerCategory").addEventListener("change", () => listCustomers(gCustomer));
+document.getElementById("customerSystemType").addEventListener("change", () => listCustomers(gCustomer));
 document.getElementById("customerSearchfield").addEventListener("input", () => listCustomers(gCustomer));
+
+
 
 function listCustomers(customers) {
     const categorySelector = document.getElementById("customerCategory");
     const searchInput = document.getElementById("customerSearchfield");
+    const systemSelector = document.getElementById("customerSystemType");
 
     const selectedCategory = categorySelector ? categorySelector.value.trim().toLowerCase() : "";
     const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const selectedSystem = systemSelector ? systemSelector.value.trim().toLowerCase() : "";
 
-    // Filtrering
-    let filtered = customers.filter(customer => {
-        const matchesCategory = selectedCategory === "" || (customer.category && customer.category.toLowerCase() === selectedCategory);
-        const matchesSearch = searchTerm === "" || (customer.name && customer.name.toLowerCase().includes(searchTerm));
-        return matchesCategory && matchesSearch;
+    const filtered = customers.filter(customer => {
+        const name = (customer.name || "").toLowerCase();
+        const category = (customer.category || "").toLowerCase();
+        const systems = Array.isArray(customer.system) ? customer.system : [customer.system];
+
+        const matchesCategory = selectedCategory === "" || category === selectedCategory;
+        const matchesSearch = searchTerm === "" || name.includes(searchTerm);
+        const matchesSystem = selectedSystem === "" || systems.some(sys => {
+            const sysName = typeof sys === "string" ? sys.toLowerCase() : (sys.name || "").toLowerCase();
+            return sysName.includes(selectedSystem);
+        });
+
+        return matchesCategory && matchesSearch && matchesSystem;
     });
 
-    // Sortering
+    // Sorter alfabetisk
     filtered.sort((a, b) => {
         const nameA = (a.name || "").toLowerCase();
         const nameB = (b.name || "").toLowerCase();
         return nameA.localeCompare(nameB);
     });
 
-    // Bygg listen
     listDatainList(filtered);
 }
+
 
 
 

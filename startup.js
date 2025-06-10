@@ -27,9 +27,23 @@ function responsUser(data) {
 function responsClient(data) {
     //hente teamid
     gClient = data.fields;
-
-    console.log("Client data:", gClient);
+    gCustomer = [];
+    if(gClient?.customerjson){
+        gCustomer = convertJSONArrayToObject(gClient.customerjson);
+    }
     
+    console.log("Customer data:", gCustomer);
+    
+}
+
+
+function convertJSONArrayToObject(array) {
+    let result = [];
+    array.forEach(item => {
+        result.push(JSON.parse(JSON.stringify(item)));
+    });
+
+    return result;
 }
 
 

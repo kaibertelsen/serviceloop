@@ -140,6 +140,12 @@ function listSystemInCustomer(data, element) {
     // Sørg for at vi har en array (selv om det bare er ett system)
     const systemArray = Array.isArray(data.system) ? data.system : [data.system];
 
+    //hvis det ikke er linket anlegg til kunde så skul foreldreelementet til systemlist og stopp prosessen
+    if (systemArray.length === 0) {
+        systemList.parentElement.style.display = "none"; // Skjul systemlisten
+        return;
+    }
+
     systemArray.forEach(system => {
        
         const itemElement = systemElementLibrary.cloneNode(true);

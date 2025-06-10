@@ -40,7 +40,7 @@ function responsClient(data) {
 function convertJSONArrayToObject(array) {
     let result = [];
     array.forEach(item => {
-        result.push(JSON.parse(JSON.stringify(item)));
+        result.push(JSON.parse(item));
     });
 
     return result;

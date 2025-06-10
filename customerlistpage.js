@@ -99,10 +99,6 @@ function listDatainList(data) {
         }
 
 
-
-
-
-
         //set post address
         const postAddress = itemElement.querySelector('.customerpostaddress');
         let postAddressText = item.postaddress || "Ukjent postadresse";
@@ -112,7 +108,7 @@ function listDatainList(data) {
         if (postAddress) postAddress.textContent = postAddressText;
 
         //list Anlegg
-        console.log("Anlegg:", item.system);
+        listSystemInCustomer(item, itemElement);
 
         // Legg til klikk-event for åpning
         const button = itemElement.querySelector('.opencustomer');
@@ -125,4 +121,35 @@ function listDatainList(data) {
         // Legg til leverandøren i containeren
         listContainer.appendChild(itemElement);
     });
+}
+
+
+function listSystemInCustomer(data, element) {
+    const systemList = element.querySelector('.systemlist');
+    if (!systemList) {
+        console.error("Ingen '.systemlist' funnet.");
+        return;
+    }
+
+    const systemElementLibrary = systemList.querySelector(".systemelement");
+    if (!systemElementLibrary) {
+        console.error("Ingen 'systemelement' funnet i 'systemlist'.");
+        return;
+    }
+
+    // Sørg for at vi har en array (selv om det bare er ett system)
+    const systemArray = Array.isArray(data.system) ? data.system : [data.system];
+
+    systemArray.forEach(systemName => {
+        if (!systemName) return;
+        
+        const itemElement = systemElementLibrary.cloneNode(true);
+        const name = itemElement.querySelector('.systemname');
+        if (name) name.textContent = systemName || "Ukjent system";
+
+        systemList.appendChild(itemElement);
+    });
+
+    // Fjern malen
+    systemList.removeChild(systemElementLibrary);
 }

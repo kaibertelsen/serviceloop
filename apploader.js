@@ -11,7 +11,8 @@ function loadScript(url) {
 // Liste over CDN-URL-er som skal lastes inn
 const cdnScripts = [
     "https://kaibertelsen.github.io/serviceloop/startup.js",
-    "https://kaibertelsen.github.io/serviceloop/apicom.js",
+    "https://kaibertelsen.github.io/serviceloop/customerlistpage.js",
+    "https://kaibertelsen.github.io/serviceloop/apicom.js"
 
 ];
 

@@ -32,7 +32,9 @@ function responsClient(data) {
         gCustomer = convertJSONArrayToObject(gClient.customerjson);
     }
     
-    console.log("Customer data:", gCustomer);
+    //start kundelisten
+    startCustomerListPage(gCustomer);
+    
     
 }
 

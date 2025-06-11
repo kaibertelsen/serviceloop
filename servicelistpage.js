@@ -6,8 +6,8 @@ document.getElementById('systemTypes')?.addEventListener('change', renderFiltere
 
 
 
-function renderFilteredServiceList(customers) {
-    const raw = convertDataTOServiceList(customers);                   // Alle rådata
+function renderFilteredServiceList() {
+    const raw = convertDataTOServiceList(gCustomer);                   // Alle rådata
     const grouped = groupServicesByCustomerAndDate(raw);              // Slår sammen på dato + kunde
     const filtered = filterServices(grouped);                         // Bruker valgte filtre
     startServiceListPage(filtered);                                   // Viser

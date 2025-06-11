@@ -137,11 +137,7 @@ function listDatainList(data) {
             });
         }
 
-        itemElement.addEventListener("click", function () {
-            openCustomer(item);
-        }
-        );
-
+       
         // Legg til leverandøren i containeren
         listContainer.appendChild(itemElement);
     });
@@ -190,3 +186,5 @@ function openCustomer(customer) {
 
     console.log("Åpner kunde:", customer);
 }
+
+

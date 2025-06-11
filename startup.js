@@ -1,6 +1,7 @@
 var gUser = null; // Global variable to store user data
 var gCustomer = []; // Global variable to store customer data
 var gClient = null; // Global variable to store client data
+var gService = []; // Global variable to store service data
 
 function startup(member) {
     console.log("Startup function called with member:", member);
@@ -32,9 +33,15 @@ function responsClient(data) {
     if(gClient?.customerjson){
         gCustomer = parseItemJson(gClient.customerjson);
     }
+
+   
     
     //start kundelisten
     startCustomerListPage(gCustomer);
+
+    //last inn Servicelisten
+    gService =convertDataTOServiceList(gCustomer); 
+    startServiceListPage(gService);
     
     
 }

@@ -118,6 +118,12 @@ function listSystemInService(data, element) {
   
       const modelname = itemElement.querySelector('.modelname');
       if (modelname) modelname.textContent = system.typemodel || "";
+
+      const lastservice = itemElement.querySelector('.lastservice');
+      if (lastservice) {
+        const lastServiceDate = system.service && system.service.length > 0 ? new Date(system.service[0].date) : new Date();
+        lastservice.textContent = `Siste service: ${lastServiceDate.toLocaleDateString("no-NO", { day: '2-digit', month: 'long', year: 'numeric' })}`;
+      }
   
       systemList.appendChild(itemElement);
     });

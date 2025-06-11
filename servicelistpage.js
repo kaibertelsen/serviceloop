@@ -64,7 +64,7 @@ function startServiceListPage(services) {
 
 
 
-function convertDataTOServiceList(customers) {
+  function convertDataTOServiceList(customers) {
     const serviceList = [];
   
     customers.forEach(customer => {
@@ -76,26 +76,31 @@ function convertDataTOServiceList(customers) {
           const model = sys.typemodel || "Ukjent modell";
           const systemName = sys.name || "Ukjent anlegg";
   
-          // 1. Legg til registrerte servicer
-          if (Array.isArray(sys.service)) {
-            sys.service.forEach(service => {
-              const date = new Date(service.date);
-              serviceList.push({
-                dato: date.toISOString(),
-                status: service.status || "Ukjent",
-                customername: name,
-                address: address,
-                poststed: `${postcode} ${city}`,
-                kalkuleringsstatus: "Registrert",
-                systemname: systemName,
-                modelname: model,
-                sendt_påminnelse: "Nei"
-              });
+          let latestRegisteredService = null;
+  
+          if (Array.isArray(sys.service) && sys.service.length > 0) {
+            // Finn siste registrerte service basert på dato
+            latestRegisteredService = sys.service.reduce((latest, current) => {
+              const latestDate = new Date(latest.date);
+              const currentDate = new Date(current.date);
+              return currentDate > latestDate ? current : latest;
             });
           }
   
-          // 2. Beregn neste service basert på installasjonsdato og intervall
-          if (sys.installed_date) {
+          if (latestRegisteredService) {
+            const date = new Date(latestRegisteredService.date);
+            serviceList.push({
+              dato: date.toISOString(),
+              status: latestRegisteredService.status || "Ukjent",
+              customername: name,
+              address: address,
+              poststed: `${postcode} ${city}`,
+              kalkuleringsstatus: "Registrert",
+              systemname: systemName,
+              modelname: model,
+              sendt_påminnelse: "Nei"
+            });
+          } else if (sys.installed_date) {
             const installDate = new Date(sys.installed_date);
             const today = new Date();
             let monthsToAdd = 0;
@@ -124,5 +129,6 @@ function convertDataTOServiceList(customers) {
   
     return serviceList;
   }
+  
   
   

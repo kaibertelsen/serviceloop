@@ -12,6 +12,7 @@ function loadScript(url) {
 const cdnScripts = [
     "https://kaibertelsen.github.io/serviceloop/startup.js",
     "https://kaibertelsen.github.io/serviceloop/customerlistpage.js",
+    "https://kaibertelsen.github.io/serviceloop/servicelistpage.js",
     "https://kaibertelsen.github.io/serviceloop/apicom.js"
 
 ];

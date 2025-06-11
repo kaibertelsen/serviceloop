@@ -1,4 +1,4 @@
-
+document.getElementById("elementlibrary").style.display = "none"; // Skjul elementbiblioteket
 
 
 function startCustomerListPage(customers) {

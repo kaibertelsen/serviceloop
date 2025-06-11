@@ -98,7 +98,7 @@ function listDatainList(data) {
         if (phone) {
             const number = item.phone || "Ukjent telefon";
             if (item.phone) {
-                phone.innerHTML = `T: <a href="tel:${item.phone}">${number}</a>`;
+                phone.innerHTML = `T: <a href="tel:${item.phone}" class="contact-link">${number}</a>`;
             } else {
                 phone.textContent = `T: ${number}`;
             }
@@ -109,11 +109,12 @@ function listDatainList(data) {
         if (email) {
             const mail = item.email || "Ukjent e-post";
             if (item.email) {
-                email.innerHTML = `E: <a href="mailto:${item.email}">${mail}</a>`;
+                email.innerHTML = `E: <a href="mailto:${item.email}" class="contact-link">${mail}</a>`;
             } else {
                 email.textContent = `E: ${mail}`;
             }
         }
+
 
 
 

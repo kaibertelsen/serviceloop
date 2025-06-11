@@ -17,14 +17,17 @@ function startServiceListPage(services) {
       counter.style.display = "block";
     }
   
-    services.forEach((item, index) => {
+    services.forEach(item => {
       const itemElement = nodeElement.cloneNode(true);
   
-      // Dato og tid
       const date = new Date(item.dato);
       const dateElement = itemElement.querySelector('.datelable');
       if (dateElement) {
-        dateElement.textContent = date.toLocaleDateString("no-NO", { day: '2-digit', month: 'long', year: 'numeric' });
+        dateElement.textContent = date.toLocaleDateString("no-NO", {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        });
       }
   
       const timeElement = itemElement.querySelector('.timeelement');
@@ -32,26 +35,28 @@ function startServiceListPage(services) {
         timeElement.textContent = "KL 15:15";
       }
   
-      // Status
       const statusElement = itemElement.querySelector('.statuselement');
       if (statusElement) {
         statusElement.textContent = item.status || "Ukjent status";
         statusElement.className = `servicestatus ${item.status ? item.status.toLowerCase() : "unknown"}`;
       }
   
-      // Kundenavn
+      const colorElement = itemElement.querySelector('.colorstatus');
+      if (colorElement) {
+        if (item.kalkuleringsstatus === "Beregnet") {
+          colorElement.style.backgroundColor = "#ffcc00";
+        } else if (item.kalkuleringsstatus === "Registrert") {
+          colorElement.style.backgroundColor = "#00cc66";
+        } else {
+          colorElement.style.backgroundColor = "#cccccc";
+        }
+      }
+  
       const name = itemElement.querySelector('.customerlable');
       if (name) name.textContent = item.customername || "Ukjent navn";
   
-      // Systemnavn
-      const systemName = itemElement.querySelector('.systemname');
-      if (systemName) systemName.textContent = item.systemname || "Ukjent anlegg";
+      listSystemInService(item, itemElement);
   
-      // Modellnavn
-      const modelname = itemElement.querySelector('.modelname');
-      if (modelname) modelname.textContent = item.modelname || "Ukjent modell";
-  
-      // Klikk for å åpne detaljer
       const button = itemElement.querySelector('.openservice');
       if (button) {
         button.addEventListener("click", () => openService(item));
@@ -59,12 +64,44 @@ function startServiceListPage(services) {
   
       listContainer.appendChild(itemElement);
     });
-  }
+}
   
-
-
-
-  function convertDataTOServiceList(customers) {
+function listSystemInService(data, element) {
+    const systemList = element.querySelector('.systemlist');
+    if (!systemList) {
+      console.error("Ingen '.systemlist' funnet.");
+      return;
+    }
+  
+    const systemElementLibrary = systemList.querySelector(".systemelement");
+    if (!systemElementLibrary) {
+      console.error("Ingen 'systemelement' funnet i 'systemlist'.");
+      return;
+    }
+  
+    const systemArray = Array.isArray(data.system) ? data.system : [data.system];
+  
+    if (!systemArray || systemArray.length === 0) {
+      systemList.parentElement.style.display = "none";
+      return;
+    }
+  
+    systemArray.forEach(system => {
+      const itemElement = systemElementLibrary.cloneNode(true);
+  
+      const name = itemElement.querySelector('.systemname');
+      if (name) name.textContent = system.name || "Ukjent system";
+  
+      const modelname = itemElement.querySelector('.modelname');
+      if (modelname) modelname.textContent = system.typemodel || "";
+  
+      systemList.appendChild(itemElement);
+    });
+  
+    systemList.removeChild(systemElementLibrary); // fjern mal
+}
+  
+function convertDataTOServiceList(customers) {
     const serviceList = [];
   
     customers.forEach(customer => {
@@ -78,7 +115,7 @@ function startServiceListPage(services) {
           const model = sys.typemodel || "Ukjent modell";
           const systemName = sys.name || "Ukjent anlegg";
   
-          // 1. Legg til alle registrerte servicer
+          // 1. Registrerte servicer
           if (Array.isArray(sys.service)) {
             sys.service.forEach(service => {
               const date = new Date(service.date);
@@ -91,18 +128,18 @@ function startServiceListPage(services) {
                 kalkuleringsstatus: "Registrert",
                 systemname: systemName,
                 modelname: model,
-                sendt_påminnelse: "Nei"
+                sendt_påminnelse: "Nei",
+                system: [sys]
               });
             });
           }
   
-          // 2. Legg til én kalkulert fremtidig service
+          // 2. Beregnet neste service
           if (sys.installed_date) {
             const installDate = new Date(sys.installed_date);
             const today = new Date();
             let monthsToAdd = 0;
   
-            // Finn neste service som er frem i tid
             while (new Date(installDate.getFullYear(), installDate.getMonth() + monthsToAdd, installDate.getDate()) <= today) {
               monthsToAdd += intervall;
             }
@@ -118,7 +155,8 @@ function startServiceListPage(services) {
               kalkuleringsstatus: "Beregnet",
               systemname: systemName,
               modelname: model,
-              sendt_påminnelse: "Nei"
+              sendt_påminnelse: "Nei",
+              system: [sys]
             });
           }
         });
@@ -126,8 +164,24 @@ function startServiceListPage(services) {
     });
   
     return serviceList;
-  }
+}
   
+function groupServicesByCustomerAndDate(services) {
+    const grouped = {};
   
+    services.forEach(service => {
+      const key = `${service.customername}_${service.dato}`;
   
+      if (!grouped[key]) {
+        grouped[key] = {
+          ...service,
+          system: [...(service.system || [])]
+        };
+      } else {
+        grouped[key].system.push(...(service.system || []));
+      }
+    });
   
+    return Object.values(grouped);
+}
+

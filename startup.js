@@ -40,9 +40,7 @@ function responsClient(data) {
     startCustomerListPage(gCustomer);
 
     //last inn Servicelisten
-    const rawServices = convertDataTOServiceList(gCustomer);
-    const groupedServices = groupServicesByCustomerAndDate(rawServices);
-    startServiceListPage(groupedServices);
+    renderFilteredServiceList(gCustomer)
     
     
 }

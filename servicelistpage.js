@@ -1,3 +1,11 @@
+function renderFilteredServiceList(customers) {
+    const raw = convertDataTOServiceList(customers);                   // Alle rådata
+    const grouped = groupServicesByCustomerAndDate(raw);              // Slår sammen på dato + kunde
+    const filtered = filterServices(grouped);                         // Bruker valgte filtre
+    startServiceListPage(filtered);                                   // Viser
+  }
+
+
 
 function startServiceListPage(services) {
     const listContainer = document.getElementById("servicelistelement");
@@ -16,6 +24,11 @@ function startServiceListPage(services) {
       counter.textContent = `${services.length} stk.`;
       counter.style.display = "block";
     }
+
+    //filter
+    services = filterServices(services);
+
+    //sortering på dato
   
     services.forEach(item => {
       const itemElement = nodeElement.cloneNode(true);
@@ -32,7 +45,10 @@ function startServiceListPage(services) {
   
       const timeElement = itemElement.querySelector('.timeelement');
       if (timeElement) {
-        timeElement.textContent = "KL 15:15";
+        // Sett tid basert på datoen
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        timeElement.textContent = `KL ${hours}:${minutes}`;
       }
   
       const statusElement = itemElement.querySelector('.statuselement');
@@ -185,3 +201,39 @@ function groupServicesByCustomerAndDate(services) {
     return Object.values(grouped);
 }
 
+function filterServices(rawServices) {
+    const forwardFilter = document.getElementById("serviceForwardSelector")?.value || "";
+    const statusFilter = document.getElementById("serviceStatusSelector")?.value || "";
+    const typeFilter = document.getElementById("systemTypes")?.value || "";
+    const now = new Date();
+  
+    let result = rawServices.filter(service => {
+      const date = new Date(service.dato);
+  
+      // Filter 1: Fremtidig grense (30, 60, 90 dager)
+      if (forwardFilter) {
+        const days = parseInt(forwardFilter, 10);
+        const futureLimit = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+        if (date > futureLimit) return false;
+      }
+  
+      // Filter 2: Status
+      if (statusFilter) {
+        const combinedStatus = `${service.kalkuleringsstatus || ""} ${service.status || ""}`.toLowerCase();
+        if (!combinedStatus.includes(statusFilter.toLowerCase())) return false;
+      }
+  
+      // Filter 3: Systemtype
+      if (typeFilter) {
+        if (!service.modelname?.toLowerCase().includes(typeFilter.toLowerCase())) return false;
+      }
+  
+      return true;
+    });
+  
+    // Sorter på dato (eldste først)
+    result.sort((a, b) => new Date(a.dato) - new Date(b.dato));
+  
+    return result;
+  }
+  

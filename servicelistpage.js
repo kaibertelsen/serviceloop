@@ -1,9 +1,17 @@
+document.getElementById('serviceForwardSelector')?.addEventListener('change', renderFilteredServiceList);
+document.getElementById('serviceStatusSelector')?.addEventListener('change', renderFilteredServiceList);
+document.getElementById('systemTypes')?.addEventListener('change', renderFilteredServiceList);
+
+
+
+
+
 function renderFilteredServiceList(customers) {
     const raw = convertDataTOServiceList(customers);                   // Alle rådata
     const grouped = groupServicesByCustomerAndDate(raw);              // Slår sammen på dato + kunde
     const filtered = filterServices(grouped);                         // Bruker valgte filtre
     startServiceListPage(filtered);                                   // Viser
-  }
+}
 
 
 
@@ -231,8 +239,9 @@ function filterServices(rawServices) {
       return true;
     });
   
-    // Sorter på dato (eldste først)
-    result.sort((a, b) => new Date(a.dato) - new Date(b.dato));
+    // Sorter på dato (nyeste først)
+    result.sort((a, b) => new Date(b.dato) - new Date(a.dato));
+
   
     return result;
   }

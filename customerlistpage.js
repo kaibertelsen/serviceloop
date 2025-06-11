@@ -173,6 +173,10 @@ function listSystemInCustomer(data, element) {
         const itemElement = systemElementLibrary.cloneNode(true);
         const name = itemElement.querySelector('.systemname');
         if (name) name.textContent = system.name|| "Ukjent system";
+
+        const modelname = itemElement.querySelector('.modelname');
+        if (modelname) modelname.textContent = system.typemodel || "";
+
         systemList.appendChild(itemElement);
     });
 

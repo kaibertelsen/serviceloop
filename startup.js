@@ -40,8 +40,9 @@ function responsClient(data) {
     startCustomerListPage(gCustomer);
 
     //last inn Servicelisten
-    gService =convertDataTOServiceList(gCustomer); 
-    startServiceListPage(gService);
+    const rawServices = convertDataTOServiceList(gCustomer);
+    const groupedServices = groupServicesByCustomerAndDate(rawServices);
+    startServiceListPage(groupedServices);
     
     
 }

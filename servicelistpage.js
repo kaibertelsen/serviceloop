@@ -220,16 +220,25 @@ function filterServices(rawServices) {
   
       // Filter 1: Fremtid / fortid / hittil i år
       if (forwardFilter) {
+        const days = parseInt(forwardFilter, 10);
+        const date = new Date(service.dato);
+      
         if (forwardFilter === "YTD") {
           const startOfYear = new Date(now.getFullYear(), 0, 1);
           if (date < startOfYear || date > now) return false;
         } else {
-          const days = parseInt(forwardFilter, 10);
           const filterDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
-          if (days > 0 && date > filterDate) return false;
-          if (days < 0 && date < filterDate) return false;
+      
+          if (days > 0) {
+            if (date > filterDate || date < now) return false; // kun mellom nå og +X dager
+          }
+      
+          if (days < 0) {
+            if (date < filterDate || date > now) return false; // kun mellom nå og -X dager
+          }
         }
       }
+      
   
       // Filter 2: Status
       if (statusFilter) {

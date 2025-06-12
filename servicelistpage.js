@@ -32,16 +32,16 @@ function startServiceListPage(services) {
       counter.textContent = `${services.length} stk.`;
       counter.style.display = "block";
     }
-
-    //filter
+  
+    // Filter
     services = filterServices(services);
-
-    //sortering på dato
   
     services.forEach(item => {
       const itemElement = nodeElement.cloneNode(true);
   
       const date = new Date(item.dato);
+  
+      // Dato
       const dateElement = itemElement.querySelector('.datelable');
       if (dateElement) {
         dateElement.textContent = date.toLocaleDateString("no-NO", {
@@ -51,36 +51,70 @@ function startServiceListPage(services) {
         });
       }
   
+      // Ukedag
+      const daylable = itemElement.querySelector('.daylable');
+      if (daylable) {
+        const dayNames = ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"];
+        daylable.textContent = dayNames[date.getDay()];
+      }
+  
+      // Tid
       const timeElement = itemElement.querySelector('.timeelement');
       if (timeElement) {
-        // Sett tid basert på datoen
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
         timeElement.textContent = `KL ${hours}:${minutes}`;
       }
   
+      // Status
       const statusElement = itemElement.querySelector('.statuselement');
       if (statusElement) {
         statusElement.textContent = item.status || "Ukjent status";
         statusElement.className = `servicestatus ${item.status ? item.status.toLowerCase() : "unknown"}`;
       }
   
+      // Farge/status
       const colorElement = itemElement.querySelector('.colorstatus');
-      if (colorElement) {
-        if (item.kalkuleringsstatus === "Beregnet") {
-          colorElement.style.backgroundColor = "#ffcc00";
-        } else if (item.kalkuleringsstatus === "Registrert") {
-          colorElement.style.backgroundColor = "#00cc66";
-        } else {
-          colorElement.style.backgroundColor = "#cccccc";
+      const checkboxElement = itemElement.querySelector('.checkboxwrapper');
+  
+      if (item.status === "Kalkulert") {
+        if (colorElement) colorElement.style.display = "none";
+        if (checkboxElement) checkboxElement.style.display = "flex";
+      } else {
+        if (checkboxElement) checkboxElement.style.display = "none";
+        if (colorElement) {
+          colorElement.style.display = "block";
+  
+          // Farge basert på status
+          const status = item.status.toLowerCase();
+          switch (status) {
+            case "registrert":
+              colorElement.style.backgroundColor = "#ffcc00"; // gul
+              break;
+            case "planlagt":
+              colorElement.style.backgroundColor = "#3399ff"; // blå
+              break;
+            case "utført":
+              colorElement.style.backgroundColor = "#00cc66"; // grønn
+              break;
+            case "fakturert":
+              colorElement.style.backgroundColor = "#000000"; // sort
+              break;
+            default:
+              colorElement.style.backgroundColor = "#cccccc"; // fallback grå
+              break;
+          }
         }
       }
   
+      // Kundenavn
       const name = itemElement.querySelector('.customerlable');
       if (name) name.textContent = item.customername || "Ukjent navn";
   
+      // System(er)
       listSystemInService(item, itemElement);
   
+      // Åpne service
       const button = itemElement.querySelector('.openservice');
       if (button) {
         button.addEventListener("click", () => openService(item));
@@ -88,7 +122,8 @@ function startServiceListPage(services) {
   
       listContainer.appendChild(itemElement);
     });
-}
+  }
+  
   
 function listSystemInService(data, element) {
     const systemList = element.querySelector('.systemlist');
@@ -133,6 +168,7 @@ function listSystemInService(data, element) {
   
 function convertDataTOServiceList(customers) {
     const serviceList = [];
+    const today = new Date();
   
     customers.forEach(customer => {
       const { name, address, postcode, city, system } = customer;
@@ -145,17 +181,34 @@ function convertDataTOServiceList(customers) {
           const model = sys.typemodel || "Ukjent modell";
           const systemName = sys.name || "Ukjent anlegg";
   
-          // 1. Registrerte servicer
+          let latestServiceDate = null;
+  
+          // Registrerte servicer
           if (Array.isArray(sys.service)) {
             sys.service.forEach(service => {
               const date = new Date(service.date);
+              if (!latestServiceDate || date > latestServiceDate) {
+                latestServiceDate = date;
+              }
+  
+              const lowerStatus = (service.status || "").toLowerCase();
+              let status = "Registrert"; // Default
+  
+              if (lowerStatus === "fakturert") {
+                status = "Fakturert";
+              } else if (lowerStatus === "utført") {
+                status = "Utført";
+              } else if (lowerStatus === "planlagt" || date > today) {
+                status = "Planlagt";
+              }
+  
               serviceList.push({
                 dato: date.toISOString(),
-                status: service.status || "Ukjent",
+                status: status,
+                kalkuleringsstatus: "Registrert",
                 customername: name,
                 address: address,
                 poststed: `${postcode} ${city}`,
-                kalkuleringsstatus: "Registrert",
                 systemname: systemName,
                 modelname: model,
                 sendt_påminnelse: "Nei",
@@ -164,30 +217,41 @@ function convertDataTOServiceList(customers) {
             });
           }
   
-          // 2. Beregnet neste service
+          // Kalkulert neste service – dersom det ikke finnes nyere registrert service
           if (sys.installed_date) {
             const installDate = new Date(sys.installed_date);
-            const today = new Date();
             let monthsToAdd = 0;
   
-            while (new Date(installDate.getFullYear(), installDate.getMonth() + monthsToAdd, installDate.getDate()) <= today) {
+            while (
+              new Date(
+                installDate.getFullYear(),
+                installDate.getMonth() + monthsToAdd,
+                installDate.getDate()
+              ) <= today
+            ) {
               monthsToAdd += intervall;
             }
   
-            const nextService = new Date(installDate.getFullYear(), installDate.getMonth() + monthsToAdd, installDate.getDate());
+            const nextService = new Date(
+              installDate.getFullYear(),
+              installDate.getMonth() + monthsToAdd,
+              installDate.getDate()
+            );
   
-            serviceList.push({
-              dato: nextService.toISOString(),
-              status: "Ikke registrert",
-              customername: name,
-              address: address,
-              poststed: `${postcode} ${city}`,
-              kalkuleringsstatus: "Beregnet",
-              systemname: systemName,
-              modelname: model,
-              sendt_påminnelse: "Nei",
-              system: [sys]
-            });
+            if (!latestServiceDate || nextService > latestServiceDate) {
+              serviceList.push({
+                dato: nextService.toISOString(),
+                status: "Kalkulert",
+                kalkuleringsstatus: "Kalkulert",
+                customername: name,
+                address: address,
+                poststed: `${postcode} ${city}`,
+                systemname: systemName,
+                modelname: model,
+                sendt_påminnelse: "Nei",
+                system: [sys]
+              });
+            }
           }
         });
       }
@@ -195,6 +259,7 @@ function convertDataTOServiceList(customers) {
   
     return serviceList;
 }
+  
   
 function groupServicesByCustomerAndDate(services) {
     const grouped = {};

@@ -293,53 +293,47 @@ function groupServicesByCustomerAndDate(services) {
 
 function filterServices(rawServices) {
     const forwardFilter = document.getElementById("serviceForwardSelector")?.value || "";
-    const statusFilter = document.getElementById("serviceStatusSelector")?.value || "";
-    const typeFilter = document.getElementById("systemTypes")?.value || "";
+    const statusFilter = document.getElementById("serviceStatusSelector")?.value.toLowerCase() || "";
+    const typeFilter = document.getElementById("systemTypes")?.value.toLowerCase() || "";
     const now = new Date();
   
     const result = rawServices.filter(service => {
-      const date = new Date(service.dato); // 👈 KUN her
+      const date = new Date(service.dato);
   
-      // Filter 1: Fremtid / fortid / hittil i år
+      // === Filter 1: Fremtid / fortid / hittil i år ===
       if (forwardFilter) {
-        const days = parseInt(forwardFilter, 10);
-        const date = new Date(service.dato);
-      
         if (forwardFilter === "YTD") {
           const startOfYear = new Date(now.getFullYear(), 0, 1);
           if (date < startOfYear || date > now) return false;
         } else {
+          const days = parseInt(forwardFilter, 10);
           const filterDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
-      
-          if (days > 0) {
-            if (date > filterDate || date < now) return false; // kun mellom nå og +X dager
-          }
-      
-          if (days < 0) {
-            if (date < filterDate || date > now) return false; // kun mellom nå og -X dager
-          }
+  
+          if (days > 0 && (date < now || date > filterDate)) return false;
+          if (days < 0 && (date > now || date < filterDate)) return false;
         }
       }
-      
   
-      // Filter 2: Status
+      // === Filter 2: Status ===
       if (statusFilter) {
-        const combinedStatus = `${service.kalkuleringsstatus || ""} ${service.status || ""}`.toLowerCase();
-        if (!combinedStatus.includes(statusFilter.toLowerCase())) return false;
+        const serviceStatus = (service.status || "").toLowerCase();
+        if (serviceStatus !== statusFilter) return false;
       }
   
-      // Filter 3: Systemtype
+      // === Filter 3: Systemtype ===
       if (typeFilter) {
-        if (!service.modelname?.toLowerCase().includes(typeFilter.toLowerCase())) return false;
+        const model = (service.modelname || "").toLowerCase();
+        if (!model.includes(typeFilter)) return false;
       }
   
       return true;
     });
   
-    // Sorter på dato (nyeste først)
+    // Sorter nyeste øverst
     result.sort((a, b) => new Date(b.dato) - new Date(a.dato));
   
     return result;
-}
+  }
+  
   
   

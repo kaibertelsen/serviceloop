@@ -4,15 +4,12 @@ document.getElementById('systemTypes')?.addEventListener('change', renderFiltere
 
 
 
-
-
 function renderFilteredServiceList() {
     const raw = convertDataTOServiceList(gCustomer);                   // Alle rådata
     const grouped = groupServicesByCustomerAndDate(raw);              // Slår sammen på dato + kunde
     const filtered = filterServices(grouped);                         // Bruker valgte filtre
     startServiceListPage(filtered);                                   // Viser
 }
-
 
 
 function startServiceListPage(services) {
@@ -126,6 +123,19 @@ function startServiceListPage(services) {
       // Kundenavn
       const name = itemElement.querySelector('.customerlable');
       if (name) name.textContent = item.customername || "Ukjent navn";
+
+      const customeraddress = itemElement.querySelector('.customeraddress');
+      if (customeraddress) customeraddress.textContent = item.address || "Ukjent adresse";
+      const customerpoststed = itemElement.querySelector('.customerpoststed');
+      let postadresse = item.poststed || "";
+      //postnummer + poststed
+      if (item.postcode && item.city) {
+        postadresse = `${item.postcode} ${item.city}`;
+      }
+      if (customerpoststed) customerpoststed.textContent = postadresse || "Ukjent postadresse";
+   
+      
+      
   
       // System(er)
       listSystemInService(item, itemElement);
@@ -139,7 +149,6 @@ function startServiceListPage(services) {
       listContainer.appendChild(itemElement);
     });
 }
-  
   
   
 function listSystemInService(data, element) {
@@ -176,6 +185,19 @@ function listSystemInService(data, element) {
         const lastServiceDate = system.service && system.service.length > 0 ? new Date(system.service[0].date) : new Date();
         lastservice.textContent = `Siste service: ${lastServiceDate.toLocaleDateString("no-NO", { day: '2-digit', month: 'long', year: 'numeric' })}`;
       }
+
+      const followupinfo = itemElement.querySelector('.followupinfo');
+      //Hvis dato for oppfølginger 20.01.2025 , 30.01.2025 osv..
+        if (followupinfo) {
+            const followups = system.service && system.service.length > 0 ? system.service[0].followup : [];
+            if (Array.isArray(followups) && followups.length > 0) {
+                const followupDates = followups.map(f => new Date(f.date).toLocaleDateString("no-NO", { day: '2-digit', month: 'long', year: 'numeric' }));
+                followupinfo.textContent = `Oppfølginger: ${followupDates.join(', ')}`;
+            } else {
+                followupinfo.textContent = "";
+                followupinfo.style.display = "none"; // Skjul hvis ingen oppfølginger
+            }
+        }
   
       systemList.appendChild(itemElement);
     });
@@ -270,8 +292,6 @@ function convertDataTOServiceList(customers) {
     return serviceList;
 }
   
-  
-  
 function groupServicesByCustomerAndDate(services) {
     const grouped = {};
   
@@ -333,7 +353,7 @@ function filterServices(rawServices) {
     result.sort((a, b) => new Date(b.dato) - new Date(a.dato));
   
     return result;
-  }
+}
   
   
   

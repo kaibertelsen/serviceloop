@@ -38,7 +38,6 @@ function startServiceListPage(services) {
   
     services.forEach(item => {
       const itemElement = nodeElement.cloneNode(true);
-  
       const date = new Date(item.dato);
   
       // Dato
@@ -66,45 +65,62 @@ function startServiceListPage(services) {
         timeElement.textContent = `KL ${hours}:${minutes}`;
       }
   
-      // Status
+      // Status tekst
       const statusElement = itemElement.querySelector('.statuselement');
       if (statusElement) {
         statusElement.textContent = item.status || "Ukjent status";
         statusElement.className = `servicestatus ${item.status ? item.status.toLowerCase() : "unknown"}`;
       }
   
-      // Farge/status
+      // Fargeboks og checkbox
       const colorElement = itemElement.querySelector('.colorstatus');
-      const checkboxElement = itemElement.querySelector('.checkboxwrapper');
+      const checkboxElement = itemElement.querySelector('.remindercheckbox');
   
-      if (item.status === "Kalkulert") {
-        if (colorElement) colorElement.style.display = "none";
-        if (checkboxElement) checkboxElement.style.display = "flex";
-      } else {
-        if (checkboxElement) checkboxElement.style.display = "none";
-        if (colorElement) {
-          colorElement.style.display = "block";
+      if (checkboxElement) checkboxElement.style.display = "none";
+      if (colorElement) colorElement.style.display = "none";
   
-          // Farge basert på status
-          const status = item.status.toLowerCase();
-          switch (status) {
-            case "registrert":
-              colorElement.style.backgroundColor = "#ffcc00"; // gul
-              break;
-            case "planlagt":
-              colorElement.style.backgroundColor = "#3399ff"; // blå
-              break;
-            case "utført":
-              colorElement.style.backgroundColor = "#00cc66"; // grønn
-              break;
-            case "fakturert":
-              colorElement.style.backgroundColor = "#000000"; // sort
-              break;
-            default:
-              colorElement.style.backgroundColor = "#cccccc"; // fallback grå
-              break;
+      const status = item.status?.toLowerCase() || "";
+  
+      switch (status) {
+        case "kalkulert":
+          if (checkboxElement) checkboxElement.style.display = "flex";
+          break;
+        case "registrert":
+          if (colorElement) {
+            colorElement.style.backgroundColor = "#cccccc"; // grå
+            colorElement.style.display = "block";
           }
-        }
+          break;
+        case "påminnet":
+          if (colorElement) {
+            colorElement.style.backgroundColor = "#ffcc00"; // gul
+            colorElement.style.display = "block";
+          }
+          break;
+        case "planlagt":
+          if (colorElement) {
+            colorElement.style.backgroundColor = "#3399ff"; // blå
+            colorElement.style.display = "block";
+          }
+          break;
+        case "utført":
+          if (colorElement) {
+            colorElement.style.backgroundColor = "#00cc66"; // grønn
+            colorElement.style.display = "block";
+          }
+          break;
+        case "fakturert":
+          if (colorElement) {
+            colorElement.style.backgroundColor = "#000000"; // sort
+            colorElement.style.display = "block";
+          }
+          break;
+        default:
+          if (colorElement) {
+            colorElement.style.backgroundColor = "#cccccc"; // fallback grå
+            colorElement.style.display = "block";
+          }
+          break;
       }
   
       // Kundenavn
@@ -122,7 +138,8 @@ function startServiceListPage(services) {
   
       listContainer.appendChild(itemElement);
     });
-  }
+}
+  
   
   
 function listSystemInService(data, element) {
@@ -181,43 +198,39 @@ function convertDataTOServiceList(customers) {
           const model = sys.typemodel || "Ukjent modell";
           const systemName = sys.name || "Ukjent anlegg";
   
-          let latestServiceDate = null;
-  
           // Registrerte servicer
           if (Array.isArray(sys.service)) {
             sys.service.forEach(service => {
               const date = new Date(service.date);
-              if (!latestServiceDate || date > latestServiceDate) {
-                latestServiceDate = date;
-              }
-  
               const lowerStatus = (service.status || "").toLowerCase();
-              let status = "Registrert"; // Default
+              const hasFollowup = Array.isArray(service.followup) && service.followup.length > 0;
   
+              let status = "Registrert";
               if (lowerStatus === "fakturert") {
                 status = "Fakturert";
               } else if (lowerStatus === "utført") {
                 status = "Utført";
               } else if (lowerStatus === "planlagt" || date > today) {
                 status = "Planlagt";
+              } else if (hasFollowup) {
+                status = "Påminnet";
               }
   
               serviceList.push({
                 dato: date.toISOString(),
                 status: status,
-                kalkuleringsstatus: "Registrert",
                 customername: name,
                 address: address,
                 poststed: `${postcode} ${city}`,
                 systemname: systemName,
                 modelname: model,
-                sendt_påminnelse: "Nei",
+                sendt_påminnelse: hasFollowup ? "Ja" : "Nei",
                 system: [sys]
               });
             });
           }
   
-          // Kalkulert neste service – dersom det ikke finnes nyere registrert service
+          // Kalkulert neste service
           if (sys.installed_date) {
             const installDate = new Date(sys.installed_date);
             let monthsToAdd = 0;
@@ -238,20 +251,17 @@ function convertDataTOServiceList(customers) {
               installDate.getDate()
             );
   
-            if (!latestServiceDate || nextService > latestServiceDate) {
-              serviceList.push({
-                dato: nextService.toISOString(),
-                status: "Kalkulert",
-                kalkuleringsstatus: "Kalkulert",
-                customername: name,
-                address: address,
-                poststed: `${postcode} ${city}`,
-                systemname: systemName,
-                modelname: model,
-                sendt_påminnelse: "Nei",
-                system: [sys]
-              });
-            }
+            serviceList.push({
+              dato: nextService.toISOString(),
+              status: "Kalkulert",
+              customername: name,
+              address: address,
+              poststed: `${postcode} ${city}`,
+              systemname: systemName,
+              modelname: model,
+              sendt_påminnelse: "Nei",
+              system: [sys]
+            });
           }
         });
       }
@@ -259,6 +269,7 @@ function convertDataTOServiceList(customers) {
   
     return serviceList;
 }
+  
   
   
 function groupServicesByCustomerAndDate(services) {
@@ -329,6 +340,6 @@ function filterServices(rawServices) {
     result.sort((a, b) => new Date(b.dato) - new Date(a.dato));
   
     return result;
-  }
+}
   
   

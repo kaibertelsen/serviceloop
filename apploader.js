@@ -33,7 +33,7 @@ cdnScripts.reduce((promise, script) => {
         }else{
             console.log("Member is not logged in");
             const logginpagetabbutton = document.getElementById("logginpagetabbutton");
-            //logginpagetabbutton.click();
+            logginpagetabbutton.click();
         }
 
     });

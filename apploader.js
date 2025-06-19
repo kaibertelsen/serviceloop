@@ -31,9 +31,10 @@ cdnScripts.reduce((promise, script) => {
             startup(member);
 
         }else{
+            //gå til innloggingsside https://serviceloop.webflow.io/login
             console.log("Member is not logged in");
-            const logginpagetabbutton = document.getElementById("logginpagetabbutton");
-            logginpagetabbutton.click();
+            window.location.href = "https://serviceloop.webflow.io/login";
+            
         }
 
     });

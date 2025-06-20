@@ -51,7 +51,7 @@ function listSystemOnCustomer(customer) {
       return;
     }
   
-    
+
     const nodeElement = elementLibrary.querySelector(".systemwrapper");
     if (!nodeElement) {
       console.error("Ingen '.systemwrapper' funnet i 'elementlibrary'.");
@@ -68,17 +68,42 @@ function listSystemOnCustomer(customer) {
     customer.system.forEach((item) => {
       const itemElement = nodeElement.cloneNode(true);
   
-      // Fyll inn verdiene uten labeltekst
-      itemElement.querySelector(".systemname").textContent     = item.name || "Ukjent anlegg";
-      itemElement.querySelector(".modelname").textContent      = item.typemodel || "–";
-      itemElement.querySelector(".seriename").textContent      = item.serial_number || "–";
-      itemElement.querySelector(".typelabel").textContent      = item.typemodel || "–";
-      itemElement.querySelector(".installdate").textContent    = item.installed_date ? formatDate(item.installed_date) : "–";
-      itemElement.querySelector(".intervallable").textContent  = item.intervall ? `${item.intervall} mnd.` : "–";
-      itemElement.querySelector(".locationlable").textContent  = item.location || "–";
-      itemElement.querySelector(".notelable").textContent      = item.notes || "–";
+        // Fyll inn verdiene uten labeltekst
+        itemElement.querySelector(".systemname").textContent = item.name || "Ukjent anlegg";
+        itemElement.querySelector(".systemname").setAttribute("data-field", "name");
+
+        itemElement.querySelector(".modelname").textContent = item.typemodel || "–";
+        itemElement.querySelector(".modelname").setAttribute("data-field", "typemodel");
+
+        itemElement.querySelector(".seriename").textContent = item.serial_number || "–";
+        itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
+
+        itemElement.querySelector(".typelabel").textContent = item.typemodel || "–";
+        itemElement.querySelector(".typelabel").setAttribute("data-field", "typemodel");
+
+        itemElement.querySelector(".installdate").textContent = item.installed_date
+        ? formatDate(item.installed_date)
+        : "–";
+        itemElement.querySelector(".installdate").setAttribute("data-field", "installed_date");
+
+        itemElement.querySelector(".intervallable").textContent = item.intervall ? `${item.intervall} mnd.` : "–";
+        itemElement.querySelector(".intervallable").setAttribute("data-field", "intervall");
+
+        itemElement.querySelector(".locationlable").textContent = item.location || "–";
+        itemElement.querySelector(".locationlable").setAttribute("data-field", "location");
+
+        itemElement.querySelector(".notelable").textContent = item.notes || "–";
+        itemElement.querySelector(".notelable").setAttribute("data-field", "notes");
+
   
-      systemListContainer.appendChild(itemElement);
+        systemListContainer.appendChild(itemElement);
+
+        itemElement.querySelectorAll("[data-field]").forEach((el) => {
+            el.classList.add("editable");
+            el.addEventListener("click", () => handleSystemEdit(el, item, customer));
+        });
+
+      
     });
   }
   
@@ -188,3 +213,43 @@ function responseEditCustomer(data){
         console.log(data);
 
 }
+
+function handleSystemEdit(element, systemItem, customer) {
+    const field = element.dataset.field;
+    const originalValue = (systemItem[field] || "").toString();
+    
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = originalValue;
+    input.className = "edit-input";
+    element.innerHTML = '';
+    element.appendChild(input);
+    input.focus();
+  
+    input.addEventListener("blur", async () => {
+      const newValue = input.value.trim();
+      element.textContent = newValue || "–";
+  
+      if (newValue === originalValue) return; // ingen endring
+  
+      // Oppdater lokalt system
+      systemItem[field] = newValue;
+  
+      // Oppdater i gCustomer (finn riktig system via rawid)
+      const customerIndex = gCustomer.findIndex(c => c.client === customer.client);
+      if (customerIndex !== -1) {
+        const systems = gCustomer[customerIndex].system;
+        const sysIndex = systems.findIndex(s => s.rawid === systemItem.rawid);
+        if (sysIndex !== -1) {
+          systems[sysIndex][field] = newValue;
+        }
+      }
+  
+      // Send til server
+      const body = {};
+      body[field] = newValue;
+  
+      PATCHairtable("appuUESr4s93SWaS7", "tbl3QKQygVxJRWmhU", systemItem.rawid, JSON.stringify(body), "responseEditSystem");
+    });
+  }
+  

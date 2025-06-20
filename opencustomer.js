@@ -43,60 +43,79 @@ document.querySelector('.customerinfoconteiner').addEventListener('click', funct
 });
 
 function handleEditField(fieldEl, field) {
-  let currentValue = currentCustomer[field];
-
-  if (field === 'postcode_city') {
-    currentValue = [currentCustomer.postcode, currentCustomer.city].filter(Boolean).join(" ");
-  } else if (field === 'email') {
-    currentValue = currentCustomer.email || "";
-  }
-
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.value = currentValue || '';
-  input.className = 'edit-input';
-
-  fieldEl.innerHTML = '';
-  fieldEl.appendChild(input);
-  input.focus();
-
-  input.addEventListener('blur', async () => {
-    const newValue = input.value.trim();
-
+    let currentValue = currentCustomer[field];
+  
     if (field === 'postcode_city') {
-      const [postcode, ...cityParts] = newValue.split(' ');
-      currentCustomer.postcode = postcode || '';
-      currentCustomer.city = cityParts.join(' ') || '';
+      currentValue = [currentCustomer.postcode, currentCustomer.city].filter(Boolean).join(" ");
     } else if (field === 'email') {
-      currentCustomer.email = newValue;
-    } else {
-      currentCustomer[field] = newValue;
+      currentValue = currentCustomer.email || "";
     }
+  
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = currentValue || '';
+    input.className = 'edit-input';
+  
+    fieldEl.innerHTML = '';
+    fieldEl.appendChild(input);
+    input.focus();
+  
+    input.addEventListener('blur', async () => {
+      const newValue = input.value.trim();
+  
+      if (field === 'postcode_city') {
+        // Splitt inn i postcode og city
+        const [postcode, ...cityParts] = newValue.split(' ');
+        const city = cityParts.join(' ').trim();
+  
+        currentCustomer.postcode = postcode || '';
+        currentCustomer.city = city || '';
+  
+        // Oppdater i gCustomer-arrayen
+        const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
+        if (customerIndex !== -1) {
+          gCustomer[customerIndex].postcode = postcode || '';
+          gCustomer[customerIndex].city = city || '';
+        }
+  
+        // Vis oppdatert kunde
+        openCustomer(currentCustomer);
+  
+        // Send begge feltene til server
+        let body = 
+            {
+                'postcode': postcode,
+                'city': city
+            };
 
-    //oppdater den globale arrayen gCustomer
-    const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
-    if (customerIndex !== -1) {
-      gCustomer[customerIndex][field] = currentCustomer[field];
-    }
+        sendUpdateToServer(currentCustomer, body);
+  
+      } else {
+        // Vanlig oppdatering av enkeltnøkkel
+        currentCustomer[field] = newValue;
+  
+        const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
+        if (customerIndex !== -1) {
+          gCustomer[customerIndex][field] = newValue;
+        }
+  
+        openCustomer(currentCustomer);
+        let body = 
+            {
+              [field]: newValue
+            };
+        sendUpdateToServer(currentCustomer, body);
+      }
+    });
+  }
+  
 
-    // Vis ny data
-    openCustomer(currentCustomer);
+function sendUpdateToServer(customer, data) {
 
-    // Send til server
-    sendUpdateToServer(currentCustomer, field, newValue);
-  });
-}
+    let body = JSON.stringify(data);
+    let rawid = customer.rawid;
 
-function sendUpdateToServer(customer, field, value) {
-
-let body = JSON.stringify(
-  {
-    [field]: value
-  });
-
-  let rawid = customer.rawid;
-
-  PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",rawid,body,"responseEditCustomer");
+    PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",rawid,body,"responseEditCustomer");
 
 }
 

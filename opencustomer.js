@@ -63,26 +63,34 @@ function handleEditField(fieldEl, field) {
       currentCustomer[field] = newValue;
     }
 
+    //oppdater den globale arrayen gCustomer
+    const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
+    if (customerIndex !== -1) {
+      gCustomer[customerIndex][field] = currentCustomer[field];
+    }
+
     // Vis ny data
     openCustomer(currentCustomer);
 
     // Send til server
-    await sendUpdateToServer(currentCustomer.client, field, newValue);
+    sendUpdateToServer(currentCustomer.client, field, newValue);
   });
 }
 
-async function sendUpdateToServer(clientId, field, value) {
-  try {
-    const response = await fetch('/api/update-customer', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clientId, field, value })
-    });
+function sendUpdateToServer(clientId, field, value) {
 
-    if (!response.ok) {
-      console.error('Feil ved lagring:', await response.text());
-    }
-  } catch (error) {
-    console.error('Nettverksfeil:', error);
-  }
+let body = JSON.stringify(
+  {
+    [field]: value
+  });
+
+  PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",clientId,body,"responseEditCustomer");
+
+}
+
+
+function responseEditCustomer(data){
+
+        console.log(data);
+
 }

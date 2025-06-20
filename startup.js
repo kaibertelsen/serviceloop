@@ -72,6 +72,8 @@ function ruteresponse(data,id){
         responsClient(data);
     }else if(id == "getTeamresponse"){
        
+    }else if(id == "responseEditCustomer"){
+        responseEditCustomer(data);
     }
 
     

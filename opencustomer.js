@@ -1,5 +1,10 @@
 let currentCustomer = {};
 
+document.getElementById("fromCustomerToListButton").addEventListener("click", function () {
+    listCustomers(gCustomer);
+  });
+  
+
 function openCustomer(customer) {
   currentCustomer = customer;
 

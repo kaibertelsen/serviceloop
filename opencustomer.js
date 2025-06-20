@@ -63,7 +63,7 @@ function listSystemOnCustomer(customer) {
         console.error("Ingen '.counter' funnet i containerens forelder.");
         return;
     }
-    counter.textContent = data.length + " stk.";
+    counter.textContent = customer.system.length + " stk.";
     counter.style.display = "block";
 
     customer.system.forEach((item, index) => {

@@ -182,9 +182,6 @@ function listSystemInCustomer(data, element) {
     systemList.removeChild(systemElementLibrary);
 }
 
-function openCustomer(customer) {
 
-    console.log("Åpner kunde:", customer);
-}
 
 

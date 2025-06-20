@@ -13,6 +13,7 @@ const cdnScripts = [
     "https://kaibertelsen.github.io/serviceloop/startup.js",
     "https://kaibertelsen.github.io/serviceloop/customerlistpage.js",
     "https://kaibertelsen.github.io/serviceloop/servicelistpage.js",
+    "https://kaibertelsen.github.io/serviceloop/opencustomer.js",
     "https://kaibertelsen.github.io/serviceloop/apicom.js"
 
 ];
@@ -34,7 +35,7 @@ cdnScripts.reduce((promise, script) => {
             //gå til innloggingsside https://serviceloop.webflow.io/login
             console.log("Member is not logged in");
             window.location.href = "https://serviceloop.webflow.io/login";
-            
+
         }
 
     });

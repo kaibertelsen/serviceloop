@@ -73,18 +73,18 @@ function handleEditField(fieldEl, field) {
     openCustomer(currentCustomer);
 
     // Send til server
-    sendUpdateToServer(currentCustomer.client, field, newValue);
+    sendUpdateToServer(currentCustomer, field, newValue);
   });
 }
 
-function sendUpdateToServer(clientId, field, value) {
+function sendUpdateToServer(customer, field, value) {
 
 let body = JSON.stringify(
   {
     [field]: value
   });
 
-  let rawid = currentCustomer.rawid || currentCustomer.id;
+  let rawid = customer.rawid;
 
   PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",rawid,body,"responseEditCustomer");
 

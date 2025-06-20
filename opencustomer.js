@@ -64,34 +64,37 @@ function handleEditField(fieldEl, field) {
       const newValue = input.value.trim();
   
       if (field === 'postcode_city') {
-        // Splitt inn i postcode og city
         const [postcode, ...cityParts] = newValue.split(' ');
         const city = cityParts.join(' ').trim();
   
         currentCustomer.postcode = postcode || '';
         currentCustomer.city = city || '';
   
-        // Oppdater i gCustomer-arrayen
         const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
         if (customerIndex !== -1) {
           gCustomer[customerIndex].postcode = postcode || '';
           gCustomer[customerIndex].city = city || '';
         }
   
-        // Vis oppdatert kunde
         openCustomer(currentCustomer);
   
-        // Send begge feltene til server
-        let body = 
-            {
-                'postcode': Number(postcode),
-                'city': city
-            };
-
+        let body = {
+          postcode: Number(postcode),
+          city: city
+        };
         sendUpdateToServer(currentCustomer, body);
   
       } else {
-        // Vanlig oppdatering av enkeltnøkkel
+        if (field === 'email' && newValue !== '') {
+          // Valider e-post
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(newValue)) {
+            alert("Ugyldig e-postadresse");
+            openCustomer(currentCustomer); // tilbakestill visning
+            return;
+          }
+        }
+  
         currentCustomer[field] = newValue;
   
         const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
@@ -100,14 +103,15 @@ function handleEditField(fieldEl, field) {
         }
   
         openCustomer(currentCustomer);
-        let body = 
-            {
-              [field]: newValue
-            };
+  
+        let body = {
+          [field]: newValue
+        };
         sendUpdateToServer(currentCustomer, body);
       }
     });
   }
+  
   
 
 function sendUpdateToServer(customer, data) {

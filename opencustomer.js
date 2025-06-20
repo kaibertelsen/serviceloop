@@ -19,10 +19,10 @@ function openCustomer(customer) {
 
   document.querySelector("[data-field='type']").textContent = "Kundenummer: " + (customer.customernr || "");
   document.querySelector("[data-field='name']").textContent = customer.name || "";
-  document.querySelector("[data-field='address']").textContent = "Adresse: " + (customer.address || "");
+  document.querySelector("[data-field='address']").textContent = customer.address || "";
 
   const postAndCity = [customer.postcode, customer.city].filter(Boolean).join(" ");
-  document.querySelector("[data-field='postcode_city']").textContent = "Poststed: " + postAndCity;
+  document.querySelector("[data-field='postcode_city']").textContent = postAndCity;
 
   const emailContainer = document.querySelector("[data-field='email']");
     if (customer.email) {

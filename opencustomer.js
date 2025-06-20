@@ -84,7 +84,7 @@ function handleEditField(fieldEl, field) {
         // Send begge feltene til server
         let body = 
             {
-                'postcode': postcode,
+                'postcode': Number(postcode),
                 'city': city
             };
 

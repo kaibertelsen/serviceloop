@@ -58,7 +58,7 @@ function listSystemOnCustomer(customer) {
     }
 
     // Sett counter
-    const counter = listContainer.parentElement.querySelector(".counter");
+    const counter = systemListContainer.parentElement.querySelector(".counter");
     if (!counter) {
         console.error("Ingen '.counter' funnet i containerens forelder.");
         return;

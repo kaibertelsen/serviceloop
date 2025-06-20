@@ -39,7 +39,7 @@ function listSystemOnCustomer(customer) {
     const systemListContainer = document.getElementById('systemlist');
     systemListContainer.innerHTML = ''; // Tøm containeren
     
-    if (!customer.systems || customer.systems.length === 0) {
+    if (!customer.system || customer.system.length === 0) {
         systemListContainer.textContent = "Ingen systemer funnet for denne kunden.";
         return;
     }
@@ -66,7 +66,7 @@ function listSystemOnCustomer(customer) {
     counter.textContent = data.length + " stk.";
     counter.style.display = "block";
 
-    customer.forEach((item, index) => {
+    customer.system.forEach((item, index) => {
         const itemElement = nodeElement.cloneNode(true);
 
         systemListContainer.appendChild(itemElement);

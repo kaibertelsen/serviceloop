@@ -84,7 +84,9 @@ let body = JSON.stringify(
     [field]: value
   });
 
-  PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",clientId,body,"responseEditCustomer");
+  let rawid = currentCustomer.rawid || currentCustomer.id;
+
+  PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",rawid,body,"responseEditCustomer");
 
 }
 

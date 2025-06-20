@@ -8,7 +8,7 @@ function openCustomer(customer) {
   if (customerTabButton) customerTabButton.click();
 
   document.querySelector("[data-field='type']").textContent = "Kundenummer: " + (customer.customernr || "");
-  document.querySelector("[data-field='name']").textContent = "Kundenavn: " + (customer.name || "");
+  document.querySelector("[data-field='name']").textContent = customer.name || "";
   document.querySelector("[data-field='address']").textContent = "Adresse: " + (customer.address || "");
 
   const postAndCity = [customer.postcode, customer.city].filter(Boolean).join(" ");

@@ -51,6 +51,7 @@ function listSystemOnCustomer(customer) {
       return;
     }
   
+    
     const nodeElement = elementLibrary.querySelector(".systemwrapper");
     if (!nodeElement) {
       console.error("Ingen '.systemwrapper' funnet i 'elementlibrary'.");

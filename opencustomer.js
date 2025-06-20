@@ -15,11 +15,11 @@ function openCustomer(customer) {
   document.querySelector("[data-field='postcode_city']").textContent = "Poststed: " + postAndCity;
 
   const emailContainer = document.querySelector("[data-field='email']");
-  if (customer.email) {
-    emailContainer.innerHTML = `E-post: <a href="mailto:${customer.email}">${customer.email}</a>`;
-  } else {
+    if (customer.email) {
+    emailContainer.innerHTML = `E-post: <span class="email-text">${customer.email}</span>`;
+    } else {
     emailContainer.textContent = "E-post: –";
-  }
+    }
 }
 
 document.querySelector('.customerinfoconteiner').addEventListener('click', function (e) {

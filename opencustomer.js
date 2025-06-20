@@ -67,36 +67,26 @@ function listSystemOnCustomer(customer) {
     customer.system.forEach((item) => {
       const itemElement = nodeElement.cloneNode(true);
   
-      // Fyll ut feltene
-      const name = item.name || "Ukjent anlegg";
-      const model = item.typemodel || "–";
-      const serial = item.serial_number || "–";
-      const type = item.typemodel || "–";
-      const installDate = item.installed_date
-        ? formatDate(item.installed_date)
-        : "–";
-      const interval = item.intervall ? `${item.intervall} mnd.` : "–";
-      const location = item.location || "–";
-      const note = item.notes || "–";
-  
-      itemElement.querySelector(".systemname").textContent = name;
-      itemElement.querySelector(".modelname").textContent = model;
-      itemElement.querySelector(".seriename").textContent = "Serienummer: " + serial;
-      itemElement.querySelector(".typelabel").textContent = "Type modell: " + type;
-      itemElement.querySelector(".installdate").textContent = "Installasjonsdato: " + installDate;
-      itemElement.querySelector(".intervallable").textContent = "Service intervall: " + interval;
-      itemElement.querySelector(".locationlable").textContent = "Lokasjon: " + location;
-      itemElement.querySelector(".notelable").textContent = "Notat: " + note;
+      // Fyll inn verdiene uten labeltekst
+      itemElement.querySelector(".systemname").textContent     = item.name || "Ukjent anlegg";
+      itemElement.querySelector(".modelname").textContent      = item.typemodel || "–";
+      itemElement.querySelector(".seriename").textContent      = item.serial_number || "–";
+      itemElement.querySelector(".typelabel").textContent      = item.typemodel || "–";
+      itemElement.querySelector(".installdate").textContent    = item.installed_date ? formatDate(item.installed_date) : "–";
+      itemElement.querySelector(".intervallable").textContent  = item.intervall ? `${item.intervall} mnd.` : "–";
+      itemElement.querySelector(".locationlable").textContent  = item.location || "–";
+      itemElement.querySelector(".notelable").textContent      = item.notes || "–";
   
       systemListContainer.appendChild(itemElement);
     });
   }
   
-  // Hjelpefunksjon for å konvertere ISO-dato til f.eks. "12. jan 2025"
+  // Formater dato som "01. feb. 2020"
   function formatDate(dateStr) {
     const options = { day: '2-digit', month: 'short', year: 'numeric' };
     return new Date(dateStr).toLocaleDateString('no-NO', options);
   }
+  
 
   
 

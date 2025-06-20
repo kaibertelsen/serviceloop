@@ -51,7 +51,7 @@ function listSystemOnCustomer(customer) {
         return;
     }
 
-    const nodeElement = elementLibrary.querySelector(".systemelement");
+    const nodeElement = elementLibrary.querySelector(".systemwrapper");
     if (!nodeElement) {
         console.error("Ingen '.supplier' funnet i 'elementlibrary'.");
         return;

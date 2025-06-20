@@ -7,7 +7,7 @@ function openCustomer(customer) {
   const customerTabButton = document.getElementById("customertabbutton");
   if (customerTabButton) customerTabButton.click();
 
-  document.querySelector("[data-field='type']").textContent = "Kundenummer: " + (customer.type || "");
+  document.querySelector("[data-field='type']").textContent = "Kundenummer: " + (customer.customernr || "");
   document.querySelector("[data-field='name']").textContent = "Kundenavn: " + (customer.name || "");
   document.querySelector("[data-field='address']").textContent = "Adresse: " + (customer.address || "");
 

@@ -30,6 +30,54 @@ function openCustomer(customer) {
     } else {
     emailContainer.textContent = "E-post: –";
     }
+
+    //list opp anlegg/ systems
+    listSystemOnCustomer(customer);
+}
+
+function listSystemOnCustomer(customer) {
+    const systemListContainer = document.getElementById('systemlist');
+    systemListContainer.innerHTML = ''; // Tøm containeren
+    
+    if (!customer.systems || customer.systems.length === 0) {
+        systemListContainer.textContent = "Ingen systemer funnet for denne kunden.";
+        return;
+    }
+
+    //kopier systemelement
+    const elementLibrary = document.getElementById("elementlibrary");
+    if (!elementLibrary) {
+        console.error("Ingen 'elementlibrary' funnet.");
+        return;
+    }
+
+    const nodeElement = elementLibrary.querySelector(".systemelement");
+    if (!nodeElement) {
+        console.error("Ingen '.supplier' funnet i 'elementlibrary'.");
+        return;
+    }
+
+    // Sett counter
+    const counter = listContainer.parentElement.querySelector(".counter");
+    if (!counter) {
+        console.error("Ingen '.counter' funnet i containerens forelder.");
+        return;
+    }
+    counter.textContent = data.length + " stk.";
+    counter.style.display = "block";
+
+    customer.forEach((item, index) => {
+        const itemElement = nodeElement.cloneNode(true);
+
+        systemListContainer.appendChild(itemElement);
+  
+
+    });
+
+
+
+    
+   
 }
 
 document.querySelector('.customerinfoconteiner').addEventListener('click', function (e) {

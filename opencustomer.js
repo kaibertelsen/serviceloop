@@ -38,47 +38,67 @@ function openCustomer(customer) {
 function listSystemOnCustomer(customer) {
     const systemListContainer = document.getElementById('systemlist');
     systemListContainer.innerHTML = ''; // Tøm containeren
-    
+  
     if (!customer.system || customer.system.length === 0) {
-        systemListContainer.textContent = "Ingen systemer funnet for denne kunden.";
-        return;
+      systemListContainer.textContent = "Ingen systemer funnet for denne kunden.";
+      return;
     }
-
-    //kopier systemelement
+  
+    // Hent mal fra elementbibliotek
     const elementLibrary = document.getElementById("elementlibrary");
     if (!elementLibrary) {
-        console.error("Ingen 'elementlibrary' funnet.");
-        return;
+      console.error("Ingen 'elementlibrary' funnet.");
+      return;
     }
-
+  
     const nodeElement = elementLibrary.querySelector(".systemwrapper");
     if (!nodeElement) {
-        console.error("Ingen '.supplier' funnet i 'elementlibrary'.");
-        return;
+      console.error("Ingen '.systemwrapper' funnet i 'elementlibrary'.");
+      return;
     }
-
-    // Sett counter
-    const counter = systemListContainer.parentElement.querySelector(".counter");
-    if (!counter) {
-        console.error("Ingen '.counter' funnet i containerens forelder.");
-        return;
-    }
-    counter.textContent = customer.system.length + " stk.";
-    counter.style.display = "block";
-
-    customer.system.forEach((item, index) => {
-        const itemElement = nodeElement.cloneNode(true);
-
-        systemListContainer.appendChild(itemElement);
   
-
+    // Oppdater counter
+    const counter = systemListContainer.parentElement.querySelector(".counter");
+    if (counter) {
+      counter.textContent = customer.system.length + " stk.";
+      counter.style.display = "block";
+    }
+  
+    customer.system.forEach((item) => {
+      const itemElement = nodeElement.cloneNode(true);
+  
+      // Fyll ut feltene
+      const name = item.name || "Ukjent anlegg";
+      const model = item.typemodel || "–";
+      const serial = item.serial_number || "–";
+      const type = item.typemodel || "–";
+      const installDate = item.installed_date
+        ? formatDate(item.installed_date)
+        : "–";
+      const interval = item.intervall ? `${item.intervall} mnd.` : "–";
+      const location = item.location || "–";
+      const note = item.notes || "–";
+  
+      itemElement.querySelector(".systemname").textContent = name;
+      itemElement.querySelector(".modelname").textContent = model;
+      itemElement.querySelector(".seriename").textContent = "Serienummer: " + serial;
+      itemElement.querySelector(".typelabel").textContent = "Type modell: " + type;
+      itemElement.querySelector(".installdate").textContent = "Installasjonsdato: " + installDate;
+      itemElement.querySelector(".intervallable").textContent = "Service intervall: " + interval;
+      itemElement.querySelector(".locationlable").textContent = "Lokasjon: " + location;
+      itemElement.querySelector(".notelable").textContent = "Notat: " + note;
+  
+      systemListContainer.appendChild(itemElement);
     });
+  }
+  
+  // Hjelpefunksjon for å konvertere ISO-dato til f.eks. "12. jan 2025"
+  function formatDate(dateStr) {
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return new Date(dateStr).toLocaleDateString('no-NO', options);
+  }
 
-
-
-    
-   
-}
+  
 
 document.querySelector('.customerinfoconteiner').addEventListener('click', function (e) {
   const fieldEl = e.target.closest('.editable');

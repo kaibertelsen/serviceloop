@@ -2,6 +2,11 @@ let currentCustomer = {};
 
 document.getElementById("fromCustomerToListButton").addEventListener("click", function () {
     listCustomers(gCustomer);
+
+      // Trykk på faneknappen
+    const listTabButton = document.getElementById("listpagetabbutton");
+    if (listTabButton) listTabButton.click();
+
   });
   
 

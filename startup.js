@@ -56,22 +56,24 @@ function parseItemJson(jsonArray) {
   
     return jsonArray.map((item, index) => {
       try {
-        let parsedItem = (typeof item === "string") ? JSON.parse(item) : item;
+        // Parse hvis item er en JSON-streng, ellers behold som objekt
+        const parsed = typeof item === "string" ? JSON.parse(item) : item;
   
-        // Sikre at notes er en streng med linjeskift tillatt
-        if (parsedItem.hasOwnProperty("notes")) {
-          if (typeof parsedItem.notes !== "string") {
-            parsedItem.notes = parsedItem.notes == null ? "" : JSON.stringify(parsedItem.notes, null, 2);
+        // Sørg for at notes er en streng og tillater linjeskift
+        if ("notes" in parsed) {
+          if (typeof parsed.notes !== "string") {
+            parsed.notes = parsed.notes == null ? "" : JSON.stringify(parsed.notes, null, 2);
           }
         }
   
-        return parsedItem;
+        return parsed;
       } catch (err) {
         console.warn(`Feil ved parsing av item #${index}:`, err);
         return null;
       }
-    }).filter(Boolean); // Fjern eventuelle null
-  }
+    }).filter(Boolean); // Fjern alle som feilet å parse
+}
+  
   
   
   

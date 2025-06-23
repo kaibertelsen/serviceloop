@@ -148,10 +148,10 @@ function listSystemOnCustomer(customer) {
         // 1. Finn elementet du skal bruke som editor-container
         let noteText = itemElement.querySelector(".notehtmlquill");
 
-        // 2. Lag Quill-editoren på dette elementet
-        var quill = new Quill(noteText, {
-          theme: 'snow',
-          placeholder: "Skriv notat her..."
+        // 1. Opprett Quill-editor
+        const quill = new Quill(noteText, {
+          theme: 'snow', // eller 'bubble' for minimalistisk stil
+          placeholder: 'Skriv her...',
         });
 
         // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)

@@ -106,7 +106,7 @@ function listSystemOnCustomer(customer) {
           } else {
             // Eventuelt send oppdatering til server her
             let data = {typemodel:[modelselector.value]};
-            sendUpdateToServer(customer, data);
+            sendEditSystemToServer(item, data);
           }
         });
 
@@ -240,7 +240,6 @@ function sendUpdateToServer(customer, data) {
 
     let body = JSON.stringify(data);
     let rawid = customer.rawid;
-
     PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",rawid,body,"responseEditCustomer");
 
 }
@@ -307,20 +306,32 @@ function handleSystemEdit(element, systemItem, customer) {
     const body = {};
     body[field] = newValue;
 
-    PATCHairtable(
-      "appuUESr4s93SWaS7",
-      "tbloIYTeuqo36rupe",
-      systemItem.rawid,
-      JSON.stringify(body),
-      "responseEditSystem"
-    );
+    sendEditSystemToServer(systemItem, body);
   });
 }
+
+function sendEditSystemToServer(systemItem, data) {
+  let body = JSON.stringify(data);
+  let rawid = systemItem.rawid;
+  PATCHairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", rawid, body, "responseEditSystem");
+}
+
 
 
   
 function responseEditSystem(data) {
   console.log("System updated:", data);
+
+  const updatedSystem = JSON.parse(data.fields);
+  const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
+  if (customerIndex !== -1) {
+    const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === updatedSystem.rawid);
+    if (systemIndex !== -1) {
+      gCustomer[customerIndex].system[systemIndex] = updatedSystem;
+      listSystemOnCustomer(gCustomer[customerIndex]); // Refresh the system list
+    }
+  }
+  
 
 }
 

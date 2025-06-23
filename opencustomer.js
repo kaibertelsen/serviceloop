@@ -168,18 +168,6 @@ function listSystemOnCustomer(customer) {
 
         const noteContainer = itemElement.querySelector(".noteconteiner");
 
-        // Første justering 0,5 sek etter opprettelse
-        setTimeout(() => {
-          if (noteContainer && quill && quill.root) {
-            noteContainer.style.height = `${quill.root.scrollHeight}px`;
-          }
-        }, 500);
-
-        // Dynamisk justering ved skriving/liming
-        quill.on('text-change', () => {
-          noteContainer.style.height = `${quill.root.scrollHeight}px`;
-        });    
-
         systemListContainer.appendChild(itemElement);
 
         itemElement.querySelectorAll("[data-field]").forEach((el) => {

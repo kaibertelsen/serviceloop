@@ -73,33 +73,40 @@ function listSystemOnCustomer(customer) {
         itemElement.querySelector(".systemname").setAttribute("data-field", "name");
 
         let modelselector = itemElement.querySelector(".editselectmodell");
-        
+
         // "Opprett ny modell"-valg øverst
         const createOption = document.createElement("option");
         createOption.value = "__create__";
         createOption.textContent = "➕ Opprett ny modell";
         modelselector.appendChild(createOption);
-    
+        
+        // Sortert liste over modeller
         const sortedTypes = [...gSystem_type].sort((a, b) =>
           a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
         );
-    
+        
         sortedTypes.forEach(type => {
           const opt = document.createElement("option");
           opt.value = type.rawid;
           opt.textContent = type.name;
-          if (type.rawid === originalValue) opt.selected = true;
           modelselector.appendChild(opt);
         });
-    
+        
+        // Sett valgt modell hvis finnes
+        modelselector.value = item.typemodel || "";
+        
+        // Reager på "Opprett ny modell"
         modelselector.addEventListener("change", () => {
           if (modelselector.value === "__create__") {
             handleCreateNewModel();
-            modelselector.value = originalValue;
+            modelselector.value = item.typemodel || "";
+          } else {
+            // Eventuelt send oppdatering til server her
+            item.typemodel = modelselector.value;
           }
         });
-       //finne hvilke option dette systemet her
-       modelselector.value = item.typemodel || "__create__"; // Sett valgt modell
+
+       
 
 
         itemElement.querySelector(".seriename").textContent = item.serial_number || "–";

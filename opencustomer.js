@@ -143,6 +143,7 @@ function listSystemOnCustomer(customer) {
         const nextservicelable = itemElement.querySelector(".nextservicelable");
         nextservicelable.textContent = serviceinfo.nextservice || "–";
         nextservicelable.style.color = serviceinfo.color;
+
         
 
         itemElement.querySelector(".intervallable").textContent = item.intervall ? `${item.intervall} mnd.` : "–";

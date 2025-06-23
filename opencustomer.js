@@ -216,7 +216,8 @@ function responseEditCustomer(data){
 
 function handleSystemEdit(element, systemItem, customer) {
   const field = element.dataset.field;
-  const originalValue = (systemItem[field] ?? "").toString();
+  const originalRawid = systemItem[field] ?? "";
+  const originalValue = originalRawid.toString();
 
   let input;
 
@@ -224,13 +225,12 @@ function handleSystemEdit(element, systemItem, customer) {
     input = document.createElement("select");
     input.className = "edit-select";
 
-    // Legg til "Opprett ny modell"-valg øverst
+    // "Opprett ny modell"-valg øverst
     const createOption = document.createElement("option");
     createOption.value = "__create__";
     createOption.textContent = "➕ Opprett ny modell";
     input.appendChild(createOption);
 
-    // Sorter gSystem_type alfabetisk og legg til som options
     const sortedTypes = [...gSystem_type].sort((a, b) =>
       a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
     );
@@ -243,11 +243,9 @@ function handleSystemEdit(element, systemItem, customer) {
       input.appendChild(opt);
     });
 
-    // Håndter valg av "Opprett ny modell"
     input.addEventListener("change", () => {
       if (input.value === "__create__") {
         handleCreateNewModel();
-        // Tilbakestill til original verdi etterpå
         input.value = originalValue;
       }
     });
@@ -285,8 +283,8 @@ function handleSystemEdit(element, systemItem, customer) {
     }
 
     if (field === "typemodel") {
-      const selected = gSystem_type.find(type => type.rawid === newValue);
-      element.textContent = selected ? selected.name : "–";
+      const selectedModel = gSystem_type.find(type => type.rawid === newValue);
+      element.textContent = selectedModel ? selectedModel.name : "–";
     } else {
       element.textContent = newValue || "–";
     }
@@ -294,23 +292,19 @@ function handleSystemEdit(element, systemItem, customer) {
     const normalizedOriginal = field === "intervall" ? Number(originalValue) : originalValue;
     if (newValue === normalizedOriginal) return;
 
-    systemItem[field] = newValue;
-
-    const customerIndex = gCustomer.findIndex(c => c.client === customer.client);
-    if (customerIndex !== -1) {
-      const systems = gCustomer[customerIndex].system;
-      const sysIndex = systems.findIndex(s => s.rawid === systemItem.rawid);
-      if (sysIndex !== -1) {
-        systems[sysIndex][field] = newValue;
-      }
-    }
-
     const body = {};
     body[field] = newValue;
 
-    PATCHairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", systemItem.rawid, JSON.stringify(body), "responseEditSystem");
+    PATCHairtable(
+      "appuUESr4s93SWaS7",
+      "tbloIYTeuqo36rupe",
+      systemItem.rawid,
+      JSON.stringify(body),
+      "responseEditSystem"
+    );
   });
 }
+
 
   
 function responseEditSystem(data) {

@@ -73,7 +73,9 @@ function listSystemOnCustomer(customer) {
         itemElement.querySelector(".systemname").setAttribute("data-field", "name");
 
         let modelselector = itemElement.querySelector(".editselectmodell");
-
+        //fjern tidligere options
+        modelselector.innerHTML = ""; // Tøm eksisterende options
+        
         // "Opprett ny modell"-valg øverst
         const createOption = document.createElement("option");
         createOption.value = "__create__";
@@ -95,6 +97,14 @@ function listSystemOnCustomer(customer) {
         // Sett valgt modell hvis finnes
         if(item.system_type_json && item.system_type_json.length > 0) {
           modelselector.value = item.system_type_json[0].rawid;
+          
+        }else{
+          //legg til "Velg modell" som første valg
+          const selectOption = document.createElement("option");
+          selectOption.value = "";
+          selectOption.textContent = "Velg modell";
+          modelselector.insertBefore(selectOption, modelselector.firstChild);
+          modelselector.value = ""; // Sett til tomt for å vise "Velg modell"
         }
         
         
@@ -117,7 +127,6 @@ function listSystemOnCustomer(customer) {
         itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
 
         itemElement.querySelector(".typelabel").textContent = item.typemodel || "–";
-        itemElement.querySelector(".typelabel").setAttribute("data-field", "typemodel");
 
         itemElement.querySelector(".installdate").textContent = item.installed_date
         ? formatDate(item.installed_date)

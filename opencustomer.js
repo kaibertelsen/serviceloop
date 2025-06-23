@@ -215,45 +215,112 @@ function responseEditCustomer(data){
 }
 
 function handleSystemEdit(element, systemItem, customer) {
-    const field = element.dataset.field;
-    const originalValue = (systemItem[field] || "").toString();
-    
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = originalValue;
-    input.className = "edit-input";
-    element.innerHTML = '';
-    element.appendChild(input);
-    input.focus();
-  
-    input.addEventListener("blur", async () => {
-      const newValue = input.value.trim();
-      element.textContent = newValue || "–";
-  
-      if (newValue === originalValue) return; // ingen endring
-  
-      // Oppdater lokalt system
-      systemItem[field] = newValue;
-  
-      // Oppdater i gCustomer (finn riktig system via rawid)
-      const customerIndex = gCustomer.findIndex(c => c.client === customer.client);
-      if (customerIndex !== -1) {
-        const systems = gCustomer[customerIndex].system;
-        const sysIndex = systems.findIndex(s => s.rawid === systemItem.rawid);
-        if (sysIndex !== -1) {
-          systems[sysIndex][field] = newValue;
-        }
-      }
-  
-      // Send til server
-      const body = {};
-      body[field] = newValue;
-  
-      PATCHairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", systemItem.rawid, JSON.stringify(body), "responseEditSystem");
-    });
-  }
-  
-  function responseEditSystem(data) {
-    console.log("System updated:", data);
+  const field = element.dataset.field;
+  const originalValue = (systemItem[field] ?? "").toString();
 
+  let input;
+
+  if (field === "typemodel") {
+    input = document.createElement("select");
+    input.className = "edit-select";
+
+    // Legg til "Opprett ny modell"-valg øverst
+    const createOption = document.createElement("option");
+    createOption.value = "__create__";
+    createOption.textContent = "➕ Opprett ny modell";
+    input.appendChild(createOption);
+
+    // Sorter gSystem_type alfabetisk og legg til som options
+    const sortedTypes = [...gSystem_type].sort((a, b) =>
+      a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
+    );
+
+    sortedTypes.forEach(type => {
+      const opt = document.createElement("option");
+      opt.value = type.rawid;
+      opt.textContent = type.name;
+      if (type.rawid === originalValue) opt.selected = true;
+      input.appendChild(opt);
+    });
+
+    // Håndter valg av "Opprett ny modell"
+    input.addEventListener("change", () => {
+      if (input.value === "__create__") {
+        handleCreateNewModel();
+        // Tilbakestill til original verdi etterpå
+        input.value = originalValue;
+      }
+    });
+
+  } else if (field === "installed_date") {
+    input = document.createElement("input");
+    input.type = "date";
+    input.className = "edit-input";
+    input.value = originalValue ? new Date(originalValue).toISOString().split("T")[0] : "";
+
+  } else if (field === "intervall") {
+    input = document.createElement("input");
+    input.type = "number";
+    input.className = "edit-input";
+    input.value = originalValue;
+
+  } else {
+    input = document.createElement("input");
+    input.type = "text";
+    input.className = "edit-input";
+    input.value = originalValue;
   }
+
+  element.innerHTML = '';
+  element.appendChild(input);
+  input.focus();
+
+  input.addEventListener("blur", async () => {
+    let newValue = input.value.trim();
+
+    if (field === "intervall") {
+      newValue = newValue ? Number(newValue) : null;
+    } else if (field === "installed_date") {
+      newValue = newValue || null;
+    }
+
+    if (field === "typemodel") {
+      const selected = gSystem_type.find(type => type.rawid === newValue);
+      element.textContent = selected ? selected.name : "–";
+    } else {
+      element.textContent = newValue || "–";
+    }
+
+    const normalizedOriginal = field === "intervall" ? Number(originalValue) : originalValue;
+    if (newValue === normalizedOriginal) return;
+
+    systemItem[field] = newValue;
+
+    const customerIndex = gCustomer.findIndex(c => c.client === customer.client);
+    if (customerIndex !== -1) {
+      const systems = gCustomer[customerIndex].system;
+      const sysIndex = systems.findIndex(s => s.rawid === systemItem.rawid);
+      if (sysIndex !== -1) {
+        systems[sysIndex][field] = newValue;
+      }
+    }
+
+    const body = {};
+    body[field] = newValue;
+
+    PATCHairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", systemItem.rawid, JSON.stringify(body), "responseEditSystem");
+  });
+}
+
+  
+function responseEditSystem(data) {
+  console.log("System updated:", data);
+
+}
+
+
+function handleCreateNewModel() {
+  // Vis f.eks. et popup-skjema eller gå til en egen side
+  alert("Her kan du opprette en ny modell.");
+  // Du kan også trigge en modal, Webflow-interaction, eller lignende
+}

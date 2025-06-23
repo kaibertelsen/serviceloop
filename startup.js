@@ -2,6 +2,7 @@ var gUser = null; // Global variable to store user data
 var gCustomer = []; // Global variable to store customer data
 var gClient = null; // Global variable to store client data
 var gService = []; // Global variable to store service data
+var gSystem_type = []; // Global variable to store system data
 
 function startup(member) {
     console.log("Startup function called with member:", member);
@@ -32,6 +33,11 @@ function responsClient(data) {
     gCustomer = [];
     if(gClient?.customerjson){
         gCustomer = parseItemJson(gClient.customerjson);
+    }
+
+    gSystem_type = [];
+    if(gClient?.system_type){
+        gSystem_type = parseItemJson(gClient.system_typejson);
     }
 
    

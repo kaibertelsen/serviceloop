@@ -149,10 +149,19 @@ function listSystemOnCustomer(customer) {
         let noteText = itemElement.querySelector(".notehtmlquill");
 
         // 1. Opprett Quill-editor
-        const quill = new Quill(noteText, {
-          theme: 'snow', // eller 'bubble' for minimalistisk stil
-          placeholder: 'Skriv her...',
+        var quill = new Quill(noteText, {
+          theme: 'snow',
+          modules: {
+              toolbar: true // Viktig for at den skal bli generert
+          }
         });
+
+        // Skjul toolbar med en gang etter initialisering
+        const toolbar = noteText.querySelector(".ql-toolbar");
+        if (toolbar) {
+            toolbar.style.display = "none";
+        }
+
 
         // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
         quill.clipboard.dangerouslyPasteHTML(item.note || "");

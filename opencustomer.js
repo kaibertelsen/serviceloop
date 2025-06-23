@@ -105,9 +105,7 @@ function listSystemOnCustomer(customer) {
             modelselector.value = item.typemodel || "";
           } else {
             // Eventuelt send oppdatering til server her
-            item.typemodel = [modelselector.value];
-            let data = {};
-            data.typemodel = item.typemodel;
+            let data = {typemodel:[modelselector.value]};
             sendUpdateToServer(customer, data);
           }
         });
@@ -249,9 +247,12 @@ function sendUpdateToServer(customer, data) {
 
 
 function responseEditCustomer(data){
-
-        console.log(data);
-
+  //oppdater gCustomer med den oppdaterte kunden
+  const updatedCustomer = JSON.parse(data.fields);
+  const customerIndex = gCustomer.findIndex(c => c.rawid === updatedCustomer.rawid);
+  if (customerIndex !== -1) {
+    gCustomer[customerIndex] = updatedCustomer;
+  }
 }
 
 function handleSystemEdit(element, systemItem, customer) {

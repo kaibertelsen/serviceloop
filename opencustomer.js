@@ -144,19 +144,24 @@ function listSystemOnCustomer(customer) {
 
         itemElement.querySelector(".locationlable").textContent = item.location || "–";
         itemElement.querySelector(".locationlable").setAttribute("data-field", "location");
-
-        let textareanotes = itemElement.querySelector(".notelable");
-        const textareaFormatted = (item.notes || "").replace(/<br\s*\/?>/gi, "\n");
-        textareanotes.value = textareaFormatted;
-
         
-        textareanotes.addEventListener("change", () => {
-          const textFromTextarea = textareanotes.value.trim();
-          const htmlFormatted = textFromTextarea.replace(/\n/g, "<br>");
-          let data = {notes: htmlFormatted};
-            sendEditSystemToServer(item, data);
+        // 1. Finn elementet du skal bruke som editor-container
+        let noteText = itemElement.querySelector(".notehtmlquill");
+
+        // 2. Lag Quill-editoren på dette elementet
+        var quill = new Quill(noteText, {
+          theme: 'snow',
+          placeholder: "Skriv notat her..."
         });
-        
+
+        // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
+        quill.clipboard.dangerouslyPasteHTML(item.note || "");
+
+        // 4. Lytt etter blur (når man forlater editoren)
+        quill.root.addEventListener("blur", function () {
+          sendEditSystemToServer(item, { note: quill.root.innerHTML });
+        });
+
         systemListContainer.appendChild(itemElement);
 
         itemElement.querySelectorAll("[data-field]").forEach((el) => {

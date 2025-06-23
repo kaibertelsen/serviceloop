@@ -72,8 +72,35 @@ function listSystemOnCustomer(customer) {
         itemElement.querySelector(".systemname").textContent = item.name || "Ukjent anlegg";
         itemElement.querySelector(".systemname").setAttribute("data-field", "name");
 
-        itemElement.querySelector(".modelname").textContent = item.typemodel || "–";
-        itemElement.querySelector(".modelname").setAttribute("data-field", "typemodel");
+        let modelselector = itemElement.querySelector(".editselectmodell");
+        
+        // "Opprett ny modell"-valg øverst
+        const createOption = document.createElement("option");
+        createOption.value = "__create__";
+        createOption.textContent = "➕ Opprett ny modell";
+        modelselector.appendChild(createOption);
+    
+        const sortedTypes = [...gSystem_type].sort((a, b) =>
+          a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
+        );
+    
+        sortedTypes.forEach(type => {
+          const opt = document.createElement("option");
+          opt.value = type.rawid;
+          opt.textContent = type.name;
+          if (type.rawid === originalValue) opt.selected = true;
+          modelselector.appendChild(opt);
+        });
+    
+        modelselector.addEventListener("change", () => {
+          if (modelselector.value === "__create__") {
+            handleCreateNewModel();
+            modelselector.value = originalValue;
+          }
+        });
+       //finne hvilke option dette systemet her
+       modelselector.value = item.typemodel || "__create__"; // Sett valgt modell
+
 
         itemElement.querySelector(".seriename").textContent = item.serial_number || "–";
         itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
@@ -194,7 +221,7 @@ function handleEditField(fieldEl, field) {
         sendUpdateToServer(currentCustomer, body);
       }
     });
-  }
+}
   
   
 
@@ -221,36 +248,7 @@ function handleSystemEdit(element, systemItem, customer) {
 
   let input;
 
-  if (field === "typemodel") {
-    input = document.createElement("select");
-    input.className = "edit-select";
-
-    // "Opprett ny modell"-valg øverst
-    const createOption = document.createElement("option");
-    createOption.value = "__create__";
-    createOption.textContent = "➕ Opprett ny modell";
-    input.appendChild(createOption);
-
-    const sortedTypes = [...gSystem_type].sort((a, b) =>
-      a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
-    );
-
-    sortedTypes.forEach(type => {
-      const opt = document.createElement("option");
-      opt.value = type.rawid;
-      opt.textContent = type.name;
-      if (type.rawid === originalValue) opt.selected = true;
-      input.appendChild(opt);
-    });
-
-    input.addEventListener("change", () => {
-      if (input.value === "__create__") {
-        handleCreateNewModel();
-        input.value = originalValue;
-      }
-    });
-
-  } else if (field === "installed_date") {
+ if (field === "installed_date") {
     input = document.createElement("input");
     input.type = "date";
     input.className = "edit-input";

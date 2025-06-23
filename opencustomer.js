@@ -322,7 +322,7 @@ function sendEditSystemToServer(systemItem, data) {
 function responseEditSystem(data) {
   console.log("System updated:", data);
 
-  const updatedSystem = data.fields;
+  const updatedSystem = JSON.parse(data.fields.json);
   const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
   if (customerIndex !== -1) {
     const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === updatedSystem.rawid);

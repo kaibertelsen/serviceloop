@@ -129,8 +129,9 @@ function listSystemOnCustomer(customer) {
         itemElement.querySelector(".typelabel").textContent = item.typemodel || "–";
 
         itemElement.querySelector(".installdate").value = item.installed_date
-        ? formatDate(item.installed_date)
-        : "–";
+        ? new Date(item.installed_date).toISOString().split("T")[0]
+        : "";
+
         
         itemElement.querySelector(".intervallable").textContent = item.intervall ? `${item.intervall} mnd.` : "–";
         itemElement.querySelector(".intervallable").setAttribute("data-field", "intervall");

@@ -156,10 +156,10 @@ function listSystemOnCustomer(customer) {
           }
         });
 
-        // Skjul toolbar med en gang etter initialisering
-        const toolbar = noteText.previousElementSibling;
-        if (toolbar && toolbar.classList.contains("ql-toolbar")) {
-          toolbar.style.display = "none";
+        //noteconteiner må justere høyden automatisk ca 0,5 sek etter at quill er opprettet
+        setTimeout(() => {
+          noteText.style.height = "auto"; // Juster høyden automatisk
+          noteText.style.height = (quill.root.scrollHeight + 10) + "px"; // Sett høyden til innholdet
         }
         
 

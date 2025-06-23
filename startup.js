@@ -54,22 +54,25 @@ function responsClient(data) {
 function parseItemJson(jsonArray) {
     if (!Array.isArray(jsonArray)) return [];
   
-    return jsonArray.map((itemStr, index) => {
+    return jsonArray.map((item, index) => {
       try {
-        const item = JSON.parse(itemStr);
+        let parsedItem = (typeof item === "string") ? JSON.parse(item) : item;
   
-        // Sikre at notes er en streng og bevar linjeskift
-        if (typeof item.notes !== "string") {
-          item.notes = item.notes == null ? "" : String(item.notes);
+        // Sikre at notes er en streng med linjeskift tillatt
+        if (parsedItem.hasOwnProperty("notes")) {
+          if (typeof parsedItem.notes !== "string") {
+            parsedItem.notes = parsedItem.notes == null ? "" : JSON.stringify(parsedItem.notes, null, 2);
+          }
         }
   
-        return item;
+        return parsedItem;
       } catch (err) {
-        console.warn(`Feil ved parsing av system #${index}:`, err);
+        console.warn(`Feil ved parsing av item #${index}:`, err);
         return null;
       }
-    }).filter(Boolean); // Fjern null hvis JSON.parse feiler
+    }).filter(Boolean); // Fjern eventuelle null
   }
+  
   
   
   

@@ -94,7 +94,7 @@ function listSystemOnCustomer(customer) {
         
         // Sett valgt modell hvis finnes
         if(item.system_type_json && item.system_type_json.length > 0) {
-          item.typemodel = item.system_type_json[0].rawid;
+          modelselector.value = item.system_type_json[0].rawid;
         }
         
         

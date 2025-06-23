@@ -58,18 +58,19 @@ function parseItemJson(jsonArray) {
       try {
         const item = JSON.parse(itemStr);
   
-        // Sikre at notes er en streng – bevar linjeskift
+        // Sikre at notes er en streng og bevar linjeskift
         if (typeof item.notes !== "string") {
           item.notes = item.notes == null ? "" : String(item.notes);
         }
   
         return item;
       } catch (err) {
-        console.warn(`Feil ved parsing av item #${index}:`, err);
+        console.warn(`Feil ved parsing av system #${index}:`, err);
         return null;
       }
-    }).filter(Boolean); // Fjern alle null
+    }).filter(Boolean); // Fjern null hvis JSON.parse feiler
   }
+  
   
   
 

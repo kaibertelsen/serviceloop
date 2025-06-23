@@ -160,6 +160,7 @@ function listSystemOnCustomer(customer) {
         // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
         quill.clipboard.dangerouslyPasteHTML(item.note || "");
 
+        const noteContainer = itemElement.querySelector(".noteconteiner");
         setTimeout(() => {
           const editorHeight = quill.root.scrollHeight;
           noteContainer.style.height = `${editorHeight + 50}px`;
@@ -179,7 +180,7 @@ function listSystemOnCustomer(customer) {
           console.log("Note content:", noteContent);
         });
 
-        const noteContainer = itemElement.querySelector(".noteconteiner");
+        
 
         systemListContainer.appendChild(itemElement);
 

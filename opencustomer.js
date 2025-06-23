@@ -128,11 +128,17 @@ function listSystemOnCustomer(customer) {
 
         itemElement.querySelector(".typelabel").textContent = item.typemodel || "–";
 
-        itemElement.querySelector(".installdate").value = item.installed_date
+        let datofelt = itemElement.querySelector(".installdate");
+        datofelt.value = item.installed_date
         ? new Date(item.installed_date).toISOString().split("T")[0]
         : "";
-
+        datofelt.addEventListener("change", () => {
+            let data = {installed_date: datofelt.value};
+            sendEditSystemToServer(item, data);
+        }
+        );
         
+
         itemElement.querySelector(".intervallable").textContent = item.intervall ? `${item.intervall} mnd.` : "–";
         itemElement.querySelector(".intervallable").setAttribute("data-field", "intervall");
 
@@ -142,7 +148,6 @@ function listSystemOnCustomer(customer) {
         itemElement.querySelector(".notelable").textContent = item.notes || "–";
         itemElement.querySelector(".notelable").setAttribute("data-field", "notes");
 
-  
         systemListContainer.appendChild(itemElement);
 
         itemElement.querySelectorAll("[data-field]").forEach((el) => {

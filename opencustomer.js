@@ -156,14 +156,7 @@ function listSystemOnCustomer(customer) {
           }
         });
 
-        //noteconteiner må justere høyden automatisk ca 0,5 sek etter at quill er opprettet
-        setTimeout(() => {
-          noteText.style.height = "auto"; // Juster høyden automatisk
-          noteText.style.height = (quill.root.scrollHeight + 10) + "px"; // Sett høyden til innholdet
-        }
-        
-
-
+      
         // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
         quill.clipboard.dangerouslyPasteHTML(item.note || "");
 
@@ -172,6 +165,20 @@ function listSystemOnCustomer(customer) {
           // Hent HTML-innholdet fra Quill-editoren
           let noteContent = quill.root.innerHTML;
         });
+
+        const noteContainer = itemElement.querySelector(".noteconteiner");
+
+        // Første justering 0,5 sek etter opprettelse
+        setTimeout(() => {
+          if (noteContainer && quill && quill.root) {
+            noteContainer.style.height = `${quill.root.scrollHeight}px`;
+          }
+        }, 500);
+
+        // Dynamisk justering ved skriving/liming
+        quill.on('text-change', () => {
+          noteContainer.style.height = `${quill.root.scrollHeight}px`;
+        });    
 
         systemListContainer.appendChild(itemElement);
 

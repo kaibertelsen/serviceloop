@@ -159,7 +159,8 @@ function listSystemOnCustomer(customer) {
 
         // 4. Lytt etter blur (når man forlater editoren)
         quill.root.addEventListener("blur", function () {
-          sendEditSystemToServer(item, { note: quill.root.innerHTML });
+          // Hent HTML-innholdet fra Quill-editoren
+          let noteContent = quill.root.innerHTML;
         });
 
         systemListContainer.appendChild(itemElement);

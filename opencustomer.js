@@ -160,19 +160,6 @@ function listSystemOnCustomer(customer) {
         // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
         quill.clipboard.dangerouslyPasteHTML(item.note || "");
 
-        const noteContainer = itemElement.querySelector(".noteconteiner");
-        setTimeout(() => {
-          const editorHeight = quill.root.scrollHeight;
-          noteContainer.style.height = `${editorHeight + 50}px`;
-        }, 100);
-
-        quill.on('text-change', () => {
-          const editorHeight = quill.root.scrollHeight;
-          noteContainer.style.height = `${editorHeight + 50}px`;
-        });
-
-        
-
         // 4. Lytt etter blur (når man forlater editoren)
         quill.root.addEventListener("blur", function () {
           // Hent HTML-innholdet fra Quill-editoren

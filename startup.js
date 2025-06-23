@@ -52,13 +52,29 @@ function responsClient(data) {
 }
 
 function parseItemJson(jsonArray) {
-    try {
-      return jsonArray.map(item => JSON.parse(item));
-    } catch (error) {
-      console.error("Feil ved parsing av customerjson:", error);
-      return [];
-    }
+    if (!Array.isArray(jsonArray)) return [];
+  
+    return jsonArray.map(item => {
+      const parsedItem = {};
+  
+      for (const key in item) {
+        if (key === "notes") {
+          if (typeof item.notes === "string") {
+            parsedItem.notes = item.notes;
+          } else if (item.notes == null) {
+            parsedItem.notes = "";
+          } else {
+            parsedItem.notes = JSON.stringify(item.notes, null, 2); // Behold struktur og linjeskift
+          }
+        } else {
+          parsedItem[key] = item[key];
+        }
+      }
+  
+      return parsedItem;
+    });
   }
+  
   
 
 function convertJSONArrayToObject(array) {

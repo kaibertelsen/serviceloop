@@ -157,10 +157,11 @@ function listSystemOnCustomer(customer) {
         });
 
         // Skjul toolbar med en gang etter initialisering
-        const toolbar = noteText.querySelector(".ql-toolbar");
-        if (toolbar) {
-            toolbar.style.display = "none";
+        const toolbar = noteText.previousElementSibling;
+        if (toolbar && toolbar.classList.contains("ql-toolbar")) {
+          toolbar.style.display = "none";
         }
+        
 
 
         // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)

@@ -146,9 +146,14 @@ function listSystemOnCustomer(customer) {
         itemElement.querySelector(".locationlable").setAttribute("data-field", "location");
 
         let textareanotes = itemElement.querySelector(".notelable");
-        textareanotes.value = item.notes || "";
+        const textareaFormatted = (item.notes || "").replace(/<br\s*\/?>/gi, "\n");
+        textareanotes.value = textareaFormatted;
+
+        
         textareanotes.addEventListener("change", () => {
-            let data = {notes: textareanotes.value};
+          const textFromTextarea = textareanotes.value.trim();
+          const htmlFormatted = textFromTextarea.replace(/\n/g, "<br>");
+          let data = {notes: htmlFormatted};
             sendEditSystemToServer(item, data);
         });
         

@@ -52,31 +52,13 @@ function responsClient(data) {
 }
 
 function parseItemJson(jsonArray) {
-    if (!Array.isArray(jsonArray)) return [];
-  
-    return jsonArray.map((item, index) => {
-      try {
-        // Parse hvis item er en JSON-streng, ellers behold som objekt
-        const parsed = typeof item === "string" ? JSON.parse(item) : item;
-  
-        // Sørg for at notes er en streng og tillater linjeskift
-        if ("notes" in parsed) {
-          if (typeof parsed.notes !== "string") {
-            parsed.notes = parsed.notes == null ? "" : JSON.stringify(parsed.notes, null, 2);
-          }
-        }
-  
-        return parsed;
-      } catch (err) {
-        console.warn(`Feil ved parsing av item #${index}:`, err);
-        return null;
-      }
-    }).filter(Boolean); // Fjern alle som feilet å parse
+    try {
+      return jsonArray.map(item => JSON.parse(item));
+    } catch (error) {
+      console.error("Feil ved parsing av customerjson:", error);
+      return [];
+    }
 }
-  
-  
-  
-  
   
 
 function convertJSONArrayToObject(array) {

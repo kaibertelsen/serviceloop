@@ -105,7 +105,7 @@ function listSystemOnCustomer(customer) {
             modelselector.value = item.typemodel || "";
           } else {
             // Eventuelt send oppdatering til server her
-            let data = {typemodel:[modelselector.value]};
+            let data = {system_type:[modelselector.value]};
             sendEditSystemToServer(item, data);
           }
         });

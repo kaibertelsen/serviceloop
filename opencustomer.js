@@ -145,9 +145,13 @@ function listSystemOnCustomer(customer) {
         itemElement.querySelector(".locationlable").textContent = item.location || "–";
         itemElement.querySelector(".locationlable").setAttribute("data-field", "location");
 
-        itemElement.querySelector(".notelable").textContent = item.notes || "–";
-        itemElement.querySelector(".notelable").setAttribute("data-field", "notes");
-
+        let textareanotes = itemElement.querySelector(".notelable");
+        textareanotes.value = item.notes || "";
+        textareanotes.addEventListener("change", () => {
+            let data = {notes: textareanotes.value};
+            sendEditSystemToServer(item, data);
+        });
+        
         systemListContainer.appendChild(itemElement);
 
         itemElement.querySelectorAll("[data-field]").forEach((el) => {

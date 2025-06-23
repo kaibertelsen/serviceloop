@@ -93,9 +93,10 @@ function listSystemOnCustomer(customer) {
         });
         
         // Sett valgt modell hvis finnes
-        if(item.typemodel) {
-        modelselector.value = item.typemodel;
+        if(item.system_type_json && item.system_type_json.length > 0) {
+          item.typemodel = item.system_type_json[0].rawid;
         }
+        
         
         // Reager på "Opprett ny modell"
         modelselector.addEventListener("change", () => {

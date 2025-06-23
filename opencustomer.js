@@ -93,7 +93,9 @@ function listSystemOnCustomer(customer) {
         });
         
         // Sett valgt modell hvis finnes
-        modelselector.value = item.typemodel || "";
+        if(item.typemodel) {
+        modelselector.value = item.typemodel;
+        }
         
         // Reager på "Opprett ny modell"
         modelselector.addEventListener("change", () => {

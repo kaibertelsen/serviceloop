@@ -249,7 +249,11 @@ function handleSystemEdit(element, systemItem, customer) {
       const body = {};
       body[field] = newValue;
   
-      PATCHairtable("appuUESr4s93SWaS7", "tbl3QKQygVxJRWmhU", systemItem.rawid, JSON.stringify(body), "responseEditSystem");
+      PATCHairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", systemItem.rawid, JSON.stringify(body), "responseEditSystem");
     });
   }
   
+  function responseEditSystem(data) {
+    console.log("System updated:", data);
+
+  }

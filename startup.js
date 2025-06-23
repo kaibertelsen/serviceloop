@@ -74,7 +74,10 @@ function ruteresponse(data,id){
        
     }else if(id == "responseEditCustomer"){
         responseEditCustomer(data);
+    }else if(id == "responseEditService"){
+        responseEditService(data);
+    }else if(id == "responseEditSystem"){
+        responseEditSystem(data);
     }
-
     
 }

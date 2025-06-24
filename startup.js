@@ -32,7 +32,7 @@ function responsClient(data) {
     gClient = data.fields;
     gCustomer = [];
     if(gClient?.customerjson){
-        gCustomer = convertCustomerJsonWithHtmlNotes(gClient.customerjson);
+        gCustomer = parseCustomerJsonArray(gClient.customerjson);
     }
 
     gSystem_type = [];
@@ -60,57 +60,28 @@ function parseItemJson(jsonArray) {
     }
 }
 
-function convertCustomerJsonWithHtmlNotes(jsonStrings) {
-    return jsonStrings.map((jsonString, index) => {
+function parseCustomerJsonArray(jsonArray) {
+    return jsonArray.map((jsonString, index) => {
       try {
-        let systemNotes = [];
-  
-        // Først: Ekstraher `system`-arrayen
-        const systemMatches = [...jsonString.matchAll(/"system":\s*\[(.*?)\](,|\})/gs)];
-        if (systemMatches.length > 0) {
-          let systemsRaw = systemMatches[0][1]; // Innholdet inni [ ... ]
-  
-          // Del opp i separate objekter (naivt, men funker hvis ikke nested)
-          const systemObjects = systemsRaw.split(/\},\s*\{/).map((str, i) => {
-            // Gjenoppbygg gyldig JSON for hvert objekt
-            let fixed = str;
-            if (!str.startsWith("{")) fixed = "{" + fixed;
-            if (!str.endsWith("}")) fixed = fixed + "}";
-  
-            let note = '';
-            const noteMatch = fixed.match(/"notes":\s*"(.*?)"(,|\})/s);
-            if (noteMatch) {
-              note = noteMatch[1];
-              fixed = fixed.replace(/"notes":\s*".*?"(,|\})/s, '"notes":""$1');
-            }
-  
-            return { fixedJson: fixed, note };
-          });
-  
-          // Bytt ut hele system-arrayen med rensede versjoner i original-strengen
-          const systemJsonCleaned = "[" + systemObjects.map(obj => obj.fixedJson).join(",") + "]";
-          jsonString = jsonString.replace(/"system":\s*\[.*?\](,|\})/gs, `"system":${systemJsonCleaned}$1`);
-          systemNotes = systemObjects.map(obj => obj.note);
-        }
-  
-        // Parse hele kunden
         const customer = JSON.parse(jsonString);
   
-        // Legg tilbake notes i system[*]
-        if (customer.system && Array.isArray(customer.system)) {
-          customer.system.forEach((sys, i) => {
-            sys.notes = systemNotes[i] || "";
+        // Ekstra sikkerhet: sørg for at alle `system[].notes` er strenger
+        if (Array.isArray(customer.system)) {
+          customer.system.forEach(sys => {
+            if (typeof sys.notes !== 'string') {
+              sys.notes = sys.notes == null ? "" : String(sys.notes);
+            }
           });
         }
   
         return customer;
-  
-      } catch (error) {
-        console.error(`Feil ved parsing av customer-json #${index}:`, error);
+      } catch (err) {
+        console.warn(`❌ Parsing-feil på index ${index}`, err);
         return null;
       }
     }).filter(Boolean);
   }
+  
   
   
 

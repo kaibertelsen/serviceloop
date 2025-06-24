@@ -19,6 +19,7 @@ function listServiceOnsystem(itemElement, item, customer) {
         return;
       }
       // Hent mal for serviceelement
+      const elementLibrary = document.getElementById("elementlibrary");
       const serviceElementTemplate = elementLibrary.querySelector(".servicerow");
       if (!serviceElementTemplate) {
         console.error("Ingen '.serviceelement' funnet i 'elementlibrary'.");

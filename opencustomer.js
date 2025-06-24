@@ -59,7 +59,7 @@ function responseNewSystem(response) {
     counter.textContent = currentCustomer.system.length + " stk.";
     counter.style.display = "block";
   }
-  
+
 }
 
 document.getElementById("fromCustomerToListButton").addEventListener("click", function () {
@@ -192,7 +192,7 @@ function listSystemOnCustomer(customer) {
             let data = {installed_date: datofelt.value};
             //live ny utregning
             calcserviceDate(item, itemElement);
-            //sendEditSystemToServer(item, data);
+            sendEditSystemToServer(item, data);
         }
         );
 

@@ -369,7 +369,7 @@ function listSystemOnCustomer(customer) {
         serviceElement.querySelector(".serviceuser").textContent = service.performed_by || "–";
         
         // Legg til redigeringsfunksjonalitet
-        serviceElement.querySelector(".editservicebutton").addEventListener("click", () => {
+        serviceElement.querySelector(".openservicebutton").addEventListener("click", () => {
           openServiceEditModal(service, item, customer);
         });
 

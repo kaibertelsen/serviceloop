@@ -3,6 +3,7 @@ var gCustomer = []; // Global variable to store customer data
 var gClient = null; // Global variable to store client data
 var gService = []; // Global variable to store service data
 var gSystem_type = []; // Global variable to store system data
+var gServicetype = []; // Global variable to store service type data
 
 const statusService = [
     { value: "", text: "Alle statuser" },
@@ -50,6 +51,13 @@ function responsClient(data) {
     gSystem_type = [];
     if(gClient?.system_type){
         gSystem_type = parseItemJson(gClient.system_typejson);
+    }
+
+    gService = [];
+    if(gClient?.servicejson){
+        gService = parseItemJson(gClient.service_typejson);
+        //sorter alfabetisk
+        gService.sort((a, b) => a.name.localeCompare(b.name));
     }
 
    

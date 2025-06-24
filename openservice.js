@@ -29,7 +29,9 @@ function listServiceOnsystem(itemElement, item, customer) {
       item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
       item.service.forEach((service) => {
         const serviceElement = serviceElementTemplate.cloneNode(true);
-        serviceElement.querySelector(".servicedate").value = service.date ? formatDate(new Date(service.date)) : "–";
+
+        //sette dato
+        serviceElement.querySelector(".servicedate").value = service.date || "";
         
         //Load status selectoren med arrayen statusService
         const statusSelect = serviceElement.querySelector(".editstatusservice");
@@ -45,6 +47,22 @@ function listServiceOnsystem(itemElement, item, customer) {
             }
             
             statusSelect.appendChild(option);
+          });
+        }
+
+        //loade edittypeservice med gService
+        const typeSelect = serviceElement.querySelector(".edittypeservice");
+        if (typeSelect) {
+          typeSelect.innerHTML = ''; // Tøm select-elementet
+          gService.forEach(type => {
+            const option = document.createElement("option");
+            option.value = type.rawid; // Bruk rawid som value
+            option.textContent = type.name;
+            //gjøre begge om til lowercase for å sammenligne
+            if (service.type && type.rawid && service.type.toLowerCase() === type.rawid.toLowerCase()) {
+              option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens type
+            }
+            typeSelect.appendChild(option);
           });
         }
 

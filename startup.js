@@ -63,7 +63,12 @@ function parseItemJson(jsonArray) {
 function parseCustomerJsonArray(jsonArray) {
     return jsonArray.map((jsonString, index) => {
       try {
-        const customer = JSON.parse(jsonString);
+        let customer;
+            if (typeof jsonString === "string" && jsonString.trim().startsWith('"{')) {
+            customer = JSON.parse(JSON.parse(jsonString));
+            } else {
+            customer = JSON.parse(jsonString);
+            }
   
         // Sørg for at alle `system[].notes` er strenger (HTML-tolerant)
         if (Array.isArray(customer.system)) {

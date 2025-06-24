@@ -240,19 +240,11 @@ function  calcserviceDate(system, itemElement) {
     }
 
     // Oppdater visning
-    itemElement.querySelector(".lastservicelable").textContent = lastService ? formatDate(lastService) : "–";
+    itemElement.querySelector(".lastservicelable").textContent = lastService ? formatDate(lastService) : "Ingen service";
     itemElement.querySelector(".nextservicelable").textContent = nextService ? formatDate(nextService) : "–";
     itemElement.querySelector(".nextservicelable").style.color = color;
   }
-  // Formater dato som "01. feb. 2020"
-  function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // 0-basert
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
-  }
-  
+
 
   function findserviceinfo(system) {
     console.log("findserviceinfo for system:", system);
@@ -296,14 +288,15 @@ function  calcserviceDate(system, itemElement) {
     };
   }
   
-  // Hjelpefunksjon for visning
-  function formatDate(date) {
-    return date.toLocaleDateString('no-NO', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
-  }
+// Hjelpefunksjon for visning
+function formatDate(date) {
+  if (!(date instanceof Date)) date = new Date(date);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+}
+
   
 
 document.querySelector('.customerinfoconteiner').addEventListener('click', function (e) {

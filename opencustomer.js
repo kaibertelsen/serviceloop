@@ -152,7 +152,6 @@ function listSystemOnCustomer(customer) {
             let data = {intervall: intervallinput.value};
             //live ny utregning 
             calcserviceDate(item,itemElement);
-            //sendEditSystemToServer(item, data);
           }
         );
 

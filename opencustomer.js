@@ -246,8 +246,11 @@ function  calcserviceDate(system, itemElement) {
   }
   // Formater dato som "01. feb. 2020"
   function formatDate(dateStr) {
-    const options = { day: '2-digit', month: 'short', year: 'numeric' };
-    return new Date(dateStr).toLocaleDateString('no-NO', options);
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 0-basert
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
   }
   
 

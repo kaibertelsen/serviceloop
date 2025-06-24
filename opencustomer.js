@@ -344,8 +344,46 @@ function listSystemOnCustomer(customer) {
           }
         });
       }
+
+
+
+      //list opp servicer
+      const serviceListContainer = itemElement.querySelector(".servicelist");
+      serviceListContainer.innerHTML = ''; // Tøm containeren
+      if (!item.service || item.service.length === 0) {
+        serviceListContainer.textContent = "Ingen service funnet for dette systemet.";
+        return;
+      }
+      // Hent mal for serviceelement
+      const serviceElementTemplate = elementLibrary.querySelector(".servicerow");
+      if (!serviceElementTemplate) {
+        console.error("Ingen '.serviceelement' funnet i 'elementlibrary'.");
+        return;
+      }
+      // Sorter service etter dato
+      item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+      item.service.forEach((service) => {
+        const serviceElement = serviceElementTemplate.cloneNode(true);
+        serviceElement.querySelector(".servicedate").textContent = service.date ? formatDate(new Date(service.date)) : "–";
+        serviceElement.querySelector(".servicestatus").textContent = service.status || "–";
+        serviceElement.querySelector(".serviceuser").textContent = service.performed_by || "–";
+        
+        // Legg til redigeringsfunksjonalitet
+        serviceElement.querySelector(".editservicebutton").addEventListener("click", () => {
+          openServiceEditModal(service, item, customer);
+        });
+
+        serviceListContainer.appendChild(serviceElement);
+      });
       
     });
+}
+
+function openServiceEditModal(service, system, customer) {
+  //trykk på tabbutton
+  const serviceTabButton = document.getElementById("serviceTabbutton");
+  if (serviceTabButton) serviceTabButton.click();
+  // Opprett modalinnhold
 }
   
 function  calcserviceDate(system, itemElement) {

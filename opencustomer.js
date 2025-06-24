@@ -1,5 +1,79 @@
 let currentCustomer = {};
 
+document.getElementById("createNewSystemButton").addEventListener("click", createNewSystem);
+
+function createNewSystem() {
+  if (!currentCustomer || !currentCustomer.client || !currentCustomer.rawid) {
+    alert("Ingen kunde valgt.");
+    return;
+  }
+
+  // 1. Opprett nytt systemobjekt
+  const newSystem = {
+    name: "Nytt anlegg",
+    serial_number: "",
+    installed_date: new Date().toISOString().split("T")[0], // dagens dato
+    location: "",
+    notes: "",
+    typemodel: "",
+    intervall: 12,
+    address_same_customer: "TRUE",
+    client: [currentCustomer.client] // kobling til kunden (koblet Airtable "Link to" felt)
+  };
+
+  // 2. Vis loader i systemlisten
+  const elementLibrary = document.getElementById("elementlibrary");
+  const loaderElement = elementLibrary?.querySelector(".loaderconteiner");
+  const systemListContainer = document.getElementById("systemlist");
+
+  if (loaderElement && systemListContainer) {
+    const loaderClone = loaderElement.cloneNode(true);
+    systemListContainer.prepend(loaderClone); // legg til øverst
+  }
+
+  // 3. Send til server (POST til Airtable)
+  POSTairtable(
+    "appuUESr4s93SWaS7",
+    "tbloIYTeuqo36rupe", // system-tabell
+    JSON.stringify(newSystem),
+    "responseNewSystem"
+  );
+}
+
+
+function responseNewSystem(response) {
+  console.log("System opprettet:", response);
+
+  if (response && response.id && response.fields) {
+    const systemRecord = {
+      ...response.fields,
+      rawid: response.id
+    };
+
+    // Legg til i currentCustomer og gCustomer
+    const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
+    if (customerIndex !== -1) {
+      gCustomer[customerIndex].system = gCustomer[customerIndex].system || [];
+      gCustomer[customerIndex].system.push(systemRecord);
+    }
+
+    currentCustomer.system = currentCustomer.system || [];
+    currentCustomer.system.push(systemRecord);
+
+    // Fjern loader (hvis ønskelig)
+    const loader = document.querySelector(".loaderconteiner");
+    if (loader) loader.remove();
+
+    // Oppdater visning
+    listSystemOnCustomer(currentCustomer);
+  } else {
+    alert("Kunne ikke opprette nytt system.");
+  }
+}
+
+
+
+
 document.getElementById("fromCustomerToListButton").addEventListener("click", function () {
     listCustomers(gCustomer);
 
@@ -478,7 +552,7 @@ function responseEditSystem(data) {
     const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === updatedSystem.rawid);
     if (systemIndex !== -1) {
       gCustomer[customerIndex].system[systemIndex] = updatedSystem;
-      listSystemOnCustomer(gCustomer[customerIndex]); // Refresh the system list
+      //listSystemOnCustomer(gCustomer[customerIndex]); // Refresh the system list
     }
   }
   

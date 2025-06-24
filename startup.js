@@ -84,6 +84,7 @@ function ruteresponse(data,id){
         responseEditService(data);
     }else if(id == "responseEditSystem"){
         responseEditSystem(data);
+    }else if(id == "responseNewSystem"){
+        responseNewSystem(data);
     }
-    
 }

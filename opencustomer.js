@@ -11,13 +11,8 @@ function createNewSystem() {
   // 1. Opprett nytt systemobjekt
   const newSystem = {
     name: "Nytt anlegg",
-    serial_number: "",
     installed_date: new Date().toISOString().split("T")[0], // dagens dato
-    location: "",
-    notes: "",
-    typemodel: "",
     intervall: 12,
-    address_same_customer: "TRUE",
     customer: [currentCustomer.rawid]
   };
 

@@ -4,6 +4,18 @@ var gClient = null; // Global variable to store client data
 var gService = []; // Global variable to store service data
 var gSystem_type = []; // Global variable to store system data
 
+const statusService = [
+    { value: "", text: "Alle statuser" },
+    { value: "kalkulert", text: "Kalkulert" },
+    { value: "registrert", text: "Registrert" },
+    { value: "påminnet", text: "Påminnet" },
+    { value: "planlagt", text: "Planlagt" },
+    { value: "utført", text: "Utført" },
+    { value: "fakturert", text: "Fakturert" }
+];
+
+
+
 function startup(member) {
     console.log("Startup function called with member:", member);
     // Her kan du legge til kode som skal kjøres når medlemmet er logget inn

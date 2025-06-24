@@ -153,7 +153,13 @@ function listSystemOnCustomer(customer) {
             //live ny utregning 
             calcserviceDate(item,itemElement);
             //sendEditSystemToServer(item, data);
-        }
+          }
+        );
+
+        intervallinput.addEventListener("blur", () => {
+            let data = {intervall: Number(intervallinput.value)};
+            sendEditSystemToServer(item, data);
+          }
         );
 
         itemElement.querySelector(".locationlable").textContent = item.location || "–";

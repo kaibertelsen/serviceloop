@@ -36,7 +36,10 @@ function listServiceOnsystem(itemElement, item, customer) {
 
         if (service.date) {
         const d = new Date(service.date);
-        dateInput.value = d.toISOString().substring(0, 10);
+        // Formatér til YYYY-MM-DDTHH:mm
+        const formatted =
+            d.toISOString().slice(0, 16); // "2025-06-01T00:00"
+        dateInput.value = formatted;
         } else {
         dateInput.value = "";
         }

@@ -165,6 +165,29 @@ function listSystemOnCustomer(customer) {
         isOpen = !isOpen;
       });
 
+      const notebuttonshowhide = itemElement.querySelector(".notebuttonshowhide");
+      const noteconteiner = itemElement.querySelector(".noteconteiner");
+      // Start skjult
+      noteconteiner.style.height = "0px";
+
+      let isNoteOpen = false;
+      notebuttonshowhide.addEventListener("click", () => {
+        if (!isNoteOpen) {
+          // Åpne notatfelt
+          noteconteiner.style.height = noteconteiner.scrollHeight + "px";
+          setTimeout(() => {
+            noteconteiner.style.height = "auto"; // Fjern høyde for dynamisk innhold
+          }, 400); // samsvarer med transition-tiden
+        } else {
+          // Lukke notatfelt
+          noteconteiner.style.height = noteconteiner.scrollHeight + "px";
+          requestAnimationFrame(() => {
+            noteconteiner.style.height = "0px";
+          });
+        }
+        isNoteOpen = !isNoteOpen;
+      }
+      );
 
   
         // Fyll inn verdiene uten labeltekst

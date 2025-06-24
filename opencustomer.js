@@ -138,7 +138,7 @@ function listSystemOnCustomer(customer) {
         // Oppdater service
         let serviceinfo = findserviceinfo(item);
         const lastservicelable = itemElement.querySelector(".lastservicelable");
-        lastservicelable.textContent = serviceinfo.lastservice || "–";
+        lastservicelable.textContent = serviceinfo.lastservice || "Ingen service";
         
         // Oppdater farge og dato
         const nextservicelable = itemElement.querySelector(".nextservicelable");

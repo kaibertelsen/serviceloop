@@ -249,7 +249,6 @@ function listSystemOnCustomer(customer) {
           quill.clipboard.dangerouslyPasteHTML(item.notes || "");
         }, 0);
         
-
         // 4. Lytt etter blur (når man forlater editoren)
         quill.root.addEventListener("blur", function () {
           // Hent HTML-innholdet fra Quill-editoren

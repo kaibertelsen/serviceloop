@@ -71,6 +71,7 @@ document.getElementById("fromCustomerToListButton").addEventListener("click", fu
     if (listTabButton) listTabButton.click();
 
 });
+
   
 function openCustomer(customer) {
   currentCustomer = customer;

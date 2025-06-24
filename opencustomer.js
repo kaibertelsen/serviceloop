@@ -136,6 +136,36 @@ function listSystemOnCustomer(customer) {
   
     customer.system.forEach((item) => {
       const itemElement = nodeElement.cloneNode(true);
+
+      const moreconteiner = itemElement.querySelector(".moreconteiner");
+      const showhidetugglemorebutton = itemElement.querySelector(".showhidetugglemorebutton");
+
+      // Start skjult
+      moreconteiner.style.height = "0px";
+
+      let isOpen = false;
+
+      showhidetugglemorebutton.addEventListener("click", () => {
+        if (!isOpen) {
+          // Åpne: Sett eksplisitt høyde først, for animasjon
+          moreconteiner.style.height = moreconteiner.scrollHeight + "px";
+
+          // Etter animasjon, fjern høyde for å støtte dynamisk innhold senere
+          setTimeout(() => {
+            moreconteiner.style.height = "auto";
+          }, 400); // samsvarer med transition-tiden
+        } else {
+          // Lukke: Sett eksplisitt høyde før overgang tilbake til 0
+          moreconteiner.style.height = moreconteiner.scrollHeight + "px";
+          requestAnimationFrame(() => {
+            moreconteiner.style.height = "0px";
+          });
+        }
+
+        isOpen = !isOpen;
+      });
+
+
   
         // Fyll inn verdiene uten labeltekst
         itemElement.querySelector(".systemname").textContent = item.name || "Ukjent anlegg";

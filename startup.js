@@ -64,7 +64,10 @@ function parseItemJson(jsonArray) {
 function parseCustomerJsonArray(jsonArray) {
     return jsonArray.map((jsonString, index) => {
       try {
-        const customer = JSON.parse(jsonString); // Én parse er nok
+        // Fjern evt. Byte Order Mark (BOM) og usynlige tegn
+        jsonString = jsonString.replace(/\uFEFF/g, "");
+  
+        const customer = JSON.parse(jsonString);
   
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
@@ -79,8 +82,9 @@ function parseCustomerJsonArray(jsonArray) {
         console.warn(`❌ Parsing-feil på index ${index}:`, err);
         return null;
       }
-    }).filter(Boolean); // Fjerner feilede
+    }).filter(Boolean);
   }
+  
   
   
   

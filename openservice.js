@@ -28,10 +28,18 @@ function listServiceOnsystem(itemElement, item, customer) {
       // Sorter service etter dato
       item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
       item.service.forEach((service) => {
+
         const serviceElement = serviceElementTemplate.cloneNode(true);
 
         //sette dato
-        serviceElement.querySelector(".servicedate").value = service.date || "";
+        const dateInput = serviceElement.querySelector(".servicedate");
+
+        if (service.date) {
+        const d = new Date(service.date);
+        dateInput.value = d.toISOString().substring(0, 10);
+        } else {
+        dateInput.value = "";
+        }
         
         //Load status selectoren med arrayen statusService
         const statusSelect = serviceElement.querySelector(".editstatusservice");

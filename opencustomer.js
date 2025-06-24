@@ -18,7 +18,7 @@ function createNewSystem() {
     typemodel: "",
     intervall: 12,
     address_same_customer: "TRUE",
-    client: [currentCustomer.client] // kobling til kunden (koblet Airtable "Link to" felt)
+    customer: [currentCustomer.rawid]
   };
 
   // 2. Vis loader i systemlisten
@@ -39,7 +39,6 @@ function createNewSystem() {
     "responseNewSystem"
   );
 }
-
 
 function responseNewSystem(response) {
   console.log("System opprettet:", response);
@@ -71,9 +70,6 @@ function responseNewSystem(response) {
   }
 }
 
-
-
-
 document.getElementById("fromCustomerToListButton").addEventListener("click", function () {
     listCustomers(gCustomer);
 
@@ -81,9 +77,8 @@ document.getElementById("fromCustomerToListButton").addEventListener("click", fu
     const listTabButton = document.getElementById("listpagetabbutton");
     if (listTabButton) listTabButton.click();
 
-  });
+});
   
-
 function openCustomer(customer) {
   currentCustomer = customer;
 
@@ -271,7 +266,7 @@ function listSystemOnCustomer(customer) {
 
       
     });
-  }
+}
   
 function  calcserviceDate(system, itemElement) {
 
@@ -322,10 +317,9 @@ function  calcserviceDate(system, itemElement) {
     itemElement.querySelector(".lastservicelable").textContent = lastService ? formatDate(lastService) : "Ingen service";
     itemElement.querySelector(".nextservicelable").textContent = nextService ? formatDate(nextService) : "–";
     itemElement.querySelector(".nextservicelable").style.color = color;
-  }
+}
 
-
-  function findserviceinfo(system) {
+function findserviceinfo(system) {
     console.log("findserviceinfo for system:", system);
   
     const today = new Date();
@@ -365,9 +359,8 @@ function  calcserviceDate(system, itemElement) {
       nextservice: nextService ? formatDate(nextService) : null,
       color
     };
-  }
+}
   
-// Hjelpefunksjon for visning
 function formatDate(date) {
   if (!(date instanceof Date)) date = new Date(date);
   const day = String(date.getDate()).padStart(2, "0");
@@ -375,8 +368,6 @@ function formatDate(date) {
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 }
-
-  
 
 document.querySelector('.customerinfoconteiner').addEventListener('click', function (e) {
   const fieldEl = e.target.closest('.editable');
@@ -458,8 +449,6 @@ function handleEditField(fieldEl, field) {
     });
 }
   
-  
-
 function sendUpdateToServer(customer, data) {
 
     let body = JSON.stringify(data);
@@ -467,7 +456,6 @@ function sendUpdateToServer(customer, data) {
     PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",rawid,body,"responseEditCustomer");
 
 }
-
 
 function responseEditCustomer(data){
   //oppdater gCustomer med den oppdaterte kunden
@@ -540,9 +528,6 @@ function sendEditSystemToServer(systemItem, data) {
   PATCHairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", rawid, body, "responseEditSystem");
 }
 
-
-
-  
 function responseEditSystem(data) {
   console.log("System updated:", data);
 
@@ -558,7 +543,6 @@ function responseEditSystem(data) {
   
 
 }
-
 
 function handleCreateNewModel() {
   // Vis f.eks. et popup-skjema eller gå til en egen side

@@ -348,7 +348,7 @@ function listSystemOnCustomer(customer) {
 
 
       //list opp servicer
-      const serviceListContainer = itemElement.querySelector(".servicelist");
+      const serviceListContainer = itemElement.querySelector(".serviceelementlist");
       serviceListContainer.innerHTML = ''; // Tøm containeren
       if (!item.service || item.service.length === 0) {
         serviceListContainer.textContent = "Ingen service funnet for dette systemet.";

@@ -125,6 +125,13 @@ function listSystemOnCustomer(customer) {
       counter.textContent = customer.system.length + " stk.";
       counter.style.display = "block";
     }
+
+    // sorter systemer etter installasjonsdato
+    customer.system.sort((a, b) => {
+      const dateA = new Date(a.installed_date || 0);
+      const dateB = new Date(b.installed_date || 0);
+      return dateB - dateA; // Sorter synkende
+    });
   
     customer.system.forEach((item) => {
       const itemElement = nodeElement.cloneNode(true);

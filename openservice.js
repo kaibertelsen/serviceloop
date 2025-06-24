@@ -45,6 +45,11 @@ function listServiceOnsystem(itemElement, item, customer) {
             if (service.status && status.value && service.status.toLowerCase() === status.value.toLowerCase()) {
               option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens status
             }
+
+            //hvis status er fakturert
+            if (status.value === "fakturert" || status.value === "Fakturert") {
+              option.disabled = true; // Deaktiver alternativet hvis status er fakturert
+            }
             
             statusSelect.appendChild(option);
           });

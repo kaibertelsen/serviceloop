@@ -174,13 +174,13 @@ function listSystemOnCustomer(customer) {
       notebuttonshowhide.addEventListener("click", () => {
         if (!isNoteOpen) {
           // Åpne notatfelt
-          noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
+          noteconteiner.style.height = (noteconteiner.scrollHeight + 40) + "px";
           setTimeout(() => {
             noteconteiner.style.height = "auto"; // Fjern høyde for dynamisk innhold
           }, 400); // samsvarer med transition-tiden
         } else {
           // Lukke notatfelt
-          noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
+          noteconteiner.style.height = (noteconteiner.scrollHeight + 40) + "px";
           requestAnimationFrame(() => {
             noteconteiner.style.height = "0px";
           });

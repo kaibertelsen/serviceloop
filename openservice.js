@@ -39,9 +39,11 @@ function listServiceOnsystem(itemElement, item, customer) {
             const option = document.createElement("option");
             option.value = status.value;
             option.textContent = status.text;
-            if (service.status === status.value) {
+            //gjøre begge om til lowercase for å sammenligne
+            if (service.status && status.value && service.status.toLowerCase() === status.value.toLowerCase()) {
               option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens status
             }
+            
             statusSelect.appendChild(option);
           });
         }

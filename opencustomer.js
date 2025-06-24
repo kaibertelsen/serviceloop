@@ -120,9 +120,6 @@ function listSystemOnCustomer(customer) {
           }
         });
 
-       
-
-
         itemElement.querySelector(".seriename").textContent = item.serial_number || "–";
         itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
 
@@ -132,6 +129,8 @@ function listSystemOnCustomer(customer) {
         : "";
         datofelt.addEventListener("change", () => {
             let data = {installed_date: datofelt.value};
+            //live ny utregning
+            calcserviceDate(item, item.intervall, itemElement);
             sendEditSystemToServer(item, data);
         }
         );
@@ -144,10 +143,17 @@ function listSystemOnCustomer(customer) {
         nextservicelable.textContent = serviceinfo.nextservice || "–";
         nextservicelable.style.color = serviceinfo.color;
 
-        
 
-        itemElement.querySelector(".intervallable").textContent = item.intervall ? `${item.intervall} mnd.` : "–";
-        itemElement.querySelector(".intervallable").setAttribute("data-field", "intervall");
+        const intervallinput = itemElement.querySelector(".serviceintervall");
+        intervallinput.value = item.intervall || "";
+        
+        intervallinput.addEventListener("change", () => {
+            let data = {intervall: intervallinput.value};
+            //live ny utregning 
+            calcserviceDate(item, intervallinput.value,itemElement);
+            sendEditSystemToServer(item, data);
+        }
+        );
 
         itemElement.querySelector(".locationlable").textContent = item.location || "–";
         itemElement.querySelector(".locationlable").setAttribute("data-field", "location");
@@ -187,6 +193,44 @@ function listSystemOnCustomer(customer) {
     });
   }
   
+function  calcserviceDate(system, intervall, itemElement) {
+    const today = new Date();
+    let lastService = null;
+    let nextService = null;
+
+    // 1. Finn siste service (dersom finnes)
+    if (system.service && system.service.length > 0) {
+      const sorted = system.service
+        .filter(s => !!s.date) // sørg for at dato finnes
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      lastService = sorted.length > 0 ? new Date(sorted[0].date) : null;
+    }
+
+    // 2. Beregn neste service
+    const interval = parseInt(intervall || "0");
+
+    if (lastService) {
+      nextService = new Date(lastService);
+      nextService.setMonth(nextService.getMonth() + interval);
+    } else if (system.installed_date && interval > 0) {
+      const installed = new Date(system.installed_date);
+      nextService = new Date(installed);
+      nextService.setMonth(installed.getMonth() + interval);
+    }
+
+    // 3. Evaluer farge
+    let color = "gray"; // default
+    if (nextService) {
+      const isOverdue = nextService < today;
+      color = isOverdue ? "red" : "green";
+    }
+
+    // Oppdater visning
+    itemElement.querySelector(".lastservicelable").textContent = lastService ? formatDate(lastService) : "–";
+    itemElement.querySelector(".nextservicelable").textContent = nextService ? formatDate(nextService) : "–";
+    itemElement.querySelector(".nextservicelable").style.color = color;
+  }
   // Formater dato som "01. feb. 2020"
   function formatDate(dateStr) {
     const options = { day: '2-digit', month: 'short', year: 'numeric' };

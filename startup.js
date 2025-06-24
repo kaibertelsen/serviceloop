@@ -65,10 +65,10 @@ function parseCustomerJsonArray(jsonArray) {
       try {
         const customer = JSON.parse(jsonString);
   
-        // Ekstra sikkerhet: sørg for at alle `system[].notes` er strenger
+        // Sørg for at alle `system[].notes` er strenger (HTML-tolerant)
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
-            if (typeof sys.notes !== 'string') {
+            if (typeof sys.notes !== "string") {
               sys.notes = sys.notes == null ? "" : String(sys.notes);
             }
           });
@@ -76,11 +76,12 @@ function parseCustomerJsonArray(jsonArray) {
   
         return customer;
       } catch (err) {
-        console.warn(`❌ Parsing-feil på index ${index}`, err);
+        console.warn(`❌ Parsing-feil på index ${index}:`, err);
         return null;
       }
-    }).filter(Boolean);
+    }).filter(Boolean); // Fjern eventuelle null fra feilet parsing
   }
+  
   
   
   

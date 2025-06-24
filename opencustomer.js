@@ -167,20 +167,20 @@ function listSystemOnCustomer(customer) {
 
       const notebuttonshowhide = itemElement.querySelector(".notebuttonshowhide");
       const noteconteiner = itemElement.querySelector(".noteconteiner");
-      // Start skjult
+      // Start skjult etter 400ms
       noteconteiner.style.height = "0px";
 
       let isNoteOpen = false;
       notebuttonshowhide.addEventListener("click", () => {
         if (!isNoteOpen) {
           // Åpne notatfelt
-          noteconteiner.style.height = noteconteiner.scrollHeight + "px";
+          noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
           setTimeout(() => {
             noteconteiner.style.height = "auto"; // Fjern høyde for dynamisk innhold
           }, 400); // samsvarer med transition-tiden
         } else {
           // Lukke notatfelt
-          noteconteiner.style.height = noteconteiner.scrollHeight + "px";
+          noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
           requestAnimationFrame(() => {
             noteconteiner.style.height = "0px";
           });

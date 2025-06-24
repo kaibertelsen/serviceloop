@@ -228,14 +228,14 @@ function listSystemOnCustomer(customer) {
             sendEditSystemToServer(item, data);
           }
         );
-
+        // Oppdater lokasjon
         itemElement.querySelector(".locationlable").textContent = item.location || "–";
         itemElement.querySelector(".locationlable").setAttribute("data-field", "location");
         
-        // 1. Finn elementet du skal bruke som editor-container
+        // Oppdater notat
         let noteText = itemElement.querySelector(".notehtmlquill");
 
-        // 1. Opprett Quill-editor
+        //Opprett Quill-editor
         var quill = new Quill(noteText, {
           theme: 'snow',
           modules: {
@@ -245,13 +245,16 @@ function listSystemOnCustomer(customer) {
 
 
         // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
-        quill.clipboard.dangerouslyPasteHTML(item.note || "");
+        quill.clipboard.dangerouslyPasteHTML(item.notes || "");
 
         // 4. Lytt etter blur (når man forlater editoren)
         quill.root.addEventListener("blur", function () {
           // Hent HTML-innholdet fra Quill-editoren
           let noteContent = quill.root.innerHTML;
           console.log("Note content:", noteContent);
+          //send til server
+          let data = {notes: noteContent};
+          sendEditSystemToServer(item, data);
         });
 
         

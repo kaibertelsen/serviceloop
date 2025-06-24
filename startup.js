@@ -63,8 +63,20 @@ function parseItemJson(jsonArray) {
 function parseCustomerJsonArray(jsonArray) {
     return jsonArray.map((jsonString, index) => {
       try {
-        const customer = JSON.parse(jsonString); // ✅ Én parsing
+        let customer;
   
+        // 🔍 Hvis det starter med '"{' og slutter med '}"', er det dobbel-encoded JSON
+        if (
+          typeof jsonString === "string" &&
+          jsonString.trim().startsWith('"{"') &&
+          jsonString.trim().endsWith('}"')
+        ) {
+          customer = JSON.parse(JSON.parse(jsonString));
+        } else {
+          customer = JSON.parse(jsonString);
+        }
+  
+        // 🔧 Sikre at alle notes er strenger
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
             if (typeof sys.notes !== "string") {
@@ -80,6 +92,7 @@ function parseCustomerJsonArray(jsonArray) {
       }
     }).filter(Boolean);
   }
+  
   
   
   

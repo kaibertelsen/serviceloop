@@ -130,27 +130,28 @@ function listSystemOnCustomer(customer) {
         datofelt.addEventListener("change", () => {
             let data = {installed_date: datofelt.value};
             //live ny utregning
-            calcserviceDate(item, item.intervall, itemElement);
+            calcserviceDate(item, itemElement);
             sendEditSystemToServer(item, data);
         }
         );
-        
+
+        // Oppdater service
         let serviceinfo = findserviceinfo(item);
         const lastservicelable = itemElement.querySelector(".lastservicelable");
         lastservicelable.textContent = serviceinfo.lastservice || "–";
         
+        // Oppdater farge og dato
         const nextservicelable = itemElement.querySelector(".nextservicelable");
         nextservicelable.textContent = serviceinfo.nextservice || "–";
         nextservicelable.style.color = serviceinfo.color;
 
-
+        // Oppdater serviceintervall-input
         const intervallinput = itemElement.querySelector(".serviceintervall");
         intervallinput.value = item.intervall || "";
-        
         intervallinput.addEventListener("change", () => {
             let data = {intervall: intervallinput.value};
             //live ny utregning 
-            calcserviceDate(item, intervallinput.value,itemElement);
+            calcserviceDate(item,itemElement);
             sendEditSystemToServer(item, data);
         }
         );
@@ -193,7 +194,12 @@ function listSystemOnCustomer(customer) {
     });
   }
   
-function  calcserviceDate(system, intervall, itemElement) {
+function  calcserviceDate(system, itemElement) {
+
+  const intervallinput = itemElement.querySelector(".serviceintervall");
+  const intervall = intervallinput.value;
+
+
     const today = new Date();
     let lastService = null;
     let nextService = null;

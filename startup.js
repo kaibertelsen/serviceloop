@@ -60,6 +60,7 @@ function parseItemJson(jsonArray) {
     }
 }
 
+
 function parseCustomerJsonArray(jsonArray) {
     return jsonArray.map((jsonString, index) => {
       try {

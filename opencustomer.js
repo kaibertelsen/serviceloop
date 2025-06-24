@@ -2,6 +2,7 @@ let currentCustomer = {};
 
 document.getElementById("createNewSystemButton").addEventListener("click", createNewSystem);
 
+
 function createNewSystem() {
   if (!currentCustomer || !currentCustomer.client || !currentCustomer.rawid) {
     alert("Ingen kunde valgt.");
@@ -268,6 +269,28 @@ function listSystemOnCustomer(customer) {
             el.addEventListener("click", () => handleSystemEdit(el, item, customer));
         });
 
+      //deletesystembutton
+      const deleteButton = itemElement.querySelector(".deletesystembutton");
+      if (deleteButton) {
+        deleteButton.addEventListener("click", () => {
+          if (confirm("Er du sikker på at du vil slette dette systemet?")) {
+            // Send DELETE forespørsel til server
+            DELETEairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", item.rawid, "responseDeleteSystem");
+
+            // Fjern systemet fra kundens liste
+            const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
+            if (customerIndex !== -1) {
+              const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === item.rawid);
+              if (systemIndex !== -1) {
+                gCustomer[customerIndex].system.splice(systemIndex, 1);
+              }
+            }
+            // Oppdater systemlisten for kunden
+            listSystemOnCustomer(currentCustomer);
+           
+          }
+        });
+      }
       
     });
 }
@@ -468,6 +491,10 @@ function responseEditCustomer(data){
   if (customerIndex !== -1) {
     gCustomer[customerIndex] = updatedCustomer;
   }
+}
+
+function responseDeleteSystem(data) {
+  console.log("System slettet:", data);
 }
 
 function handleSystemEdit(element, systemItem, customer) {

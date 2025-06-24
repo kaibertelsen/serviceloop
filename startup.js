@@ -110,5 +110,7 @@ function ruteresponse(data,id){
         responseEditSystem(data);
     }else if(id == "responseNewSystem"){
         responseNewSystem(data);
+    }else if(id == "responseDeleteSystem"){
+        responseDeleteSystem(data);
     }
 }

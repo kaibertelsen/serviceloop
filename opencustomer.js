@@ -131,7 +131,7 @@ function listSystemOnCustomer(customer) {
             let data = {installed_date: datofelt.value};
             //live ny utregning
             calcserviceDate(item, itemElement);
-            sendEditSystemToServer(item, data);
+            //sendEditSystemToServer(item, data);
         }
         );
 
@@ -152,7 +152,7 @@ function listSystemOnCustomer(customer) {
             let data = {intervall: intervallinput.value};
             //live ny utregning 
             calcserviceDate(item,itemElement);
-            sendEditSystemToServer(item, data);
+            //sendEditSystemToServer(item, data);
         }
         );
 
@@ -219,8 +219,15 @@ function  calcserviceDate(system, itemElement) {
     if (lastService) {
       nextService = new Date(lastService);
       nextService.setMonth(nextService.getMonth() + interval);
-    } else if (system.installed_date && interval > 0) {
-      const installed = new Date(system.installed_date);
+    } else {
+      const inputInstalled = itemElement.querySelector(".installdate");
+      const installedDate = inputInstalled.value;
+      if (!installedDate) {
+        nextService = null; // Ingen installert dato, ingen neste service
+        return;
+      }
+      // Hvis ingen siste service, bruk installert dato
+      const installed = new Date(installedDate);
       nextService = new Date(installed);
       nextService.setMonth(installed.getMonth() + interval);
     }

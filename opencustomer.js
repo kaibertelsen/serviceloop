@@ -38,31 +38,28 @@ function createNewSystem() {
 function responseNewSystem(response) {
   console.log("System opprettet:", response);
 
-  if (response && response.id && response.fields) {
-    const systemRecord = {
-      ...response.fields,
-      rawid: response.id
-    };
-
-    // Legg til i currentCustomer og gCustomer
-    const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
-    if (customerIndex !== -1) {
-      gCustomer[customerIndex].system = gCustomer[customerIndex].system || [];
-      gCustomer[customerIndex].system.push(systemRecord);
-    }
-
-    currentCustomer.system = currentCustomer.system || [];
-    currentCustomer.system.push(systemRecord);
-
-    // Fjern loader (hvis ønskelig)
-    const loader = document.querySelector(".loaderconteiner");
-    if (loader) loader.remove();
-
-    // Oppdater visning
-    listSystemOnCustomer(currentCustomer);
+ let newSystem = JSON.parse(response.fields.json);
+  // Legg til det nye systemet i kundens systemliste
+  if (currentCustomer && currentCustomer.system) {
+    currentCustomer.system.push(newSystem);
   } else {
-    alert("Kunne ikke opprette nytt system.");
+    currentCustomer.system = [newSystem];
   }
+
+  // Oppdater systemlisten for kunden
+  listSystemOnCustomer(currentCustomer);
+
+  // Fjern loaderen
+  const systemListContainer = document.getElementById("systemlist");
+  const loaderElement = systemListContainer.querySelector(".loaderconteiner");
+  if (loaderElement) loaderElement.remove();
+  // Oppdater systemantall
+  const counter = systemListContainer.parentElement.querySelector(".counter");
+  if (counter) {
+    counter.textContent = currentCustomer.system.length + " stk.";
+    counter.style.display = "block";
+  }
+  
 }
 
 document.getElementById("fromCustomerToListButton").addEventListener("click", function () {

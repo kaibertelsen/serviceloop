@@ -245,7 +245,10 @@ function listSystemOnCustomer(customer) {
 
 
         // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
-        quill.clipboard.dangerouslyPasteHTML(item.notes || "");
+        setTimeout(() => {
+          quill.clipboard.dangerouslyPasteHTML(item.notes || "");
+        }, 0);
+        
 
         // 4. Lytt etter blur (når man forlater editoren)
         quill.root.addEventListener("blur", function () {

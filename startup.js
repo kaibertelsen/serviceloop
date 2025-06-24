@@ -63,14 +63,8 @@ function parseItemJson(jsonArray) {
 function parseCustomerJsonArray(jsonArray) {
     return jsonArray.map((jsonString, index) => {
       try {
-        let customer;
-            if (typeof jsonString === "string" && jsonString.trim().startsWith('"{')) {
-            customer = JSON.parse(JSON.parse(jsonString));
-            } else {
-            customer = JSON.parse(jsonString);
-            }
+        const customer = JSON.parse(jsonString); // ✅ Én parsing
   
-        // Sørg for at alle `system[].notes` er strenger (HTML-tolerant)
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
             if (typeof sys.notes !== "string") {
@@ -84,8 +78,9 @@ function parseCustomerJsonArray(jsonArray) {
         console.warn(`❌ Parsing-feil på index ${index}:`, err);
         return null;
       }
-    }).filter(Boolean); // Fjern eventuelle null fra feilet parsing
+    }).filter(Boolean);
   }
+  
   
   
   

@@ -12,29 +12,29 @@ document.getElementById("fromServicetoCustomer").addEventListener("click", funct
 
 function listServiceOnsystem(itemElement, item, customer) {
 
-      //list opp servicer
-      const serviceListContainer = itemElement.querySelector(".serviceelementlist");
-      serviceListContainer.innerHTML = ''; // Tøm containeren
-      
+    //list opp servicer
+    const serviceListContainer = itemElement.querySelector(".serviceelementlist");
+    serviceListContainer.innerHTML = ''; // Tøm containeren
+    
 
-      if (!item.service || item.service.length === 0) {
-        serviceListContainer.textContent = "Ingen service funnet for dette systemet.";
-        return;
-      }
-      // Hent mal for serviceelement
-      const elementLibrary = document.getElementById("elementlibrary");
-      const serviceElementTemplate = elementLibrary.querySelector(".servicerow");
-      if (!serviceElementTemplate) {
-        console.error("Ingen '.serviceelement' funnet i 'elementlibrary'.");
-        return;
-      }
-      // Sorter service etter dato
-      item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    if (!item.service || item.service.length === 0) {
+    serviceListContainer.textContent = "Ingen service funnet for dette systemet.";
+    return;
+    }
+    // Hent mal for serviceelement
+    const elementLibrary = document.getElementById("elementlibrary");
+    const serviceElementTemplate = elementLibrary.querySelector(".servicerow");
+    if (!serviceElementTemplate) {
+    console.error("Ingen '.serviceelement' funnet i 'elementlibrary'.");
+    return;
+    }
+    // Sorter service etter dato
+    item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
 
-      
+    
 
-      item.service.forEach((service) => {
+    item.service.forEach((service) => {
 
         const serviceElement = serviceElementTemplate.cloneNode(true);
 
@@ -170,8 +170,37 @@ function listServiceOnsystem(itemElement, item, customer) {
         const borderColor = statusObj ? statusObj.color : "gray";
         serviceElement.style.borderLeft = `6px solid ${borderColor}`;
 
+        //deleteknapp
+        const deleteservicebutton = serviceElement.querySelector(".deleteservicebutton");
+        if (deleteservicebutton) {
+            deleteservicebutton.addEventListener("click", function () {
+                // Bekreft sletting
+                if (confirm("Er du sikker på at du vil slette denne servicen?")) {
+                    // Send slett forespørsel til server
+                    let serviceId = service.rawid; // Anta at rawid er ID-en for servicen
+                    DELETEairtable(
+                        "appuUESr4s93SWaS7",
+                        "tblPWerScR5AbxnlJ", // system-tabell
+                        serviceId,
+                        "responseDeleteService"
+                    );
+                    // Fjern service-elementet fra visningen
+                    serviceElement.remove();
+                    //fjern servicen fra systemet
+                    if (currentItemElement) {
+                        let system = customer.system.find(s => s.rawid === item.rawid);
+                        if (system && system.service) {
+                            system.service = system.service.filter(s => s.rawid !== serviceId);
+                            // Oppdater visningen av systemet
+                            listServiceOnsystem(currentItemElement, system, customer);
+                        }
+                    }
+                }
+            });
+        }
+
         serviceListContainer.appendChild(serviceElement);
-      });
+    });
 }
 
 
@@ -239,4 +268,9 @@ function responseNewService(data) {
     }
     
     
+}
+
+function responseDeleteService(data) {
+console.log("Service slettet:", data);
+
 }

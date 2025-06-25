@@ -146,5 +146,7 @@ function ruteresponse(data,id){
         responseDeleteSystem(data);
     }else if(id == "responseNewService"){
         responseNewService(data);
+    }else if(id == "responseDeleteService"){
+        responseDeleteService(data);
     }
 }

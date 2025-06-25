@@ -184,17 +184,17 @@ function listServiceOnsystem(itemElement, item, customer) {
                         serviceId,
                         "responseDeleteService"
                     );
+                    
+
+                    //fjern servicen fra systemet
+                    let system = customer.system.find(s => s.rawid === item.rawid);
+                    if (system && system.service) {
+                        system.service = system.service.filter(s => s.rawid !== serviceId);
+                    }
+
                     // Fjern service-elementet fra visningen
                     serviceElement.remove();
-                    //fjern servicen fra systemet
-                    if (currentItemElement) {
-                        let system = customer.system.find(s => s.rawid === item.rawid);
-                        if (system && system.service) {
-                            system.service = system.service.filter(s => s.rawid !== serviceId);
-                            // Oppdater visningen av systemet
-                            listServiceOnsystem(currentItemElement, system, customer);
-                        }
-                    }
+                    
                 }
             });
         }

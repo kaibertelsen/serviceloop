@@ -91,7 +91,7 @@ function listServiceOnsystem(itemElement, item, customer) {
             option.value = user.rawid; // Bruk brukerens ID som value
             option.textContent = user.name;
             //gjøre begge om til lowercase for å sammenligne
-            if (service.user && user.rawid && service.user.toLowerCase() === user.rawid.toLowerCase()) {
+            if (service.userid && user.rawid) {
               option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens bruker
             }
             userSelect.appendChild(option);

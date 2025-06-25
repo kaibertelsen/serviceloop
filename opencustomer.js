@@ -419,8 +419,6 @@ function  calcserviceDate(system, itemElement) {
 }
 
 function findserviceinfo(system) {
-  console.log("findserviceinfo for system:", system);
-
   const today = new Date();
   let lastService = null;
   let nextService = null;
@@ -428,7 +426,7 @@ function findserviceinfo(system) {
 
   const validCompletedStatuses = ["utført", "fakturert"];
 
-  // 1. Finn siste utførte eller fakturerte service
+  // 1. Finn siste utførte/fakturerte
   let serviceDone = null;
   if (Array.isArray(system.service)) {
     const completed = system.service
@@ -439,30 +437,9 @@ function findserviceinfo(system) {
     lastService = serviceDone;
   }
 
-  // 2. Finn fremtidig planlagt service (kun ignorer "kalkulert")
-  let futurePlanned = null;
-  let hasPlannedNonKalkulert = false;
-
-  if (Array.isArray(system.service)) {
-    const planned = system.service
-      .filter(s => {
-        if (!s.date) return false;
-        const date = new Date(s.date);
-        const status = (s.status || "").toLowerCase();
-        const isRelevant = status !== "kalkulert" && date > today;
-        if (isRelevant) hasPlannedNonKalkulert = true;
-        return isRelevant;
-      })
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    futurePlanned = planned.length > 0 ? new Date(planned[0].date) : null;
-  }
-
-  // 3. Beregn neste service
+  // 2. Beregn neste service
   const interval = parseInt(system.intervall || "0");
-  if (futurePlanned) {
-    nextService = futurePlanned;
-  } else if (serviceDone && interval > 0) {
+  if (serviceDone && interval > 0) {
     nextService = new Date(serviceDone);
     nextService.setMonth(nextService.getMonth() + interval);
   } else if (system.installed_date && interval > 0) {
@@ -471,14 +448,29 @@ function findserviceinfo(system) {
     nextService.setMonth(installed.getMonth() + interval);
   }
 
-  // 4. Evaluer farge
+  // 3. Evaluer farge
   let color = "gray";
   if (nextService) {
     color = nextService < today ? "red" : "green";
   }
 
-  // 5. Lag forslag hvis ingen fremtidig planlagt service finnes
-  if (!hasPlannedNonKalkulert && nextService) {
+  // 4. Ikke foreslå hvis det finnes noen service innenfor ±2 måneder fra nextService
+  let hasAnyServiceInRange = false;
+  if (Array.isArray(system.service) && nextService) {
+    const rangeStart = new Date(nextService);
+    rangeStart.setMonth(rangeStart.getMonth() - 2);
+    const rangeEnd = new Date(nextService);
+    rangeEnd.setMonth(rangeEnd.getMonth() + 2);
+
+    hasAnyServiceInRange = system.service.some(s => {
+      if (!s.date) return false;
+      const d = new Date(s.date);
+      return d >= rangeStart && d <= rangeEnd;
+    });
+  }
+
+  // 5. Lag forslag kun hvis det ikke finnes noen service innenfor området
+  if (nextService && !hasAnyServiceInRange) {
     suggestedService = {
       date: nextService.toISOString(),
       status: "kalkulert",
@@ -495,6 +487,7 @@ function findserviceinfo(system) {
     suggestedService
   };
 }
+
 
 
 

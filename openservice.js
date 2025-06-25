@@ -39,6 +39,7 @@ function listServiceOnsystem(itemElement, item, customer) {
       // Sorter service etter dato
       item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
+
       
 
       item.service.forEach((service) => {
@@ -171,6 +172,11 @@ function listServiceOnsystem(itemElement, item, customer) {
             //sendEditSystemToServer(item, data);
           });
         }
+
+        // Sett border på høyre side av systemelement basert på siste status
+        const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
+        const borderColor = statusObj ? statusObj.color : "gray";
+        serviceElement.style.borderRight = `6px solid ${borderColor}`;
 
         serviceListContainer.appendChild(serviceElement);
       });

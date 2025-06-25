@@ -346,6 +346,14 @@ function listSystemOnCustomer(customer) {
         });
       }
 
+      //lage klik event på newservicebutton
+      const newServiceButton = itemElement.querySelector(".newservicebutton");
+      if (newServiceButton) {
+          newServiceButton.addEventListener("click", function () {
+              makeNewService(itemElement,item, customer);
+          });
+      }
+      
       listServiceOnsystem(itemElement, item, customer);
 
       

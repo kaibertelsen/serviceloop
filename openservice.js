@@ -12,14 +12,6 @@ document.getElementById("fromServicetoCustomer").addEventListener("click", funct
 
 function listServiceOnsystem(itemElement, item, customer) {
 
-    //lage klik event på newservicebutton
-    const newServiceButton = itemElement.querySelector(".newservicebutton");
-    if (newServiceButton) {
-        newServiceButton.addEventListener("click", function () {
-            makeNewService(itemElement,item, customer);
-        });
-    }
-
       //list opp servicer
       const serviceListContainer = itemElement.querySelector(".serviceelementlist");
       serviceListContainer.innerHTML = ''; // Tøm containeren
@@ -185,7 +177,6 @@ function listServiceOnsystem(itemElement, item, customer) {
 
 function makeNewService(itemElement, item, customer) {
 
-    const serviceListContainer = itemElement.querySelector(".serviceelementlist");
     currentItemElement = itemElement; // Oppdater global variabel
 
     let serviceinfo = findserviceinfo(item);

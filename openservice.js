@@ -224,8 +224,8 @@ function listServiceOnsystem(itemElement, item, customer) {
                         system.service = system.service.filter(s => s.rawid !== serviceId);
                     }
 
-                    // Fjern service-elementet fra visningen
-                    serviceElement.remove();
+                    // lag listen på nytt
+                    listServiceOnsystem(itemElement, system, customer);
                     
                 }
             });

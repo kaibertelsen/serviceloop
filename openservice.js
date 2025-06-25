@@ -35,11 +35,20 @@ function listServiceOnsystem(itemElement, item, customer) {
     item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
 
-    //Sjekke om den skal foresløs neste service
+
+    //Sjekke om den skal foreslåes neste service
     const serviceinfo = findserviceinfo(item);
     if (serviceinfo.suggestedService) {
         const service = serviceinfo.suggestedService;
-        //legg til først i item.service
+
+        //sjekk om det allerede finnes en service med "kalkulert" status da må disse fjernes først
+        const existingService = item.service.find(s => s.status && s.status.toLowerCase() === "kalkulert");
+        if (existingService) {
+            //fjern eksisterende kalkulert service
+            item.service = item.service.filter(s => s.rawid !== existingService.rawid);
+        }
+
+        //legg til ny kalkulert først i item.service
         item.service.unshift(service);
     }
 

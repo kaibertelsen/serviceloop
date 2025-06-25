@@ -48,6 +48,15 @@ function listServiceOnsystem(itemElement, item, customer) {
         var serviceElement = null; // Variabel for service-elementet
         if(service.status === "Kalkulert" || service.status === "kalkulert") {
             serviceElement = servicecalcElement.cloneNode(true);
+
+             //lage klik event på newservicebutton
+            const newServiceButton = itemElement.querySelector(".newcalcservice");
+            if (newServiceButton) {
+                newServiceButton.addEventListener("click", function () {
+                    makeNewService(itemElement,item, service,serviceElement);
+                });
+            }
+
         }else{
             serviceElement = serviceElementTemplate.cloneNode(true);
         }
@@ -79,8 +88,8 @@ function listServiceOnsystem(itemElement, item, customer) {
             }
 
             //hvis status er fakturert
-            if (status.value === "fakturert" || status.value === "Fakturert") {
-              option.disabled = true; // Deaktiver alternativet hvis status er fakturert
+            if (status.value === "fakturert" || status.value === "Fakturert" || status.value === "Kalkulert" || status.value === "kalkulert") {
+              option.disabled = true; // Deaktiver alternativer
             }
             
             statusSelect.appendChild(option);
@@ -221,14 +230,23 @@ function listServiceOnsystem(itemElement, item, customer) {
 }
 
 
-function makeNewService(itemElement, item, customer) {
+function makeNewService(itemElement, item, service,serviceelement) {
 
     currentItemElement = itemElement; // Oppdater global variabel
 
+  
     let serviceinfo = findserviceinfo(item);
     let nextServiceDate = (serviceinfo.nextserviceDate instanceof Date && !isNaN(serviceinfo.nextserviceDate))
     ? serviceinfo.nextserviceDate.toISOString()
     : new Date().toISOString();
+
+    //sjekk om service.date er satt, hvis ikke bruk nextServiceDate
+    if (service.date) {
+        //da er dette fra et kalkulert service element
+        nextServiceDate = service.date; // Bruk eksisterende dato hvis den er satt
+        //fjern elementet mens den oppretter på server
+        serviceelement.remove();
+    }
 
 
     let userid = gUser.rawid || "";

@@ -7,7 +7,7 @@ var gSystem_type = []; // Global variable to store system data
 var gServicetype = []; // Global variable to store service type data
 
 const statusService = [
-    { value: "", text: "Alle statuser", color: "gray" },
+    { value: "", text: "Ingen status", color: "white" }, // hvit
     { value: "kalkulert", text: "Kalkulert", color: "gray" },
     { value: "registrert", text: "Registrert", color: "#007bff" },   // blå
     { value: "påminnet", text: "Påminnet", color: "#17a2b8" },       // cyan

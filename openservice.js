@@ -89,7 +89,7 @@ function listServiceOnsystem(itemElement, item, customer) {
             }
             //send til server
             let data = {date: newDate.toISOString()};
-            sendEditServiceToServer(item, data);
+            sendEditServiceToServer(service, data);
         }
         );
         
@@ -333,8 +333,8 @@ console.log("Service slettet:", data);
 }
 
 
-function sendEditServiceToServer(systemItem, data) {
+function sendEditServiceToServer(service, data) {
     let body = JSON.stringify(data);
-    let rawid = systemItem.rawid;
+    let rawid = service.rawid;
     PATCHairtable("appuUESr4s93SWaS7", "tblPWerScR5AbxnlJ", rawid, body, "responseEditService");
   }

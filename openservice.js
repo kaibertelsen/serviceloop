@@ -82,6 +82,22 @@ function listServiceOnsystem(itemElement, item, customer) {
           });
         }
 
+        //loade edituserservice med gUsers
+        const userSelect = serviceElement.querySelector(".edituserservice");
+        if (userSelect) {
+          userSelect.innerHTML = ''; // Tøm select-elementet
+          gUsers.forEach(user => {
+            const option = document.createElement("option");
+            option.value = user.rawid; // Bruk brukerens ID som value
+            option.textContent = user.name;
+            //gjøre begge om til lowercase for å sammenligne
+            if (service.user && user.rawid && service.user.toLowerCase() === user.rawid.toLowerCase()) {
+              option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens bruker
+            }
+            userSelect.appendChild(option);
+          });
+        } 
+
         
         // Legg til redigeringsfunksjonalitet
         serviceElement.querySelector(".openservicebutton").addEventListener("click", () => {

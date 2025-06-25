@@ -353,7 +353,7 @@ function listSystemOnCustomer(customer) {
               makeNewService(itemElement,item, customer);
           });
       }
-      
+
       listServiceOnsystem(itemElement, item, customer);
 
       
@@ -424,21 +424,42 @@ function findserviceinfo(system) {
   const today = new Date();
   let lastService = null;
   let nextService = null;
+  let suggestedService = null;
 
-  // 1. Finn siste service (dersom finnes)
-  if (system.service && system.service.length > 0) {
-    const sorted = system.service
-      .filter(s => !!s.date)
+  const validStatuses = ["utført", "fakturert"];
+
+  // 1. Finn siste utførte eller fakturerte service
+  let serviceDone = null;
+  if (Array.isArray(system.service)) {
+    const completed = system.service
+      .filter(s => !!s.date && validStatuses.includes((s.status || "").toLowerCase()))
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    lastService = sorted.length > 0 ? new Date(sorted[0].date) : null;
+    serviceDone = completed.length > 0 ? new Date(completed[0].date) : null;
+    lastService = serviceDone;
   }
 
-  // 2. Beregn neste service
+  // 2. Finn fremtidig planlagt service som IKKE er utført eller fakturert
+  let futurePlanned = null;
+  if (Array.isArray(system.service)) {
+    const planned = system.service
+      .filter(s => {
+        if (!s.date) return false;
+        const status = (s.status || "").toLowerCase();
+        return !validStatuses.includes(status) && new Date(s.date) > today;
+      })
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    futurePlanned = planned.length > 0 ? new Date(planned[0].date) : null;
+  }
+
   const interval = parseInt(system.intervall || "0");
 
-  if (lastService) {
-    nextService = new Date(lastService);
+  // 3. Beregn neste service
+  if (futurePlanned) {
+    nextService = futurePlanned;
+  } else if (serviceDone && interval > 0) {
+    nextService = new Date(serviceDone);
     nextService.setMonth(nextService.getMonth() + interval);
   } else if (system.installed_date && interval > 0) {
     const installed = new Date(system.installed_date);
@@ -446,22 +467,35 @@ function findserviceinfo(system) {
     nextService.setMonth(installed.getMonth() + interval);
   }
 
-  // 3. Evaluer farge
+  // 4. Evaluer farge
   let color = "gray";
   if (nextService) {
     const isOverdue = nextService < today;
     color = isOverdue ? "red" : "green";
   }
 
-  // 4. Returner både formaterte datoer og rå Date-objekter
+  // 5. Lag forslag til service hvis det ikke finnes fremtidig planlagt
+  if (!futurePlanned && nextService) {
+    suggestedService = {
+      date: nextService.toISOString(),
+      status: "kalkulert",
+      type: "",       // fyll inn senere om ønskelig
+      note: "",
+      user: "",       // fyll inn med gUser.rawid hvis aktuelt
+      followup: []
+    };
+  }
+
   return {
     lastservice: lastService ? formatDate(lastService) : null,
     lastserviceDate: lastService || null,
     nextservice: nextService ? formatDate(nextService) : null,
     nextserviceDate: nextService || null,
-    color
+    color,
+    suggestedService
   };
 }
+
 
   
 function formatDate(date) {

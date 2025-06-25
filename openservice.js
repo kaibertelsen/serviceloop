@@ -209,14 +209,15 @@ function makeNewService(itemElement, item, customer) {
     currentItemElement = itemElement; // Oppdater global variabel
 
     let serviceinfo = findserviceinfo(item);
-    let nextServiceDate = serviceinfo.nextservice || new Date().toISOString();
+    let nextServiceDate = serviceinfo.nextserviceDate || new Date().toISOString();
 
     let userid = gUser.rawid || "";
 
     let body = {
         system: [item.rawid],
         status: "Registrert",
-        user: [userid]
+        user: [userid],
+        date: nextServiceDate
     };
 
     const elementLibrary = document.getElementById("elementlibrary");

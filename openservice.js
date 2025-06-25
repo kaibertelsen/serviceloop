@@ -236,12 +236,6 @@ function responseNewService(data) {
         }
     }
     // Oppdater visningen av systemet
-    if (currentServiceList) {
-        // Tøm den nåværende service-listen
-        currentServiceList.innerHTML = '';
-        // List opp servicer på nytt
-        listServiceOnsystem(currentItemElement, system, customer);
-    } else {
-        console.error("currentServiceList er ikke definert.");
-    }
+    listServiceOnsystem(currentItemElement, system, customer);
+    
 }

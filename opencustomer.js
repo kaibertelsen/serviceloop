@@ -426,36 +426,40 @@ function findserviceinfo(system) {
   let nextService = null;
   let suggestedService = null;
 
-  const validStatuses = ["utført", "fakturert"];
+  const validCompletedStatuses = ["utført", "fakturert"];
 
   // 1. Finn siste utførte eller fakturerte service
   let serviceDone = null;
   if (Array.isArray(system.service)) {
     const completed = system.service
-      .filter(s => !!s.date && validStatuses.includes((s.status || "").toLowerCase()))
+      .filter(s => !!s.date && validCompletedStatuses.includes((s.status || "").toLowerCase()))
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     serviceDone = completed.length > 0 ? new Date(completed[0].date) : null;
     lastService = serviceDone;
   }
 
-  // 2. Finn fremtidig planlagt service som IKKE er utført eller fakturert
+  // 2. Finn fremtidig planlagt service (kun ignorer "kalkulert")
   let futurePlanned = null;
+  let hasPlannedNonKalkulert = false;
+
   if (Array.isArray(system.service)) {
     const planned = system.service
       .filter(s => {
         if (!s.date) return false;
+        const date = new Date(s.date);
         const status = (s.status || "").toLowerCase();
-        return !validStatuses.includes(status) && new Date(s.date) > today;
+        const isRelevant = status !== "kalkulert" && date > today;
+        if (isRelevant) hasPlannedNonKalkulert = true;
+        return isRelevant;
       })
       .sort((a, b) => new Date(a.date) - new Date(b.date));
 
     futurePlanned = planned.length > 0 ? new Date(planned[0].date) : null;
   }
 
-  const interval = parseInt(system.intervall || "0");
-
   // 3. Beregn neste service
+  const interval = parseInt(system.intervall || "0");
   if (futurePlanned) {
     nextService = futurePlanned;
   } else if (serviceDone && interval > 0) {
@@ -470,16 +474,15 @@ function findserviceinfo(system) {
   // 4. Evaluer farge
   let color = "gray";
   if (nextService) {
-    const isOverdue = nextService < today;
-    color = isOverdue ? "red" : "green";
+    color = nextService < today ? "red" : "green";
   }
 
-  // 5. Lag forslag til service hvis det ikke finnes fremtidig planlagt
-  if (!futurePlanned && nextService) {
+  // 5. Lag forslag hvis ingen fremtidig planlagt service finnes
+  if (!hasPlannedNonKalkulert && nextService) {
     suggestedService = {
       date: nextService.toISOString(),
       status: "kalkulert",
-      user: [gUser.rawid]  // fyll inn med gUser.rawid hvis aktuelt
+      user: [gUser.rawid]
     };
   }
 
@@ -492,6 +495,7 @@ function findserviceinfo(system) {
     suggestedService
   };
 }
+
 
 
   

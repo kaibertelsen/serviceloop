@@ -201,7 +201,7 @@ function makeNewService(itemElement, item, customer) {
         const loaderClone = loaderElement.cloneNode(true);
         const textinfo = loaderClone.querySelector(".textinfo");
         if (textinfo) {
-            textinfo.textContent = "Laster inn ny service...";
+            textinfo.textContent = "Oppretter ny service...";
         }
         serviceelementlist.prepend(loaderClone);
     }

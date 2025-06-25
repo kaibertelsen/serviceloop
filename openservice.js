@@ -98,11 +98,39 @@ function listServiceOnsystem(itemElement, item, customer) {
           });
         } 
 
-        
-        // Legg til redigeringsfunksjonalitet
+        //åpner mer informasjon på service
+        const moreInfo = serviceElement.querySelector(".moreserviceinfo");
+        moreInfo.style.height = "0px"; // Start med høyde 0 for animasjon
         serviceElement.querySelector(".openservicebutton").addEventListener("click", () => {
+            
+            if (!moreInfo) return;
           
-        });
+            const isCollapsed = moreInfo.offsetHeight === 0;
+          
+            if (isCollapsed) {
+              // Åpne: start fra 0 og gå til scrollHeight
+              moreInfo.style.height = "0px"; // sikker start
+              const fullHeight = moreInfo.scrollHeight + "px";
+          
+              requestAnimationFrame(() => {
+                moreInfo.style.height = fullHeight;
+              });
+          
+              // Etter animasjonen, fjern høyden så den tilpasses innhold automatisk
+              setTimeout(() => {
+                moreInfo.style.height = "auto";
+              }, 400);
+            } else {
+              // Lukk: start fra nåværende høyde og gå til 0
+              const currentHeight = moreInfo.scrollHeight + "px";
+              moreInfo.style.height = currentHeight;
+          
+              requestAnimationFrame(() => {
+                moreInfo.style.height = "0px";
+              });
+            }
+          });
+          
 
         serviceListContainer.appendChild(serviceElement);
       });

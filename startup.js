@@ -8,6 +8,7 @@ var gServicetype = []; // Global variable to store service type data
 
 const statusService = [
     { value: "", text: "Alle statuser", color: "gray" },
+    { value: "kalkulert", text: "Kalkulert", color: "gray" },
     { value: "registrert", text: "Registrert", color: "#007bff" },   // blå
     { value: "påminnet", text: "Påminnet", color: "#17a2b8" },       // cyan
     { value: "planlagt", text: "Planlagt", color: "#ffc107" },       // gul

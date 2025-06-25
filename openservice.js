@@ -209,7 +209,6 @@ function makeNewService(itemElement, item, customer) {
     currentItemElement = itemElement; // Oppdater global variabel
 
     let serviceinfo = findserviceinfo(item);
-    let serviceinfo = findserviceinfo(item);
     let nextServiceDate = (serviceinfo.nextserviceDate instanceof Date && !isNaN(serviceinfo.nextserviceDate))
     ? serviceinfo.nextserviceDate.toISOString()
     : new Date().toISOString();

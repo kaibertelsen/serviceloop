@@ -79,6 +79,19 @@ function listServiceOnsystem(itemElement, item, customer) {
         } else {
         dateInput.value = "";
         }
+
+        //når dato settes send dette til server
+        dateInput.addEventListener("change", function () {
+            const newDate = new Date(dateInput.value);
+            if (isNaN(newDate)) {
+                console.error("Ugyldig dato:", dateInput.value);
+                return;
+            }
+            //send til server
+            let data = {date: newDate.toISOString()};
+            sendEditServiceToServer(item, data);
+        }
+        );
         
         //Load status selectoren med arrayen statusService
         const statusSelect = serviceElement.querySelector(".editstatusservice");
@@ -318,3 +331,10 @@ function responseDeleteService(data) {
 console.log("Service slettet:", data);
 
 }
+
+
+function sendEditServiceToServer(systemItem, data) {
+    let body = JSON.stringify(data);
+    let rawid = systemItem.rawid;
+    PATCHairtable("appuUESr4s93SWaS7", "tblPWerScR5AbxnlJ", rawid, body, "responseEditService");
+  }

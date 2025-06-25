@@ -121,8 +121,10 @@ function listServiceOnsystem(itemElement, item, customer) {
 
         //åpner mer informasjon på service
         const moreInfo = serviceElement.querySelector(".moreserviceinfo");
-        moreInfo.style.height = "0px"; // Start med høyde 0 for animasjon
-        serviceElement.querySelector(".openservicebutton").addEventListener("click", () => {
+        if (moreInfo) {
+          
+            moreInfo.style.height = "0px"; // Start med høyde 0 for animasjon
+            serviceElement.querySelector(".openservicebutton").addEventListener("click", () => {
             
             if (!moreInfo) return;
           
@@ -150,7 +152,8 @@ function listServiceOnsystem(itemElement, item, customer) {
                 moreInfo.style.height = "0px";
               });
             }
-        });
+            });
+        }
         
         
         const noteservicequill = serviceElement.querySelector(".noteservicequill");

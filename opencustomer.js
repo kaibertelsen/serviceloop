@@ -281,6 +281,8 @@ function listSystemOnCustomer(customer) {
         intervallinput.addEventListener("blur", () => {
             let data = {intervall: Number(intervallinput.value)};
             sendEditSystemToServer(item, data);
+            //list servicene på nytt
+            listServiceOnsystem(itemElement, item, customer);
           }
         );
         // Oppdater lokasjon

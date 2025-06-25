@@ -454,23 +454,22 @@ function findserviceinfo(system) {
     color = nextService < today ? "red" : "green";
   }
 
-  // 4. Ikke foreslå hvis det finnes noen service innenfor ±2 måneder fra nextService
-  let hasAnyServiceInRange = false;
+  // 4. Sjekk om det finnes en service i tidsrommet mellom lastService → nextService + 2 måneder
+  let hasServiceInWindow = false;
   if (Array.isArray(system.service) && nextService) {
-    const rangeStart = new Date(nextService);
-    rangeStart.setMonth(rangeStart.getMonth() - 2);
-    const rangeEnd = new Date(nextService);
-    rangeEnd.setMonth(rangeEnd.getMonth() + 2);
+    const windowStart = lastService || new Date(0); // bruk 1970 hvis ingen lastService
+    const windowEnd = new Date(nextService);
+    windowEnd.setMonth(windowEnd.getMonth() + 2);
 
-    hasAnyServiceInRange = system.service.some(s => {
+    hasServiceInWindow = system.service.some(s => {
       if (!s.date) return false;
       const d = new Date(s.date);
-      return d >= rangeStart && d <= rangeEnd;
+      return d >= windowStart && d <= windowEnd;
     });
   }
 
-  // 5. Lag forslag kun hvis det ikke finnes noen service innenfor området
-  if (nextService && !hasAnyServiceInRange) {
+  // 5. Foreslå kalkulert service hvis det ikke finnes noen i vinduet
+  if (nextService && !hasServiceInWindow) {
     suggestedService = {
       date: nextService.toISOString(),
       status: "kalkulert",
@@ -487,6 +486,7 @@ function findserviceinfo(system) {
     suggestedService
   };
 }
+
 
 
 

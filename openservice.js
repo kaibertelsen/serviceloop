@@ -168,7 +168,7 @@ function listServiceOnsystem(itemElement, item, customer) {
         // Sett border på høyre side av systemelement basert på siste status
         const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
         const borderColor = statusObj ? statusObj.color : "gray";
-        serviceElement.style.borderRight = `6px solid ${borderColor}`;
+        serviceElement.style.borderLeft = `6px solid ${borderColor}`;
 
         serviceListContainer.appendChild(serviceElement);
       });

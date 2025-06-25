@@ -209,7 +209,11 @@ function makeNewService(itemElement, item, customer) {
     currentItemElement = itemElement; // Oppdater global variabel
 
     let serviceinfo = findserviceinfo(item);
-    let nextServiceDate = serviceinfo.nextserviceDate || new Date().toISOString();
+    let serviceinfo = findserviceinfo(item);
+    let nextServiceDate = (serviceinfo.nextserviceDate instanceof Date && !isNaN(serviceinfo.nextserviceDate))
+    ? serviceinfo.nextserviceDate.toISOString()
+    : new Date().toISOString();
+
 
     let userid = gUser.rawid || "";
 

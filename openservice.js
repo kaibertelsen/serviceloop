@@ -59,7 +59,7 @@ function listServiceOnsystem(itemElement, item, customer) {
             serviceElement = servicecalcElement.cloneNode(true);
 
              //lage klik event på newservicebutton
-            const newServiceButton = itemElement.querySelector(".newcalcservice");
+            const newServiceButton = serviceElement.querySelector(".newcalcservice");
             if (newServiceButton) {
                 newServiceButton.addEventListener("click", function () {
                     makeNewService(itemElement,item, service,serviceElement);

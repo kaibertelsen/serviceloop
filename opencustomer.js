@@ -479,10 +479,7 @@ function findserviceinfo(system) {
     suggestedService = {
       date: nextService.toISOString(),
       status: "kalkulert",
-      type: "",       // fyll inn senere om ønskelig
-      note: "",
-      user: "",       // fyll inn med gUser.rawid hvis aktuelt
-      followup: []
+      user: [gUser.rawid]  // fyll inn med gUser.rawid hvis aktuelt
     };
   }
 

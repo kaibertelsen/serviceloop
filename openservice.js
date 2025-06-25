@@ -32,7 +32,13 @@ function listServiceOnsystem(itemElement, item, customer) {
     item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
 
-    
+    //Sjekke om den skal foresløs neste service
+    const serviceinfo = findserviceinfo(item);
+    if (serviceinfo.suggestedService) {
+        const service = serviceinfo.suggestedService;
+        //legg til først i item.service
+        item.service.unshift(service);
+    }
 
     item.service.forEach((service) => {
 

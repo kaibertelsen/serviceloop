@@ -233,9 +233,12 @@ function responseNewService(data) {
                 system.service = [];
             }
             system.service.push(newService);
+
+            // Oppdater visningen av systemet
+            listServiceOnsystem(currentItemElement, system, customer);
+
         }
     }
-    // Oppdater visningen av systemet
-    listServiceOnsystem(currentItemElement, system, customer);
+    
     
 }

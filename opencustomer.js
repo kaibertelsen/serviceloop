@@ -411,46 +411,50 @@ function  calcserviceDate(system, itemElement) {
 }
 
 function findserviceinfo(system) {
-    console.log("findserviceinfo for system:", system);
-  
-    const today = new Date();
-    let lastService = null;
-    let nextService = null;
-  
-    // 1. Finn siste service (dersom finnes)
-    if (system.service && system.service.length > 0) {
-      const sorted = system.service
-        .filter(s => !!s.date) // sørg for at dato finnes
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
-  
-      lastService = sorted.length > 0 ? new Date(sorted[0].date) : null;
-    }
-  
-    // 2. Beregn neste service
-    const interval = parseInt(system.intervall || "0");
-  
-    if (lastService) {
-      nextService = new Date(lastService);
-      nextService.setMonth(nextService.getMonth() + interval);
-    } else if (system.installed_date && interval > 0) {
-      const installed = new Date(system.installed_date);
-      nextService = new Date(installed);
-      nextService.setMonth(installed.getMonth() + interval);
-    }
-  
-    // 3. Evaluer farge
-    let color = "gray"; // default
-    if (nextService) {
-      const isOverdue = nextService < today;
-      color = isOverdue ? "red" : "green";
-    }
-  
-    return {
-      lastservice: lastService ? formatDate(lastService) : null,
-      nextservice: nextService ? formatDate(nextService) : null,
-      color
-    };
+  console.log("findserviceinfo for system:", system);
+
+  const today = new Date();
+  let lastService = null;
+  let nextService = null;
+
+  // 1. Finn siste service (dersom finnes)
+  if (system.service && system.service.length > 0) {
+    const sorted = system.service
+      .filter(s => !!s.date)
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    lastService = sorted.length > 0 ? new Date(sorted[0].date) : null;
+  }
+
+  // 2. Beregn neste service
+  const interval = parseInt(system.intervall || "0");
+
+  if (lastService) {
+    nextService = new Date(lastService);
+    nextService.setMonth(nextService.getMonth() + interval);
+  } else if (system.installed_date && interval > 0) {
+    const installed = new Date(system.installed_date);
+    nextService = new Date(installed);
+    nextService.setMonth(installed.getMonth() + interval);
+  }
+
+  // 3. Evaluer farge
+  let color = "gray";
+  if (nextService) {
+    const isOverdue = nextService < today;
+    color = isOverdue ? "red" : "green";
+  }
+
+  // 4. Returner både formaterte datoer og rå Date-objekter
+  return {
+    lastservice: lastService ? formatDate(lastService) : null,
+    lastserviceDate: lastService || null,
+    nextservice: nextService ? formatDate(nextService) : null,
+    nextserviceDate: nextService || null,
+    color
+  };
 }
+
   
 function formatDate(date) {
   if (!(date instanceof Date)) date = new Date(date);

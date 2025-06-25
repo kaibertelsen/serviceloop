@@ -1,4 +1,5 @@
 var gUser = null; // Global variable to store user data
+var gUsers = []; // Global variable to store users data
 var gCustomer = []; // Global variable to store customer data
 var gClient = null; // Global variable to store client data
 var gService = []; // Global variable to store service data
@@ -52,14 +53,17 @@ function responsClient(data) {
         gSystem_type = parseItemJson(gClient.system_typejson);
     }
 
-    gService = [];
+    gServicetype = [];
     if(gClient?.service_typejson){
-        gService = parseItemJson(gClient.service_typejson);
+        gServicetype = parseItemJson(gClient.service_typejson);
         //sorter alfabetisk
-        gService.sort((a, b) => a.name.localeCompare(b.name));
+        gServicetype.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-   
+    gUsers =  []; 
+   if(gClient?.usersjson){
+        gUsers = convertJSONArrayToObject(gClient.usersjson);
+    }
     
     //start kundelisten
     startCustomerListPage(gCustomer);

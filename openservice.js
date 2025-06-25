@@ -66,11 +66,11 @@ function listServiceOnsystem(itemElement, item, customer) {
           });
         }
 
-        //loade edittypeservice med gService
+        //loade edittypeservice med gServicetype
         const typeSelect = serviceElement.querySelector(".edittypeservice");
         if (typeSelect) {
           typeSelect.innerHTML = ''; // Tøm select-elementet
-          gService.forEach(type => {
+          gServicetype.forEach(type => {
             const option = document.createElement("option");
             option.value = type.rawid; // Bruk rawid som value
             option.textContent = type.name;

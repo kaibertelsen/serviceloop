@@ -1,4 +1,5 @@
 
+var currentServiceList = null; // Global variabel for å holde styr på gjeldende service-liste
 
 document.getElementById("fromServicetoCustomer").addEventListener("click", function () {
    
@@ -11,9 +12,19 @@ document.getElementById("fromServicetoCustomer").addEventListener("click", funct
 
 function listServiceOnsystem(itemElement, item, customer) {
 
+    //lage klik event på newservicebutton
+    const newServiceButton = itemElement.querySelector(".newservicebutton");
+    if (newServiceButton) {
+        newServiceButton.addEventListener("click", function () {
+            makeNewService(itemElement,item, customer);
+        });
+    }
+
       //list opp servicer
       const serviceListContainer = itemElement.querySelector(".serviceelementlist");
       serviceListContainer.innerHTML = ''; // Tøm containeren
+      currentServiceList = serviceListContainer; // Oppdater global variabel
+
       if (!item.service || item.service.length === 0) {
         serviceListContainer.textContent = "Ingen service funnet for dette systemet.";
         return;
@@ -27,6 +38,9 @@ function listServiceOnsystem(itemElement, item, customer) {
       }
       // Sorter service etter dato
       item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+      
+
       item.service.forEach((service) => {
 
         const serviceElement = serviceElementTemplate.cloneNode(true);
@@ -160,4 +174,75 @@ function listServiceOnsystem(itemElement, item, customer) {
 
         serviceListContainer.appendChild(serviceElement);
       });
+}
+
+
+function makeNewService(itemElement, item, customer) {
+    let serviceinfo = findserviceinfo(item);
+    let nextServiceDate = serviceinfo.nextservice || new Date().toISOString();
+
+    let userid = gUser.rawid || "";
+
+    let body = {
+        customer: customer.rawid,
+        system: item.rawid,
+        date: nextServiceDate,
+        status: "registrert",
+        user: [userid]
+    };
+
+    const elementLibrary = document.getElementById("elementlibrary");
+    const loaderElement = elementLibrary?.querySelector(".loaderconteiner");
+    const serviceelementlist = itemElement.querySelector(".serviceelementlist");
+
+    if (loaderElement && serviceelementlist) {
+        const loaderClone = loaderElement.cloneNode(true);
+        const textinfo = loaderClone.querySelector(".textinfo");
+        if (textinfo) {
+            textinfo.textContent = "Laster inn ny service...";
+        }
+        serviceelementlist.prepend(loaderClone);
+    }
+
+    // Send til server
+    POSTairtable(
+        "appuUESr4s93SWaS7",
+        "tblPWerScR5AbxnlJ", // system-tabell
+        JSON.stringify(body),
+        "responseNewService"
+    );
+}
+
+function responseNewService(data) {
+   
+    let newService = JSON.parse(data.fields.json);
+    // Legg til det nye systemet i kundens systemliste
+
+    console.log("Ny service opprettet:", newService);
+    //oppdater lokal service array "gService"
+    gService.push(newService);
+
+
+    //oppdater kunde 
+    let customer = gCustomer.find(c => c.rawid === newService.customerid);
+    if (customer) {
+        // Finn systemet i kundens systemliste
+        let system = customer.system.find(s => s.rawid === newService.systemid);
+        if (system) {
+            // Legg til den nye servicen i systemets service-liste
+            if (!system.service) {
+                system.service = [];
+            }
+            system.service.push(newService);
+        }
+    }
+    // Oppdater visningen av systemet
+    if (currentServiceList) {
+        // Tøm den nåværende service-listen
+        currentServiceList.innerHTML = '';
+        // List opp servicer på nytt
+        listServiceOnsystem(currentServiceList, system, customer);
+    } else {
+        console.error("currentServiceList er ikke definert.");
+    }
 }

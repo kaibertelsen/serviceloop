@@ -424,23 +424,21 @@ function findserviceinfo(system) {
   let nextService = null;
   let suggestedService = null;
 
-  const validCompletedStatuses = ["utført", "fakturert"];
+  const validStatuses = ["utført", "fakturert"];
 
-  // 1. Finn siste utførte/fakturerte
-  let serviceDone = null;
-  if (Array.isArray(system.service)) {
-    const completed = system.service
-      .filter(s => !!s.date && validCompletedStatuses.includes((s.status || "").toLowerCase()))
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+  const services = Array.isArray(system.service) ? system.service : [];
 
-    serviceDone = completed.length > 0 ? new Date(completed[0].date) : null;
-    lastService = serviceDone;
-  }
+  // 1. Finn siste service som er ferdigstilt (utført/fakturert)
+  const completedServices = services
+    .filter(s => !!s.date && validStatuses.includes((s.status || "").toLowerCase()))
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  lastService = completedServices.length > 0 ? new Date(completedServices[0].date) : null;
 
   // 2. Beregn neste service
   const interval = parseInt(system.intervall || "0");
-  if (serviceDone && interval > 0) {
-    nextService = new Date(serviceDone);
+  if (lastService && interval > 0) {
+    nextService = new Date(lastService);
     nextService.setMonth(nextService.getMonth() + interval);
   } else if (system.installed_date && interval > 0) {
     const installed = new Date(system.installed_date);
@@ -448,33 +446,35 @@ function findserviceinfo(system) {
     nextService.setMonth(installed.getMonth() + interval);
   }
 
-  // 3. Evaluer farge
-  let color = "gray";
+  // 3. Finn service innenfor nextService-vinduet (ekskluder lastService selv)
+  let serviceInWindow = false;
   if (nextService) {
-    color = nextService < today ? "red" : "green";
-  }
+    const plus2Months = new Date(nextService);
+    plus2Months.setMonth(plus2Months.getMonth() + 2);
 
-  // 4. Sjekk om det finnes en service i tidsrommet mellom lastService → nextService + 2 måneder
-  let hasServiceInWindow = false;
-  if (Array.isArray(system.service) && nextService) {
-    const windowStart = lastService || new Date(0); // bruk 1970 hvis ingen lastService
-    const windowEnd = new Date(nextService);
-    windowEnd.setMonth(windowEnd.getMonth() + 2);
-
-    hasServiceInWindow = system.service.some(s => {
+    serviceInWindow = services.some(s => {
       if (!s.date) return false;
       const d = new Date(s.date);
-      return d >= windowStart && d <= windowEnd;
+      // Ikke ta med lastService selv
+      if (lastService && d.getTime() === lastService.getTime()) return false;
+      return d > lastService && d <= plus2Months;
     });
   }
 
-  // 5. Foreslå kalkulert service hvis det ikke finnes noen i vinduet
-  if (nextService && !hasServiceInWindow) {
+  // 4. Bestem om det skal foreslås service
+  if (!serviceInWindow && nextService) {
     suggestedService = {
       date: nextService.toISOString(),
       status: "kalkulert",
       user: [gUser.rawid]
     };
+  }
+
+  // 5. Farge
+  let color = "gray";
+  if (nextService) {
+    const isOverdue = nextService < today;
+    color = isOverdue ? "red" : "green";
   }
 
   return {
@@ -486,6 +486,7 @@ function findserviceinfo(system) {
     suggestedService
   };
 }
+
 
 
 

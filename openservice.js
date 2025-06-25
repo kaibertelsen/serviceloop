@@ -24,6 +24,9 @@ function listServiceOnsystem(itemElement, item, customer) {
     // Hent mal for serviceelement
     const elementLibrary = document.getElementById("elementlibrary");
     const serviceElementTemplate = elementLibrary.querySelector(".servicerow");
+
+    const servicecalcElement = elementLibrary.querySelector(".servicecalc");
+
     if (!serviceElementTemplate) {
     console.error("Ingen '.serviceelement' funnet i 'elementlibrary'.");
     return;
@@ -42,7 +45,12 @@ function listServiceOnsystem(itemElement, item, customer) {
 
     item.service.forEach((service) => {
 
-        const serviceElement = serviceElementTemplate.cloneNode(true);
+        var serviceElement = null; // Variabel for service-elementet
+        if(service.status === "Kalkulert" || service.status === "kalkulert") {
+            serviceElement = servicecalcElement.cloneNode(true);
+        }else{
+            serviceElement = serviceElementTemplate.cloneNode(true);
+        }
 
         //sette dato
         const dateInput = serviceElement.querySelector(".servicedate");

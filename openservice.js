@@ -187,7 +187,8 @@ function makeNewService(itemElement, item, customer) {
     let body = {
         system: [item.rawid],
         status: "Registrert",
-        user: [userid]
+        user: [userid],
+        date: nextServiceDate
     };
 
     const elementLibrary = document.getElementById("elementlibrary");

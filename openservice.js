@@ -184,8 +184,8 @@ function makeNewService(itemElement, item, customer) {
     let userid = gUser.rawid || "";
 
     let body = {
-        customer: customer.rawid,
-        system: item.rawid,
+        customer: [customer.rawid],
+        system: [item.rawid],
         status: "registrert",
         user: [userid]
     };

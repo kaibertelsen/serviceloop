@@ -1,5 +1,5 @@
 
-var currentServiceList = null; // Global variabel for å holde styr på gjeldende service-liste
+var currentItemElement = null; // Global variabel for å holde styr på gjeldende service-liste
 
 document.getElementById("fromServicetoCustomer").addEventListener("click", function () {
    
@@ -23,7 +23,7 @@ function listServiceOnsystem(itemElement, item, customer) {
       //list opp servicer
       const serviceListContainer = itemElement.querySelector(".serviceelementlist");
       serviceListContainer.innerHTML = ''; // Tøm containeren
-      currentServiceList = serviceListContainer; // Oppdater global variabel
+      
 
       if (!item.service || item.service.length === 0) {
         serviceListContainer.textContent = "Ingen service funnet for dette systemet.";
@@ -178,6 +178,10 @@ function listServiceOnsystem(itemElement, item, customer) {
 
 
 function makeNewService(itemElement, item, customer) {
+
+    const serviceListContainer = itemElement.querySelector(".serviceelementlist");
+    currentItemElement = itemElement; // Oppdater global variabel
+
     let serviceinfo = findserviceinfo(item);
     let nextServiceDate = serviceinfo.nextservice || new Date().toISOString();
 
@@ -217,10 +221,7 @@ function responseNewService(data) {
     // Legg til det nye systemet i kundens systemliste
 
     console.log("Ny service opprettet:", newService);
-    //oppdater lokal service array "gService"
-    gService.push(newService);
-
-
+  
     //oppdater kunde 
     let customer = gCustomer.find(c => c.rawid === newService.customerid);
     if (customer) {
@@ -239,7 +240,7 @@ function responseNewService(data) {
         // Tøm den nåværende service-listen
         currentServiceList.innerHTML = '';
         // List opp servicer på nytt
-        listServiceOnsystem(currentServiceList, system, customer);
+        listServiceOnsystem(currentItemElement, system, customer);
     } else {
         console.error("currentServiceList er ikke definert.");
     }

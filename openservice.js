@@ -129,8 +129,34 @@ function listServiceOnsystem(itemElement, item, customer) {
                 moreInfo.style.height = "0px";
               });
             }
+        });
+        
+        
+        const noteservicequill = serviceElement.querySelector(".noteservicequill");
+        if (noteservicequill) {
+          // Initialize Quill editor for notes
+          const quill = new Quill(noteservicequill, {
+            theme: 'snow',
+            modules: {
+                toolbar: true // Viktig for at den skal bli generert
+            }
           });
           
+          // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
+        setTimeout(() => {
+            quill.clipboard.dangerouslyPasteHTML(service.note || "");
+          }, 0);
+          
+          // 4. Lytt etter blur (når man forlater editoren)
+          quill.root.addEventListener("blur", function () {
+            // Hent HTML-innholdet fra Quill-editoren
+            let noteContent = quill.root.innerHTML;
+            console.log("Note content:", noteContent);
+            //send til server
+            let data = {note: noteContent};
+            //sendEditSystemToServer(item, data);
+          });
+        }
 
         serviceListContainer.appendChild(serviceElement);
       });

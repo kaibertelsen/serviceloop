@@ -186,7 +186,6 @@ function makeNewService(itemElement, item, customer) {
     let body = {
         customer: customer.rawid,
         system: item.rawid,
-        date: nextServiceDate,
         status: "registrert",
         user: [userid]
     };

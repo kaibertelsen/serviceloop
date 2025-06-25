@@ -7,13 +7,14 @@ var gSystem_type = []; // Global variable to store system data
 var gServicetype = []; // Global variable to store service type data
 
 const statusService = [
-    { value: "", text: "Alle statuser" },
-    { value: "registrert", text: "Registrert" },
-    { value: "påminnet", text: "Påminnet" },
-    { value: "planlagt", text: "Planlagt" },
-    { value: "utført", text: "Utført" },
-    { value: "fakturert", text: "Fakturert" }
-];
+    { value: "", text: "Alle statuser", color: "gray" },
+    { value: "registrert", text: "Registrert", color: "#007bff" },   // blå
+    { value: "påminnet", text: "Påminnet", color: "#17a2b8" },       // cyan
+    { value: "planlagt", text: "Planlagt", color: "#ffc107" },       // gul
+    { value: "utført", text: "Utført", color: "#28a745" },           // grønn
+    { value: "fakturert", text: "Fakturert", color: "#000000" }      // svart
+  ];
+  
 
 
 

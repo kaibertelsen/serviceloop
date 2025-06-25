@@ -173,7 +173,7 @@ function listSystemInService(data, element) {
   
     systemArray.forEach(system => {
       const itemElement = systemElementLibrary.cloneNode(true);
-  
+
       const name = itemElement.querySelector('.systemname');
       if (name) name.textContent = system.name || "Ukjent system";
   
@@ -199,6 +199,13 @@ function listSystemInService(data, element) {
             }
         }
   
+      // Sett border på høyre side av systemelement basert på siste status
+      const latestService = system.service && system.service.length > 0 ? system.service[0] : null;
+      const serviceStatus = latestService?.status?.toLowerCase() || "";
+      const statusObj = statusService.find(s => s.value === serviceStatus);
+      const borderColor = statusObj ? statusObj.color : "gray";
+      itemElement.style.borderRight = `6px solid ${borderColor}`;
+
       systemList.appendChild(itemElement);
     });
   

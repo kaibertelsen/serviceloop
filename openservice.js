@@ -340,7 +340,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     service.followup.forEach(followup => {
         //sjekk om followup er en array, hvis ikke gjør den til en array
         let followupElement = nodeElement.cloneNode(true);
-        followupElement.querySelector(".followupdasteonservice").textContent = followup.date ? new Date(followup.date).toLocaleDateString("no-NO") : "–";
+        //dato og klikkeslett
+        followupElement.querySelector(".followupdasteonservice").textContent = new Date(followup.date).toLocaleDateString("no-NO");
         followupElement.querySelector(".emailfollowuplable").textContent = followup.email || "–";
 
         listFollowup.appendChild(followupElement);

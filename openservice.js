@@ -579,6 +579,7 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
         user: [gUser.rawid]
     };
 
+    
     // Send til Airtable
     POSTairtable(
         "appuUESr4s93SWaS7",

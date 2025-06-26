@@ -147,8 +147,6 @@ function createSystemElement(nodeElement, item, customer){
 
     const itemElement = nodeElement.cloneNode(true);
 
-    createSystemElement(itemElement, item, customer);
-
     const moreconteiner = itemElement.querySelector(".moreconteiner");
     const showhidetugglemorebutton = itemElement.querySelector(".showhidetugglemorebutton");
 
@@ -297,7 +295,7 @@ function createSystemElement(nodeElement, item, customer){
           listServiceOnsystem(itemElement, item, customer);
         }
       );
-      
+
       // Oppdater lokasjon
       itemElement.querySelector(".locationlable").textContent = item.location || "–";
       itemElement.querySelector(".locationlable").setAttribute("data-field", "location");

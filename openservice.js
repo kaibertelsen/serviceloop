@@ -344,7 +344,6 @@ console.log("Service slettet:", data);
 
 }
 
-
 function sendEditServiceToServer(service, data) {
     let body = JSON.stringify(data);
     let rawid = service.rawid;

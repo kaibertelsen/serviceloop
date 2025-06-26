@@ -487,11 +487,23 @@ function sendwarningToCustomer(item, service){
     }
 
     const navn = customer.name || "Kunde";
+    //hvis det er en bedrift fjern navnet
+    if (customer.type && customer.type.toLowerCase() === "bedrift") {
+        navn = "";
+    }
+
+
     const anleggsnavn = item.name || "Anlegg";
+    const location = item.location || "";
+    if (location) {
+        anleggsnavn += `i (${location})`;
+    }
 
     const servicedato = service.date ? new Date(service.date).toLocaleDateString("no-NO") : "";
     const brukernavn = gUser.name || "Bruker";
     const email = customer.email || "";
+
+
     if (!email) {
         console.error("Ingen e-postadresse funnet for kunde:", customer.rawid);
         return;

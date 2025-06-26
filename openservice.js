@@ -524,7 +524,15 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
   
     const htmlBody = `
       <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;padding:30px;background:#fff;border-radius:8px;box-shadow:0 3px 12px rgba(0,0,0,0.05)">
+        
+        <div style="text-align:center; margin-bottom:30px;">
+          <img src="https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/68495ac7e72d8c41ea1e06a3_Corsoft-web-textAsset%202.svg" 
+               alt="Varme VVS AS logo" 
+               style="max-height:60px; max-width:220px;" />
+        </div>
+  
         <p style="font-size:18px;">Hei ${navn},</p>
+  
         <p style="font-size:16px;line-height:1.6">
           Vi ønsker å informere deg om at det nærmer seg service på ditt anlegg: 
           <strong style="color:#004080">${anleggsnavn}</strong>.
@@ -538,11 +546,13 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
         <p style="font-size:16px;line-height:1.6">
           Du kan svare direkte på denne e-posten dersom du har spørsmål eller ønsker å avtale noe spesielt.
         </p>
+  
         <p style="margin-top:30px;">
           Med vennlig hilsen,<br />
           <strong>${brukernavn}</strong><br />
           Varme VVS AS
         </p>
+  
         <p style="color:#777;font-size:13px;margin-top:20px">
           Denne e-posten er sendt automatisk fra vårt system. Ta kontakt dersom noe er uklart.
         </p>
@@ -556,12 +566,12 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
       html: htmlBody
     };
   
-    // Send til Zapier Webhook
+    // Send til Zapier webhook
     sendDataToZapierWebhookCreatUser(payload);
-    
   }
   
-  async function sendDataToZapierWebhookCreatUser(data) {
+  
+async function sendDataToZapierWebhookCreatUser(data) {
     const formData = new FormData();
     for (const key in data) {
         const value = data[key];

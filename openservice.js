@@ -544,25 +544,24 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
       html: htmlBody
     };
   
-    // Send til Zapier webhook
-    fetch("https://hooks.zapier.com/hooks/catch/10455257/ubd0mdj/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`Feil fra Zapier: ${res.status}`);
-        }
-        return res.text();
-      })
-      .then(response => {
-        console.log("E-post sendt via Zapier:", response);
-      })
-      .catch(error => {
-        console.error("Feil ved sending til Zapier:", error);
-      });
+    // Send til Zapier Webhook
+    sendDataToZapierWebhookCreatUser(payload);
+    
   }
   
+  async function sendDataToZapierWebhookCreatUser(data) {
+    const formData = new FormData();
+    for (const key in data) {
+        const value = data[key];
+        formData.append(key, typeof value === 'object' ? JSON.stringify(value) : value);
+    }
+
+    const response = await fetch("https://hooks.zapier.com/hooks/catch/10455257/ubd0mdj/", {
+        method: "POST",
+        body: formData
+    });
+
+    if (!response.ok) {
+        console.error("Error sending data to Zapier:", response.statusText);
+    }
+}

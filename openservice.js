@@ -92,6 +92,9 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             console.error("Ugyldig dato:", dateInput.value);
             return;
         }
+        // Oppdater service med ny dato
+        service.date = newDate.toISOString(); // Lagre dato i ISO-format
+
         //send til server
         let data = {date: newDate.toISOString()};
         sendEditServiceToServer(service, data);
@@ -118,6 +121,18 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         
         statusSelect.appendChild(option);
         });
+
+        // Legg til endringshendelse for status
+        statusSelect.addEventListener("change", function () {
+            const selectedStatus = statusSelect.value;
+            if (selectedStatus) {
+                // Oppdater tjenestens status
+                service.status = selectedStatus;
+                //send til server
+                let data = {status: [selectedStatus]};
+                sendEditServiceToServer(service, data);
+            }
+        });
     }
 
     //loade edittypeservice med gServicetype
@@ -133,6 +148,18 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens type
         }
         typeSelect.appendChild(option);
+        });
+
+        // Legg til endringshendelse for type
+        typeSelect.addEventListener("change", function () {
+            const selectedType = typeSelect.value;
+            if (selectedType) {
+                // Oppdater tjenestens type
+                service.type = selectedType;
+                //send til server
+                let data = {type: [selectedType]};
+                sendEditServiceToServer(service, data);
+            }
         });
     }
 
@@ -150,6 +177,19 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         }
         userSelect.appendChild(option);
         });
+
+        // Legg til endringshendelse for bruker
+        userSelect.addEventListener("change", function () {
+            const selectedUser = userSelect.value;
+            if (selectedUser) {
+                // Oppdater tjenestens bruker
+                service.userid = selectedUser;
+                //send til server
+                let data = {user: [selectedUser]};
+                sendEditServiceToServer(service, data);
+            }
+        }
+        );
     } 
 
     //åpner mer informasjon på service
@@ -209,9 +249,11 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         // Hent HTML-innholdet fra Quill-editoren
         let noteContent = quill.root.innerHTML;
         console.log("Note content:", noteContent);
-        //send til server
+        // Oppdater tjenesten med det nye notatet
+        service.note = noteContent;
+        // Send oppdateringen til serveren
         let data = {note: noteContent};
-        //sendEditSystemToServer(item, data);
+        sendEditServiceToServer(service, data);
         });
     }
 

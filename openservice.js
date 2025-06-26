@@ -573,8 +573,7 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
     sendDataToZapierWebhookCreatUser(payload);
 
     //send til airtable content,date,email,user, service
-    const airtableData = {
-        date: new Date().toISOString(),
+    const airtableData = { 
         email: email,
         user: [gUser.rawid],
         service: [service.rawid]

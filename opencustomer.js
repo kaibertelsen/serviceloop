@@ -43,55 +43,11 @@ function openCustomer(customer) {
 
   
 function  calcserviceDate(system, itemElement) {
-
-  const intervallinput = itemElement.querySelector(".serviceintervall");
-  const intervall = intervallinput.value;
-  system.intervall = intervall; // oppdater systemet med intervall
-
-
-    const today = new Date();
-    let lastService = null;
-    let nextService = null;
-
-    // 1. Finn siste service (dersom finnes)
-    if (system.service && system.service.length > 0) {
-      const sorted = system.service
-        .filter(s => !!s.date) // sørg for at dato finnes
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      lastService = sorted.length > 0 ? new Date(sorted[0].date) : null;
-    }
-
-    // 2. Beregn neste service
-    const interval = parseInt(intervall || "0");
-
-    if (lastService) {
-      nextService = new Date(lastService);
-      nextService.setMonth(nextService.getMonth() + interval);
-    } else {
-      const inputInstalled = itemElement.querySelector(".installdate");
-      const installedDate = inputInstalled.value;
-      if (!installedDate) {
-        nextService = null; // Ingen installert dato, ingen neste service
-        return;
-      }
-      // Hvis ingen siste service, bruk installert dato
-      const installed = new Date(installedDate);
-      nextService = new Date(installed);
-      nextService.setMonth(installed.getMonth() + interval);
-    }
-
-    // 3. Evaluer farge
-    let color = "gray"; // default
-    if (nextService) {
-      const isOverdue = nextService < today;
-      color = isOverdue ? "red" : "green";
-    }
-
+    let serviceinfo = findserviceinfo(system);
     // Oppdater visning
-    itemElement.querySelector(".lastservicelable").textContent = lastService ? formatDate(lastService) : "Ingen service";
-    itemElement.querySelector(".nextservicelable").textContent = nextService ? formatDate(nextService) : "–";
-    itemElement.querySelector(".nextservicelable").style.color = color;
+    itemElement.querySelector(".lastservicelable").textContent = serviceinfo.lastService || "–";
+    itemElement.querySelector(".nextservicelable").textContent = serviceinfo.nextService || "–";
+    itemElement.querySelector(".nextservicelable").style.color = serviceinfo.color;
 }
 
 function findserviceinfo(system) {

@@ -184,13 +184,13 @@ function createSystemElement(nodeElement, item, customer){
       intervallinput.value = item.intervall || "";
       intervallinput.addEventListener("change", () => {
           let data = {intervall: intervallinput.value};
-          //live ny utregning 
+          //live ny utregning og oppdater lable
           calcserviceDate(item,itemElement);
         }
       );
 
       intervallinput.addEventListener("blur", () => {
-        
+
           calcserviceDate(item,itemElement);
           let data = {intervall: Number(intervallinput.value)};
           sendEditSystemToServer(item, data);

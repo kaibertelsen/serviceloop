@@ -179,24 +179,20 @@ function createSystemElement(nodeElement, item, customer){
       nextservicelable.textContent = serviceinfo.nextservice || "–";
       nextservicelable.style.color = serviceinfo.color;
 
-      // Oppdater serviceintervall-input
-      const intervallinput = itemElement.querySelector(".serviceintervall");
-      intervallinput.value = item.intervall || "";
-      intervallinput.addEventListener("change", () => {
-          //live ny utregning og oppdater lable
-          calcserviceDate(item,intervallinput,itemElement);
-        }
-      );
+        // Oppdater serviceintervall-input
+        const intervallinput = itemElement.querySelector(".serviceintervall");
+        intervallinput.value = item.intervall || "";
+        intervallinput.addEventListener("change", () => {
+            //live ny utregning og oppdater lable
+            calcserviceDate(item,intervallinput,itemElement);
+        });
 
-      intervallinput.addEventListener("blur", () => {
-
-          calcserviceDate(item,itemElement);
-          let data = {intervall: Number(intervallinput.value)};
-          sendEditSystemToServer(item, data);
-          //list servicene på nytt
-          listServiceOnsystem(itemElement, item, customer);
-        }
-      );
+        intervallinput.addEventListener("blur", () => {
+        calcserviceDate(item,intervallinput,itemElement);
+        sendEditSystemToServer(item, {intervall: Number(intervallinput.value)});
+        //list servicene på nytt
+        listServiceOnsystem(itemElement, item, customer);
+        });
 
       // Oppdater lokasjon
       itemElement.querySelector(".locationlable").textContent = item.location || "–";

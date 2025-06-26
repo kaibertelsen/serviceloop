@@ -496,7 +496,7 @@ function sendwarningToCustomer(item, service){
     let anleggsnavn = item.name || "Anlegg";
     const location = item.location || "";
     if (location) {
-        anleggsnavn += `i (${location})`;
+        anleggsnavn += `(${location})`;
     }
 
     const servicedato = service.date ? new Date(service.date).toLocaleDateString("no-NO") : "";

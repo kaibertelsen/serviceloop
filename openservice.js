@@ -131,6 +131,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 //send til server
                 let data = {status: selectedStatus};
                 sendEditServiceToServer(service, data);
+
+                //sett riktig bordercolor på serviceelementet
+                const statusObj = statusService.find(status => status.value.toLowerCase() === selectedStatus.toLowerCase());
+                const borderColor = statusObj ? statusObj.color : "gray";
+                serviceElement.style.borderLeft = `6px solid ${borderColor}`;
+
             }
         });
     }

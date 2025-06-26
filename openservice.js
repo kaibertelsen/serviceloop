@@ -348,4 +348,11 @@ function sendEditServiceToServer(service, data) {
     let body = JSON.stringify(data);
     let rawid = service.rawid;
     PATCHairtable("appuUESr4s93SWaS7", "tblPWerScR5AbxnlJ", rawid, body, "responseEditService");
-  }
+}
+
+function responseEditService(data) {
+    //oppdater gService med den oppdaterte servicen
+    const updatedService = JSON.parse(data.fields.json);
+  console.log("Service oppdatert:", updatedService);
+
+}

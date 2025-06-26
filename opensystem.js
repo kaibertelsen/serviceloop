@@ -106,6 +106,7 @@ function createSystemElement(nodeElement, item, customer){
       itemElement.querySelector(".systemname").textContent = item.name || "Ukjent anlegg";
       itemElement.querySelector(".systemname").setAttribute("data-field", "name");
 
+    //Modell selector
       let modelselector = itemElement.querySelector(".editselectmodell");
       //fjern tidligere options
       modelselector.innerHTML = ""; // Tøm eksisterende options
@@ -145,8 +146,7 @@ function createSystemElement(nodeElement, item, customer){
       // Reager på "Opprett ny modell"
       modelselector.addEventListener("change", () => {
         if (modelselector.value === "__create__") {
-          handleCreateNewModel();
-          modelselector.value = item.typemodel || "";
+          handleCreateNewModel(nodeElement, item, customer);
         } else {
           // Eventuelt send oppdatering til server her
           let data = {system_type:[modelselector.value]};
@@ -421,8 +421,65 @@ function responseEditSystem(data) {
   
 }
   
-function handleCreateNewModel() {
-    // Vis f.eks. et popup-skjema eller gå til en egen side
-    alert("Her kan du opprette en ny modell.");
-    // Du kan også trigge en modal, Webflow-interaction, eller lignende
+function handleCreateNewModel(nodeElement, item, customer) {
+    // Vis f.eks. et popup-skjema hvor en kan angi modellnavn
+    const modelName = prompt("Skriv inn navnet på den nye modellen:");
+    if (!modelName) {
+        alert("Modellnavn kan ikke være tomt.");
+        return;
+    }
+    // Opprett nytt systemtypeobjekt
+    const newModel = {
+        name: modelName,
+        system: [item.rawid], // Legg til systemet som bruker denne modellen
+        client: [currentCustomer.client] // Legg til klient-ID
+    };
+    // Send til server (POST til Airtable)
+    POSTairtable(
+        "appuUESr4s93SWaS7",
+        "tble7pEg5BaVNS3o5", // system_type-tabell
+        JSON.stringify(newModel),
+        "responseNewModel"
+    );
+
+    // Vis loader i systemlisten
+    const elementLibrary = document.getElementById("elementlibrary");
+    const loaderElement = elementLibrary?.querySelector(".loaderconteiner");
+    const systemListContainer = document.getElementById("systemlist");
+    if (loaderElement && systemListContainer) {
+        const loaderClone = loaderElement.cloneNode(true);
+        systemListContainer.prepend(loaderClone); // legg til øverst
+    }
+   
+}
+
+function responseNewModel(data) {
+
+    console.log("Ny modell opprettet:", data);
+  
+    // Legg til den nye modellen i system_type-listen
+    const newModel = JSON.parse(data.fields.json);
+    gSystem_type.push(newModel);
+
+    //Oppdater systemet lokalt
+    const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
+    if (customerIndex !== -1) {
+        const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === currentSystem.rawid);
+        if (systemIndex !== -1) {
+            gCustomer[customerIndex].system[systemIndex].system_type = [newModel];
+        }
+    }
+    // Fjern loaderen
+    const systemListContainer = document.getElementById("systemlist");
+    const loaderElement = systemListContainer.querySelector(".loaderconteiner");
+    if (loaderElement) loaderElement.remove();
+    
+
+    //last inn systemer på nytt
+    if (systemListContainer) {
+        listSystemOnCustomer(currentCustomer);
+    } else {
+        console.error("Ingen systemliste funnet.");
+    }
+  
 }

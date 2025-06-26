@@ -86,13 +86,13 @@ function createSystemElement(nodeElement, item, customer){
     notebuttonshowhide.addEventListener("click", () => {
       if (!isNoteOpen) {
         // Åpne notatfelt
-        noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
+        noteconteiner.style.height = noteconteiner.scrollHeight + "px";
         setTimeout(() => {
           noteconteiner.style.height = "auto"; // Fjern høyde for dynamisk innhold
         }, 400); // samsvarer med transition-tiden
       } else {
         // Lukke notatfelt
-        noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
+        noteconteiner.style.height = noteconteiner.scrollHeight + "px";
         requestAnimationFrame(() => {
           noteconteiner.style.height = "0px";
         });
@@ -415,7 +415,6 @@ function responseEditSystem(data) {
       const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === updatedSystem.rawid);
       if (systemIndex !== -1) {
         gCustomer[customerIndex].system[systemIndex] = updatedSystem;
-        //listSystemOnCustomer(gCustomer[customerIndex]); // Refresh the system list
       }
     }
     

@@ -16,21 +16,12 @@ function listServiceOnsystem(itemElement, item, customer) {
     const serviceListContainer = itemElement.querySelector(".serviceelementlist");
     serviceListContainer.innerHTML = ''; // Tøm containeren
     
-
-    if (!item.service || item.service.length === 0) {
-    serviceListContainer.textContent = "Ingen service funnet for dette systemet.";
-    return;
-    }
     // Hent mal for serviceelement
     const elementLibrary = document.getElementById("elementlibrary");
     const serviceElementTemplate = elementLibrary.querySelector(".servicerow");
 
     const servicecalcElement = elementLibrary.querySelector(".servicecalc");
 
-    if (!serviceElementTemplate) {
-    console.error("Ingen '.serviceelement' funnet i 'elementlibrary'.");
-    return;
-    }
     // Sorter service etter dato
     item.service.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
@@ -47,6 +38,11 @@ function listServiceOnsystem(itemElement, item, customer) {
         const service = serviceinfo.suggestedService;
         //legg til ny kalkulert først i item.service
         item.service.unshift(service);
+    }
+
+    if (!item.service || item.service.length === 0) {
+        serviceListContainer.textContent = "Ingen service funnet for dette systemet.";
+        return;
     }
 
     item.service.forEach((service) => {

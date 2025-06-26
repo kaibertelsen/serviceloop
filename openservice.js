@@ -486,7 +486,7 @@ function sendwarningToCustomer(item, service){
         return;
     }
 
-    const navn = customer.name || "Kunde";
+    let navn = customer.name || "Kunde";
     //hvis det er en bedrift fjern navnet
     if (customer.type && customer.type.toLowerCase() === "bedrift") {
         navn = "";

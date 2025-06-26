@@ -129,7 +129,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 // Oppdater tjenestens status
                 service.status = selectedStatus;
                 //send til server
-                let data = {status: [selectedStatus]};
+                let data = {status: selectedStatus};
                 sendEditServiceToServer(service, data);
             }
         });

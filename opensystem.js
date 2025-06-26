@@ -157,6 +157,7 @@ function createSystemElement(nodeElement, item, customer){
       itemElement.querySelector(".seriename").textContent = item.serial_number || "–";
       itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
 
+    //Datofelt
         let datofelt = itemElement.querySelector(".installdate");
         datofelt.value = item.installed_date
         ? new Date(item.installed_date).toISOString().split("T")[0]
@@ -164,6 +165,7 @@ function createSystemElement(nodeElement, item, customer){
         datofelt.addEventListener("change", () => {
           let data = {installed_date: datofelt.value};
           //live ny utregning
+          item.installed_date = datofelt.value;
           calcserviceDate(item,intervallinput,itemElement);
           sendEditSystemToServer(item, data);
         });

@@ -400,7 +400,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
         status: status,
         user: [userid],
         date: nextServiceDate,
-        followup: followup // Legg til followup
+        followup: [followup] // Legg til followup
     };
 
     const elementLibrary = document.getElementById("elementlibrary");

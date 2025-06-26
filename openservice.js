@@ -72,8 +72,15 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         serviceElement = serviceElementTemplate.cloneNode(true);
     }
     //knappen moreinfo
-    const moreInfo = serviceElement.querySelector(".moreserviceinfo");
-
+    const openservicebutton = serviceElement.querySelector(".openservicebutton");
+    //sett farge på openservicebutton
+    if (openservicebutton) {
+        const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
+        if (statusObj) {
+            openservicebutton.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
+        }
+    }
+    
     //sette dato
     const dateInput = serviceElement.querySelector(".servicedate");
 
@@ -153,10 +160,10 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     }
 
                     //oppdater farge på moreInfo
-                    if (moreInfo) {
+                    if (openservicebutton) {
                         const statusObj = statusService.find(status => status.value.toLowerCase() === selectedStatus.toLowerCase());
                         if (statusObj) {
-                            moreInfo.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
+                            openservicebutton.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
                         }
                     }
                 
@@ -223,17 +230,14 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     } 
 
     //åpner mer informasjon på service
-   
+    const moreInfo = serviceElement.querySelector(".moreserviceinfo");
     if (moreInfo) {
         
         moreInfo.style.height = "0px"; // Start med høyde 0 for animasjon
 
-        //sett bakgrunsfarge på moreInfo basert på status
-        const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
-        if (statusObj) {
-            moreInfo.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
-        }
-        serviceElement.querySelector(".openservicebutton").addEventListener("click", () => {
+
+        
+        openservicebutton.addEventListener("click", () => {
         
         if (!moreInfo) return;
         

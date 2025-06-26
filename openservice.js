@@ -137,6 +137,22 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 const borderColor = statusObj ? statusObj.color : "gray";
                 serviceElement.style.borderLeft = `6px solid ${borderColor}`;
 
+                //om det er fakturert eller utført så må lastservice oppdateres
+                if (selectedStatus.toLowerCase() === "fakturert" || selectedStatus.toLowerCase() === "utført") {
+                    // Oppdater lastservice datoen
+                    const lastServiceLabel = itemElement.querySelector(".lastservicelable");
+                    let serviceInfo = findserviceinfo(item);
+                    if (lastServiceLabel) {
+                        lastServiceLabel.textContent = serviceInfo.lastservice || "–";
+                    }
+                    // Oppdater neste service datoen
+                    const nextServiceLabel = itemElement.querySelector(".nextservicelable");
+                    if (nextServiceLabel) {
+                        nextServiceLabel.textContent = serviceInfo.nextservice || "–";
+                        nextServiceLabel.style.color = serviceInfo.color || "black"; // Sett farge basert på status
+                    }
+                }
+
             }
         });
     }

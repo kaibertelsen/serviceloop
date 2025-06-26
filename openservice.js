@@ -514,12 +514,15 @@ function sendwarningToCustomer(item, service){
         anleggsnavn: anleggsnavn,
         servicedato: servicedato,
         brukernavn: brukernavn,
-        email: email
+        email: email,
+        service: service
     });
+
+   
 
 }
 
-function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernavn, email }) {
+function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernavn, email, service }) {
     const subject = `Servicepåminnelse: Vi foreslår service på ${servicedato}`;
   
     const htmlBody = `
@@ -568,6 +571,23 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
   
     // Send til Zapier webhook
     sendDataToZapierWebhookCreatUser(payload);
+
+    //send til airtable content,date,email,user, service
+    const airtableData = {
+        content: htmlBody,
+        date: new Date().toISOString(),
+        email: email,
+        user: [gUser.rawid],
+        service: [service.rawid]
+    };
+
+    // Send til Airtable
+    POSTairtable(
+        "appuUESr4s93SWaS7",
+        "tblSm8gaXkWw7PFJ8", // service-tabell
+        JSON.stringify(airtableData),
+        "responseSendServiceReminder"
+    );
   }
   
   

@@ -480,7 +480,7 @@ function sendwarningToCustomer(item, service){
 
 
     //finne kundenavn
-    const customer = gCustomer.find(c => c.rawid === item.customerid);
+    const customer = gCustomer.find(c => c.rawid === item.customer);
     if (!customer) {
         console.error("Kunde ikke funnet for system:", item.rawid);
         return;

@@ -70,6 +70,16 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             }
 
             newServiceButton.addEventListener("click", function () {
+
+                const warncustomerswitch = serviceElement.querySelector(".warncustomerswitch");
+                const warnCustomer = warncustomerswitch && warncustomerswitch.checked;
+
+                
+                //gi en alert om at kunde vil bli varslet og trykker man ok så sendes service til server
+                if (warnCustomer && !confirm("Kunden vil bli varslet om denne servicen. Er du sikker på at du vil opprette denne servicen?")) {
+                    return; // Avbryt hvis brukeren ikke bekrefter
+                }
+                    
                 makeNewService(itemElement,item, service,serviceElement);
             });
         }
@@ -370,9 +380,22 @@ function makeNewService(itemElement, item, service,serviceelement) {
 
     let userid = gUser.rawid || "";
 
+    //skal kunden varsles om denne servicen?
+    const warncustomerswitch = serviceelement.querySelector(".warncustomerswitch");
+    let warnCustomer = false;
+    if (warncustomerswitch) {
+        warnCustomer = warncustomerswitch.checked;
+    }
+
+    let status = "Registrert"; // Standard status for ny service
+    //hvis kunden skal varsles, sett status til "Påminnet"
+    if (warnCustomer) {
+        status = "Påminnet";
+    }
+
     let body = {
         system: [item.rawid],
-        status: "Registrert",
+        status: status,
         user: [userid],
         date: nextServiceDate
     };
@@ -397,6 +420,14 @@ function makeNewService(itemElement, item, service,serviceelement) {
         JSON.stringify(body),
         "responseNewService"
     );
+
+
+    //hvis kunden skal varsles, send en e-post
+    if (warnCustomer) {
+        // Send varsel til kunden
+    sendwarningToCustomer(item, service);
+    }
+
 }
 
 function responseNewService(data) {
@@ -444,3 +475,94 @@ function responseEditService(data) {
   console.log("Service oppdatert:", updatedService);
 
 }
+
+function sendwarningToCustomer(item, service){
+
+
+    //finne kundenavn
+    const customer = gCustomer.find(c => c.rawid === item.customerid);
+    if (!customer) {
+        console.error("Kunde ikke funnet for system:", item.rawid);
+        return;
+    }
+
+    const navn = customer.name || "Kunde";
+    const anleggsnavn = item.name || "Anlegg";
+
+    const servicedato = service.date ? new Date(service.date).toLocaleDateString("no-NO") : "";
+    const brukernavn = gUser.name || "Bruker";
+    const email = customer.email || "";
+    if (!email) {
+        console.error("Ingen e-postadresse funnet for kunde:", customer.rawid);
+        return;
+    }
+    // Send e-post via Zapier
+    sendServiceReminderToZapier({
+        navn: navn,
+        anleggsnavn: anleggsnavn,
+        servicedato: servicedato,
+        brukernavn: brukernavn,
+        email: email
+    });
+
+}
+
+function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernavn, email }) {
+    const subject = `Servicepåminnelse: Vi foreslår service på ${servicedato}`;
+  
+    const htmlBody = `
+      <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;padding:30px;background:#fff;border-radius:8px;box-shadow:0 3px 12px rgba(0,0,0,0.05)">
+        <p style="font-size:18px;">Hei ${navn},</p>
+        <p style="font-size:16px;line-height:1.6">
+          Vi ønsker å informere deg om at det nærmer seg service på ditt anlegg: 
+          <strong style="color:#004080">${anleggsnavn}</strong>.
+        </p>
+        <p style="font-size:16px;line-height:1.6">
+          Vi foreslår at servicen utføres den <strong style="color:#004080">${servicedato}</strong>.
+        </p>
+        <p style="font-size:16px;line-height:1.6">
+          Regelmessig service sikrer effektiv drift og lengre levetid. Gi oss gjerne en tilbakemelding så vi kan bekrefte tidspunktet eller avtale en annen dag som passer deg bedre.
+        </p>
+        <p style="font-size:16px;line-height:1.6">
+          Du kan svare direkte på denne e-posten dersom du har spørsmål eller ønsker å avtale noe spesielt.
+        </p>
+        <p style="margin-top:30px;">
+          Med vennlig hilsen,<br />
+          <strong>${brukernavn}</strong><br />
+          Varme VVS AS
+        </p>
+        <p style="color:#777;font-size:13px;margin-top:20px">
+          Denne e-posten er sendt automatisk fra vårt system. Ta kontakt dersom noe er uklart.
+        </p>
+      </div>
+    `;
+  
+    // Lag Zapier-payload
+    const payload = {
+      to: email,
+      subject: subject,
+      html: htmlBody
+    };
+  
+    // Send til Zapier webhook
+    fetch("https://hooks.zapier.com/hooks/catch/10455257/ubd0mdj/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Feil fra Zapier: ${res.status}`);
+        }
+        return res.text();
+      })
+      .then(response => {
+        console.log("E-post sendt via Zapier:", response);
+      })
+      .catch(error => {
+        console.error("Feil ved sending til Zapier:", error);
+      });
+  }
+  

@@ -392,12 +392,15 @@ function makeNewService(itemElement, item, service,serviceelement) {
     if (warnCustomer) {
         status = "Påminnet";
     }
-
+    let followup = {
+        content:"Test"
+    }
     let body = {
         system: [item.rawid],
         status: status,
         user: [userid],
-        date: nextServiceDate
+        date: nextServiceDate,
+        followup: followup // Legg til followup
     };
 
     const elementLibrary = document.getElementById("elementlibrary");
@@ -579,7 +582,7 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
         user: [gUser.rawid]
     };
 
-    
+
     // Send til Airtable
     POSTairtable(
         "appuUESr4s93SWaS7",

@@ -599,7 +599,7 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
 
     currentFollowingUp = airtableData;
 
-
+}
   
   
 async function sendDataToZapierWebhookCreatUser(data) {

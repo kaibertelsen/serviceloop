@@ -493,7 +493,7 @@ function sendwarningToCustomer(item, service){
     }
 
 
-    const anleggsnavn = item.name || "Anlegg";
+    let anleggsnavn = item.name || "Anlegg";
     const location = item.location || "";
     if (location) {
         anleggsnavn += `i (${location})`;

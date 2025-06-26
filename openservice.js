@@ -330,6 +330,29 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         });
     }
 
+    //list opp followingup 
+    let listFollowup = serviceElement.querySelector(".followuplistonservice");
+    let nodeElement = document.getElementById("elementlibrary").querySelector(".followupraeelement");
+
+    //sorter service.followup etter dato
+    service.followup.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    service.followup.forEach(followup => {
+        //sjekk om followup er en array, hvis ikke gjør den til en array
+        let followupElement = nodeElement.cloneNode(true);
+        followupElement.querySelector(".followupdasteonservice").textContent = followup.date ? new Date(followup.date).toLocaleDateString("no-NO") : "–";
+        followupElement.querySelector(".emailfollowuplable").textContent = followup.email || "–";
+
+        listFollowup.appendChild(followupElement);
+        
+    });
+
+
+    
+
+    
+
+
 
 
     // Returner det ferdige service-elementet
@@ -358,6 +381,8 @@ function deleteService(service, itemElement, item, customer){
     listServiceOnsystem(itemElement, system, customer);
 
 }
+
+
 
 function makeNewService(itemElement, item, service,serviceelement) {
 
@@ -597,10 +622,24 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
         user: [gUser.rawid]
     };
 
+    if (service && service.rawid) {
+        currentFollowingUp = null; // Nullstill global variabel for å indikere at vi ikke følger opp
+        airtableData.service = [service.rawid]; // Legg til service ID i followup-dataen
+        //send til airtable
+        POSTairtable(
+            "appuUESr4s93SWaS7",
+            "tblSm8gaXkWw7PFJ8", // followup-tabell
+            JSON.stringify(airtableData),
+            "responseFollowUp"
+        );
+        console.log("Follow-up data sent to Airtable:", airtableData);
+    }else{
+        currentFollowingUp = airtableData; 
+    }
+
     currentFollowingUp = airtableData;
 
 }
-  
   
 async function sendDataToZapierWebhookCreatUser(data) {
     const formData = new FormData();

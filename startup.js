@@ -58,8 +58,6 @@ function responsClient(data) {
     gServicetype = [];
     if(gClient?.service_typejson){
         gServicetype = parseItemJson(gClient.service_typejson);
-        //sorter alfabetisk
-        gServicetype.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     gUsers =  []; 

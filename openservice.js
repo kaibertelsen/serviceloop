@@ -341,7 +341,9 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         //sjekk om followup er en array, hvis ikke gjør den til en array
         let followupElement = nodeElement.cloneNode(true);
         //dato og klikkeslett
-        followupElement.querySelector(".followupdasteonservice").textContent = new Date(followup.date).toLocaleDateString("no-NO");
+        // Formatert dato og klokkeslett
+        const formattedDateTime = formatFollowupDate(followup.date);
+        followupElement.querySelector(".followupdasteonservice").textContent = formattedDateTime || "–";
         followupElement.querySelector(".emailfollowuplable").textContent = followup.email || "–";
 
         listFollowup.appendChild(followupElement);
@@ -657,4 +659,17 @@ async function sendDataToZapierWebhookCreatUser(data) {
     if (!response.ok) {
         console.error("Error sending data to Zapier:", response.statusText);
     }
+}
+
+
+function formatDateAndTime(isoDateStr) {
+  const date = new Date(isoDateStr);
+
+  const day = date.getDate(); // f.eks. 26
+  const month = date.getMonth() + 1; // f.eks. 6
+  const year = date.getFullYear(); // f.eks. 2025
+  const hours = String(date.getHours()).padStart(2, '0'); // f.eks. 17
+  const minutes = String(date.getMinutes()).padStart(2, '0'); // f.eks. 53
+
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
 }

@@ -48,8 +48,8 @@ function  calcserviceDate(system,intervallinput, itemElement) {
 
     let serviceinfo = findserviceinfo(system);
     // Oppdater visning
-    itemElement.querySelector(".lastservicelable").textContent = serviceinfo.lastService || "–";
-    itemElement.querySelector(".nextservicelable").textContent = serviceinfo.nextService || "–";
+    itemElement.querySelector(".lastservicelable").textContent = serviceinfo.lastservice || "–";
+    itemElement.querySelector(".nextservicelable").textContent = serviceinfo.nextservice || "–";
     itemElement.querySelector(".nextservicelable").style.color = serviceinfo.color;
 }
 

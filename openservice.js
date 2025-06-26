@@ -115,7 +115,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         }
 
         //hvis status er fakturert
-        if (status.value === "fakturert" || status.value === "Fakturert" || status.value === "Kalkulert" || status.value === "kalkulert") {
+        if (status.value === "Kalkulert" || status.value === "kalkulert") {
             option.disabled = true; // Deaktiver alternativer
         }
         

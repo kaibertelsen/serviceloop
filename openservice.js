@@ -392,15 +392,12 @@ function makeNewService(itemElement, item, service,serviceelement) {
     if (warnCustomer) {
         status = "Påminnet";
     }
-    let followup = {
-        content:"Test"
-    }
+  
     let body = {
         system: [item.rawid],
         status: status,
         user: [userid],
-        date: nextServiceDate,
-        followup: [followup] // Legg til followup
+        date: nextServiceDate
     };
 
     const elementLibrary = document.getElementById("elementlibrary");
@@ -424,11 +421,13 @@ function makeNewService(itemElement, item, service,serviceelement) {
         "responseNewService"
     );
 
-
-    //hvis kunden skal varsles, send en e-post
+    currentFollowingUp = null; // Nullstill global variabel
+    
     if (warnCustomer) {
         // Send varsel til kunden
+        currentFollowingUp = true; // Sett global variabel for å indikere at vi følger opp
     sendwarningToCustomer(item, service);
+
     }
 
 }
@@ -456,6 +455,22 @@ function responseNewService(data) {
             listServiceOnsystem(currentItemElement, system, customer);
 
         }
+    }
+
+    //sjekk om den skal lagre en followup
+    if (currentFollowingUp) {
+    let body = currentFollowingUp;
+    body.service = [newService.rawid]; // Legg til service ID i followup-dataen
+
+    //send til airtable
+    POSTairtable(
+        "appuUESr4s93SWaS7",
+        "tblSm8gaXkWw7PFJ8", // followup-tabell
+        JSON.stringify(body),
+        "responseFollowUp"
+    );
+    currentFollowingUp = null; // Nullstill global variabel etter sending
+        
     }
     
     
@@ -576,21 +591,15 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
     sendDataToZapierWebhookCreatUser(payload);
 
     //lagre airtableobject til seinere. Må motta serviceid først content,date,email,user, service 
-    const airtableData = { 
+    let airtableData = { 
         content: htmlBody,
         email: email,
         user: [gUser.rawid]
     };
 
+    currentFollowingUp = airtableData;
 
-    // Send til Airtable
-    POSTairtable(
-        "appuUESr4s93SWaS7",
-        "tblSm8gaXkWw7PFJ8", // service-tabell
-        JSON.stringify(airtableData),
-        "responseSendServiceReminder"
-    );
-  }
+
   
   
 async function sendDataToZapierWebhookCreatUser(data) {

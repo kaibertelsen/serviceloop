@@ -1,4 +1,4 @@
-
+var currentSystem = null;
 
 function listSystemOnCustomer(customer) {
     const systemListContainer = document.getElementById('systemlist');
@@ -130,9 +130,8 @@ function createSystemElement(nodeElement, item, customer){
       });
       
       // Sett valgt modell hvis finnes
-      if(item.system_type_json && item.system_type_json.length > 0) {
-        modelselector.value = item.system_type_json[0].rawid;
-        
+      if(item.system_type_id) {
+        modelselector.value = item.system_type_id; // Sett valgt modell basert på system_type_id
       }else{
         //legg til "Velg modell" som første valg
         const selectOption = document.createElement("option");
@@ -422,6 +421,7 @@ function responseEditSystem(data) {
 }
   
 function handleCreateNewModel(nodeElement, item, customer) {
+    currentSystem = item; // Sett det nåværende systemet for å bruke i responsen
     // Vis f.eks. et popup-skjema hvor en kan angi modellnavn
     const modelName = prompt("Skriv inn navnet på den nye modellen:");
     if (!modelName) {
@@ -462,13 +462,8 @@ function responseNewModel(data) {
     gSystem_type.push(newModel);
 
     //Oppdater systemet lokalt
-    const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
-    if (customerIndex !== -1) {
-        const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === currentSystem.rawid);
-        if (systemIndex !== -1) {
-            gCustomer[customerIndex].system[systemIndex].system_type = [newModel];
-        }
-    }
+    currentSystem.system_type_id = newModel.rawid; // Sett system_type til den nye modellens rawid
+
     // Fjern loaderen
     const systemListContainer = document.getElementById("systemlist");
     const loaderElement = systemListContainer.querySelector(".loaderconteiner");

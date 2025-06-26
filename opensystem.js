@@ -187,10 +187,10 @@ function createSystemElement(nodeElement, item, customer){
         });
 
         intervallinput.addEventListener("blur", () => {
-        calcserviceDate(item,intervallinput,itemElement);
-        sendEditSystemToServer(item, {intervall: Number(intervallinput.value)});
-        //list servicene på nytt
-        listServiceOnsystem(itemElement, item, customer);
+            calcserviceDate(item,intervallinput,itemElement);
+            sendEditSystemToServer(item, {intervall: Number(intervallinput.value)});
+            //list servicene på nytt
+            listServiceOnsystem(itemElement, item, customer);
         });
 
       // Oppdater lokasjon
@@ -252,7 +252,7 @@ function createSystemElement(nodeElement, item, customer){
       });
     }
 
-    //lage klik event på newservicebutton
+    //lage klikk event på newservicebutton
     const newServiceButton = itemElement.querySelector(".newservicebutton");
     if (newServiceButton) {
         newServiceButton.addEventListener("click", function () {
@@ -260,9 +260,10 @@ function createSystemElement(nodeElement, item, customer){
         });
     }
 
+    // Liste opp servicer
     listServiceOnsystem(itemElement, item, customer);
 
-  
+
     // Returner det oppdaterte elementet
     return itemElement;
 

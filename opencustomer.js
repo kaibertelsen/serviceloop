@@ -290,12 +290,14 @@ function createSystemElement(nodeElement, item, customer){
       );
 
       intervallinput.addEventListener("blur", () => {
+          calcserviceDate(item,itemElement);
           let data = {intervall: Number(intervallinput.value)};
           sendEditSystemToServer(item, data);
           //list servicene på nytt
           listServiceOnsystem(itemElement, item, customer);
         }
       );
+      
       // Oppdater lokasjon
       itemElement.querySelector(".locationlable").textContent = item.location || "–";
       itemElement.querySelector(".locationlable").setAttribute("data-field", "location");

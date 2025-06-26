@@ -342,8 +342,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         let followupElement = nodeElement.cloneNode(true);
         //dato og klikkeslett
         // Formatert dato og klokkeslett
-        const formattedDateTime = formatFollowupDate(followup.date);
-        followupElement.querySelector(".followupdasteonservice").textContent = formattedDateTime || "–";
+        const formattedDateTime = formatDateAndTime(followup.date);
+        followupElement.querySelector(".followupdasteonservice").textContent = formattedDateTime
         followupElement.querySelector(".emailfollowuplable").textContent = followup.email || "–";
 
         listFollowup.appendChild(followupElement);

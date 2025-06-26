@@ -63,6 +63,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             //lage klik event på newservicebutton
         const newServiceButton = serviceElement.querySelector(".newcalcservice");
         if (newServiceButton) {
+            //sett bakgrunsfarge på knappen som tilsvarer status "kalkulert"
+            const statusObj = statusService.find(status => status.value.toLowerCase() === "kalkulert");
+            if (statusObj) {
+                newServiceButton.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
+            }
+
             newServiceButton.addEventListener("click", function () {
                 makeNewService(itemElement,item, service,serviceElement);
             });

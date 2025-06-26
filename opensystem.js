@@ -157,27 +157,26 @@ function createSystemElement(nodeElement, item, customer){
       itemElement.querySelector(".seriename").textContent = item.serial_number || "–";
       itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
 
-      let datofelt = itemElement.querySelector(".installdate");
-      datofelt.value = item.installed_date
-      ? new Date(item.installed_date).toISOString().split("T")[0]
-      : "";
-      datofelt.addEventListener("change", () => {
+        let datofelt = itemElement.querySelector(".installdate");
+        datofelt.value = item.installed_date
+        ? new Date(item.installed_date).toISOString().split("T")[0]
+        : "";
+        datofelt.addEventListener("change", () => {
           let data = {installed_date: datofelt.value};
           //live ny utregning
-          calcserviceDate(item, itemElement);
+          calcserviceDate(item,intervallinput,itemElement);
           sendEditSystemToServer(item, data);
-      }
-      );
+        });
 
-      // Oppdater service
-      let serviceinfo = findserviceinfo(item);
-      const lastservicelable = itemElement.querySelector(".lastservicelable");
-      lastservicelable.textContent = serviceinfo.lastservice || "Ingen service";
-      
-      // Oppdater farge og dato
-      const nextservicelable = itemElement.querySelector(".nextservicelable");
-      nextservicelable.textContent = serviceinfo.nextservice || "–";
-      nextservicelable.style.color = serviceinfo.color;
+        // Oppdater service
+        let serviceinfo = findserviceinfo(item);
+        const lastservicelable = itemElement.querySelector(".lastservicelable");
+        lastservicelable.textContent = serviceinfo.lastservice || "Ingen service";
+        
+        // Oppdater farge og dato
+        const nextservicelable = itemElement.querySelector(".nextservicelable");
+        nextservicelable.textContent = serviceinfo.nextservice || "–";
+        nextservicelable.style.color = serviceinfo.color;
 
         // Oppdater serviceintervall-input
         const intervallinput = itemElement.querySelector(".serviceintervall");

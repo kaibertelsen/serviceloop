@@ -51,203 +51,219 @@ function listServiceOnsystem(itemElement, item, customer) {
 
     item.service.forEach((service) => {
 
-        var serviceElement = null; // Variabel for service-elementet
-        if(service.status === "Kalkulert" || service.status === "kalkulert") {
-            serviceElement = servicecalcElement.cloneNode(true);
-
-             //lage klik event på newservicebutton
-            const newServiceButton = serviceElement.querySelector(".newcalcservice");
-            if (newServiceButton) {
-                newServiceButton.addEventListener("click", function () {
-                    makeNewService(itemElement,item, service,serviceElement);
-                });
-            }
-
-        }else{
-            serviceElement = serviceElementTemplate.cloneNode(true);
-        }
-
-        //sette dato
-        const dateInput = serviceElement.querySelector(".servicedate");
-
-        if (service.date) {
-        const d = new Date(service.date);
-        // Formatér til YYYY-MM-DDTHH:mm
-        const formatted =
-            d.toISOString().slice(0, 16); // "2025-06-01T00:00"
-        dateInput.value = formatted;
-        } else {
-        dateInput.value = "";
-        }
-
-        //når dato settes send dette til server
-        dateInput.addEventListener("change", function () {
-            const newDate = new Date(dateInput.value);
-            if (isNaN(newDate)) {
-                console.error("Ugyldig dato:", dateInput.value);
-                return;
-            }
-            //send til server
-            let data = {date: newDate.toISOString()};
-            sendEditServiceToServer(service, data);
-        }
-        );
-        
-        //Load status selectoren med arrayen statusService
-        const statusSelect = serviceElement.querySelector(".editstatusservice");
-        if (statusSelect) {
-          statusSelect.innerHTML = ''; // Tøm select-elementet
-          statusService.forEach(status => {
-            const option = document.createElement("option");
-            option.value = status.value;
-            option.textContent = status.text;
-            //gjøre begge om til lowercase for å sammenligne
-            if (service.status && status.value && service.status.toLowerCase() === status.value.toLowerCase()) {
-              option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens status
-            }
-
-            //hvis status er fakturert
-            if (status.value === "fakturert" || status.value === "Fakturert" || status.value === "Kalkulert" || status.value === "kalkulert") {
-              option.disabled = true; // Deaktiver alternativer
-            }
-            
-            statusSelect.appendChild(option);
-          });
-        }
-
-        //loade edittypeservice med gServicetype
-        const typeSelect = serviceElement.querySelector(".edittypeservice");
-        if (typeSelect) {
-          typeSelect.innerHTML = ''; // Tøm select-elementet
-          gServicetype.forEach(type => {
-            const option = document.createElement("option");
-            option.value = type.rawid; // Bruk rawid som value
-            option.textContent = type.name;
-            //gjøre begge om til lowercase for å sammenligne
-            if (service.type && type.rawid && service.type.toLowerCase() === type.rawid.toLowerCase()) {
-              option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens type
-            }
-            typeSelect.appendChild(option);
-          });
-        }
-
-        //loade edituserservice med gUsers
-        const userSelect = serviceElement.querySelector(".edituserservice");
-        if (userSelect) {
-          userSelect.innerHTML = ''; // Tøm select-elementet
-          gUsers.forEach(user => {
-            const option = document.createElement("option");
-            option.value = user.rawid; // Bruk brukerens ID som value
-            option.textContent = user.name;
-            //gjøre begge om til lowercase for å sammenligne
-            if (service.userid === user.rawid) {
-              option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens bruker
-            }
-            userSelect.appendChild(option);
-          });
-        } 
-
-        //åpner mer informasjon på service
-        const moreInfo = serviceElement.querySelector(".moreserviceinfo");
-        if (moreInfo) {
-          
-            moreInfo.style.height = "0px"; // Start med høyde 0 for animasjon
-            serviceElement.querySelector(".openservicebutton").addEventListener("click", () => {
-            
-            if (!moreInfo) return;
-          
-            const isCollapsed = moreInfo.offsetHeight === 0;
-          
-            if (isCollapsed) {
-              // Åpne: start fra 0 og gå til scrollHeight
-              moreInfo.style.height = "0px"; // sikker start
-              const fullHeight = moreInfo.scrollHeight + "px";
-          
-              requestAnimationFrame(() => {
-                moreInfo.style.height = fullHeight;
-              });
-          
-              // Etter animasjonen, fjern høyden så den tilpasses innhold automatisk
-              setTimeout(() => {
-                moreInfo.style.height = "auto";
-              }, 400);
-            } else {
-              // Lukk: start fra nåværende høyde og gå til 0
-              const currentHeight = moreInfo.scrollHeight + "px";
-              moreInfo.style.height = currentHeight;
-          
-              requestAnimationFrame(() => {
-                moreInfo.style.height = "0px";
-              });
-            }
-            });
-        }
-        
-        
-        const noteservicequill = serviceElement.querySelector(".noteservicequill");
-        if (noteservicequill) {
-          // Initialize Quill editor for notes
-          const quill = new Quill(noteservicequill, {
-            theme: 'snow',
-            modules: {
-                toolbar: true // Viktig for at den skal bli generert
-            }
-          });
-          
-          // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
-        setTimeout(() => {
-            quill.clipboard.dangerouslyPasteHTML(service.note || "");
-          }, 0);
-          
-          // 4. Lytt etter blur (når man forlater editoren)
-          quill.root.addEventListener("blur", function () {
-            // Hent HTML-innholdet fra Quill-editoren
-            let noteContent = quill.root.innerHTML;
-            console.log("Note content:", noteContent);
-            //send til server
-            let data = {note: noteContent};
-            //sendEditSystemToServer(item, data);
-          });
-        }
-
-        // Sett border på høyre side av systemelement basert på siste status
-        const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
-        const borderColor = statusObj ? statusObj.color : "gray";
-        serviceElement.style.borderLeft = `6px solid ${borderColor}`;
-
-        //deleteknapp
-        const deleteservicebutton = serviceElement.querySelector(".deleteservicebutton");
-        if (deleteservicebutton) {
-            deleteservicebutton.addEventListener("click", function () {
-                // Bekreft sletting
-                if (confirm("Er du sikker på at du vil slette denne servicen?")) {
-                    // Send slett forespørsel til server
-                    let serviceId = service.rawid; // Anta at rawid er ID-en for servicen
-                    DELETEairtable(
-                        "appuUESr4s93SWaS7",
-                        "tblPWerScR5AbxnlJ", // system-tabell
-                        serviceId,
-                        "responseDeleteService"
-                    );
-                    
-
-                    //fjern servicen fra systemet
-                    let system = customer.system.find(s => s.rawid === item.rawid);
-                    if (system && system.service) {
-                        system.service = system.service.filter(s => s.rawid !== serviceId);
-                    }
-
-                    // lag listen på nytt
-                    listServiceOnsystem(itemElement, system, customer);
-                    
-                }
-            });
-        }
-
+        let serviceElement = makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement);
         serviceListContainer.appendChild(serviceElement);
+
     });
 }
 
+function makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement) {
+
+    let serviceElement;
+
+    if(service.status === "Kalkulert" || service.status === "kalkulert") {
+        serviceElement = servicecalcElement.cloneNode(true);
+
+            //lage klik event på newservicebutton
+        const newServiceButton = serviceElement.querySelector(".newcalcservice");
+        if (newServiceButton) {
+            newServiceButton.addEventListener("click", function () {
+                makeNewService(itemElement,item, service,serviceElement);
+            });
+        }
+
+    }else{
+        serviceElement = serviceElementTemplate.cloneNode(true);
+    }
+
+    //sette dato
+    const dateInput = serviceElement.querySelector(".servicedate");
+
+    if (service.date) {
+    const d = new Date(service.date);
+    // Formatér til YYYY-MM-DDTHH:mm
+    const formatted =
+        d.toISOString().slice(0, 16); // "2025-06-01T00:00"
+    dateInput.value = formatted;
+    } else {
+    dateInput.value = "";
+    }
+
+    //når dato settes send dette til server
+    dateInput.addEventListener("change", function () {
+        const newDate = new Date(dateInput.value);
+        if (isNaN(newDate)) {
+            console.error("Ugyldig dato:", dateInput.value);
+            return;
+        }
+        //send til server
+        let data = {date: newDate.toISOString()};
+        sendEditServiceToServer(service, data);
+    }
+    );
+    
+    //Load status selectoren med arrayen statusService
+    const statusSelect = serviceElement.querySelector(".editstatusservice");
+    if (statusSelect) {
+        statusSelect.innerHTML = ''; // Tøm select-elementet
+        statusService.forEach(status => {
+        const option = document.createElement("option");
+        option.value = status.value;
+        option.textContent = status.text;
+        //gjøre begge om til lowercase for å sammenligne
+        if (service.status && status.value && service.status.toLowerCase() === status.value.toLowerCase()) {
+            option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens status
+        }
+
+        //hvis status er fakturert
+        if (status.value === "fakturert" || status.value === "Fakturert" || status.value === "Kalkulert" || status.value === "kalkulert") {
+            option.disabled = true; // Deaktiver alternativer
+        }
+        
+        statusSelect.appendChild(option);
+        });
+    }
+
+    //loade edittypeservice med gServicetype
+    const typeSelect = serviceElement.querySelector(".edittypeservice");
+    if (typeSelect) {
+        typeSelect.innerHTML = ''; // Tøm select-elementet
+        gServicetype.forEach(type => {
+        const option = document.createElement("option");
+        option.value = type.rawid; // Bruk rawid som value
+        option.textContent = type.name;
+        //gjøre begge om til lowercase for å sammenligne
+        if (service.type && type.rawid && service.type.toLowerCase() === type.rawid.toLowerCase()) {
+            option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens type
+        }
+        typeSelect.appendChild(option);
+        });
+    }
+
+    //loade edituserservice med gUsers
+    const userSelect = serviceElement.querySelector(".edituserservice");
+    if (userSelect) {
+        userSelect.innerHTML = ''; // Tøm select-elementet
+        gUsers.forEach(user => {
+        const option = document.createElement("option");
+        option.value = user.rawid; // Bruk brukerens ID som value
+        option.textContent = user.name;
+        //gjøre begge om til lowercase for å sammenligne
+        if (service.userid === user.rawid) {
+            option.selected = true; // Marker som valgt hvis det samsvarer med tjenestens bruker
+        }
+        userSelect.appendChild(option);
+        });
+    } 
+
+    //åpner mer informasjon på service
+    const moreInfo = serviceElement.querySelector(".moreserviceinfo");
+    if (moreInfo) {
+        
+        moreInfo.style.height = "0px"; // Start med høyde 0 for animasjon
+        serviceElement.querySelector(".openservicebutton").addEventListener("click", () => {
+        
+        if (!moreInfo) return;
+        
+        const isCollapsed = moreInfo.offsetHeight === 0;
+        
+        if (isCollapsed) {
+            // Åpne: start fra 0 og gå til scrollHeight
+            moreInfo.style.height = "0px"; // sikker start
+            const fullHeight = moreInfo.scrollHeight + "px";
+        
+            requestAnimationFrame(() => {
+            moreInfo.style.height = fullHeight;
+            });
+        
+            // Etter animasjonen, fjern høyden så den tilpasses innhold automatisk
+            setTimeout(() => {
+            moreInfo.style.height = "auto";
+            }, 400);
+        } else {
+            // Lukk: start fra nåværende høyde og gå til 0
+            const currentHeight = moreInfo.scrollHeight + "px";
+            moreInfo.style.height = currentHeight;
+        
+            requestAnimationFrame(() => {
+            moreInfo.style.height = "0px";
+            });
+        }
+        });
+    }
+    
+    
+    const noteservicequill = serviceElement.querySelector(".noteservicequill");
+    if (noteservicequill) {
+        // Initialize Quill editor for notes
+        const quill = new Quill(noteservicequill, {
+        theme: 'snow',
+        modules: {
+            toolbar: true // Viktig for at den skal bli generert
+        }
+        });
+        
+        // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
+    setTimeout(() => {
+        quill.clipboard.dangerouslyPasteHTML(service.note || "");
+        }, 0);
+        
+        // 4. Lytt etter blur (når man forlater editoren)
+        quill.root.addEventListener("blur", function () {
+        // Hent HTML-innholdet fra Quill-editoren
+        let noteContent = quill.root.innerHTML;
+        console.log("Note content:", noteContent);
+        //send til server
+        let data = {note: noteContent};
+        //sendEditSystemToServer(item, data);
+        });
+    }
+
+    // Sett border på høyre side av systemelement basert på siste status
+    const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
+    const borderColor = statusObj ? statusObj.color : "gray";
+    serviceElement.style.borderLeft = `6px solid ${borderColor}`;
+
+    //deleteknapp
+    const deleteservicebutton = serviceElement.querySelector(".deleteservicebutton");
+    if (deleteservicebutton) {
+        deleteservicebutton.addEventListener("click", function () {
+            // Bekreft sletting
+            if (confirm("Er du sikker på at du vil slette denne servicen?")) {
+                // slett service fra Airtable og lokal array
+                deleteService(service, itemElement, item, customer);
+            }
+        });
+    }
+
+
+
+    // Returner det ferdige service-elementet
+    return serviceElement;
+
+}
+
+function deleteService(service, itemElement, item, customer){
+
+    let serviceId = service.rawid; 
+    DELETEairtable(
+        "appuUESr4s93SWaS7",
+        "tblPWerScR5AbxnlJ", // system-tabell
+        serviceId,
+        "responseDeleteService"
+    );
+    
+
+    //fjern servicen fra systemet
+    let system = customer.system.find(s => s.rawid === item.rawid);
+    if (system && system.service) {
+        system.service = system.service.filter(s => s.rawid !== serviceId);
+    }
+
+    // lag listen på nytt
+    listServiceOnsystem(itemElement, system, customer);
+
+}
 
 function makeNewService(itemElement, item, service,serviceelement) {
 

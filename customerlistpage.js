@@ -175,7 +175,7 @@ function listSystemInCustomer(data, element) {
         const modelname = itemElement.querySelector('.modelname');
         //finne modellnavn basert på system.typemodel og gSystem_type
         let modelnametext = "";
-        if (system.typemodel) {
+        if (system.system_type_id) {
             const typeModel = gSystem_type.find(type => type.id === system.system_type_id);
             if (typeModel) {
                 modelnametext = typeModel.name;

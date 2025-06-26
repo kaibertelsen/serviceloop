@@ -184,7 +184,6 @@ function createSystemElement(nodeElement, item, customer){
       intervallinput.value = item.intervall || "";
       intervallinput.addEventListener("change", () => {
           //live ny utregning og oppdater lable
-
           calcserviceDate(item,intervallinput,itemElement);
         }
       );

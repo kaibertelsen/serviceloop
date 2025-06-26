@@ -168,6 +168,8 @@ function createSystemElement(nodeElement, item, customer){
           item.installed_date = datofelt.value;
           calcserviceDate(item,intervallinput,itemElement);
           sendEditSystemToServer(item, data);
+          //list servicene på nytt
+          listServiceOnsystem(itemElement, item, customer);
         });
 
         // Oppdater service

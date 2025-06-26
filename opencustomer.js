@@ -136,230 +136,239 @@ function listSystemOnCustomer(customer) {
     });
   
     customer.system.forEach((item) => {
-      const itemElement = nodeElement.cloneNode(true);
 
-      const moreconteiner = itemElement.querySelector(".moreconteiner");
-      const showhidetugglemorebutton = itemElement.querySelector(".showhidetugglemorebutton");
+      let itemElement = createSystemElement(nodeElement, item, customer);
+      systemListContainer.appendChild(itemElement);
 
-      // Start skjult
-      moreconteiner.style.height = "0px";
+    });
+}
 
-      let isOpen = false;
+function createSystemElement(nodeElement, item, customer){
 
-      showhidetugglemorebutton.addEventListener("click", () => {
-        if (!isOpen) {
-          // Åpne: Sett eksplisitt høyde først, for animasjon
-          moreconteiner.style.height = moreconteiner.scrollHeight + "px";
+    const itemElement = nodeElement.cloneNode(true);
 
-          // Etter animasjon, fjern høyde for å støtte dynamisk innhold senere
-          setTimeout(() => {
-            moreconteiner.style.height = "auto";
-          }, 400); // samsvarer med transition-tiden
+    createSystemElement(itemElement, item, customer);
+
+    const moreconteiner = itemElement.querySelector(".moreconteiner");
+    const showhidetugglemorebutton = itemElement.querySelector(".showhidetugglemorebutton");
+
+    // Start skjult
+    moreconteiner.style.height = "0px";
+
+    let isOpen = false;
+
+    showhidetugglemorebutton.addEventListener("click", () => {
+      if (!isOpen) {
+        // Åpne: Sett eksplisitt høyde først, for animasjon
+        moreconteiner.style.height = moreconteiner.scrollHeight + "px";
+
+        // Etter animasjon, fjern høyde for å støtte dynamisk innhold senere
+        setTimeout(() => {
+          moreconteiner.style.height = "auto";
+        }, 400); // samsvarer med transition-tiden
+      } else {
+        // Lukke: Sett eksplisitt høyde før overgang tilbake til 0
+        moreconteiner.style.height = moreconteiner.scrollHeight + "px";
+        requestAnimationFrame(() => {
+          moreconteiner.style.height = "0px";
+        });
+      }
+
+      isOpen = !isOpen;
+    });
+
+    const notebuttonshowhide = itemElement.querySelector(".notebuttonshowhide");
+    const noteconteiner = itemElement.querySelector(".noteconteiner");
+    // Start skjult etter 400ms
+    noteconteiner.style.height = "0px";
+
+    let isNoteOpen = false;
+    notebuttonshowhide.addEventListener("click", () => {
+      if (!isNoteOpen) {
+        // Åpne notatfelt
+        noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
+        setTimeout(() => {
+          noteconteiner.style.height = "auto"; // Fjern høyde for dynamisk innhold
+        }, 400); // samsvarer med transition-tiden
+      } else {
+        // Lukke notatfelt
+        noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
+        requestAnimationFrame(() => {
+          noteconteiner.style.height = "0px";
+        });
+      }
+      isNoteOpen = !isNoteOpen;
+    }
+    );
+
+
+      // Fyll inn verdiene uten labeltekst
+      itemElement.querySelector(".systemname").textContent = item.name || "Ukjent anlegg";
+      itemElement.querySelector(".systemname").setAttribute("data-field", "name");
+
+      let modelselector = itemElement.querySelector(".editselectmodell");
+      //fjern tidligere options
+      modelselector.innerHTML = ""; // Tøm eksisterende options
+      
+      // "Opprett ny modell"-valg øverst
+      const createOption = document.createElement("option");
+      createOption.value = "__create__";
+      createOption.textContent = "➕ Opprett ny modell";
+      modelselector.appendChild(createOption);
+      
+      // Sortert liste over modeller
+      const sortedTypes = [...gSystem_type].sort((a, b) =>
+        a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
+      );
+      
+      sortedTypes.forEach(type => {
+        const opt = document.createElement("option");
+        opt.value = type.rawid;
+        opt.textContent = type.name;
+        modelselector.appendChild(opt);
+      });
+      
+      // Sett valgt modell hvis finnes
+      if(item.system_type_json && item.system_type_json.length > 0) {
+        modelselector.value = item.system_type_json[0].rawid;
+        
+      }else{
+        //legg til "Velg modell" som første valg
+        const selectOption = document.createElement("option");
+        selectOption.value = "";
+        selectOption.textContent = "Velg modell";
+        modelselector.insertBefore(selectOption, modelselector.firstChild);
+        modelselector.value = ""; // Sett til tomt for å vise "Velg modell"
+      }
+      
+      
+      // Reager på "Opprett ny modell"
+      modelselector.addEventListener("change", () => {
+        if (modelselector.value === "__create__") {
+          handleCreateNewModel();
+          modelselector.value = item.typemodel || "";
         } else {
-          // Lukke: Sett eksplisitt høyde før overgang tilbake til 0
-          moreconteiner.style.height = moreconteiner.scrollHeight + "px";
-          requestAnimationFrame(() => {
-            moreconteiner.style.height = "0px";
-          });
+          // Eventuelt send oppdatering til server her
+          let data = {system_type:[modelselector.value]};
+          sendEditSystemToServer(item, data);
         }
-
-        isOpen = !isOpen;
       });
 
-      const notebuttonshowhide = itemElement.querySelector(".notebuttonshowhide");
-      const noteconteiner = itemElement.querySelector(".noteconteiner");
-      // Start skjult etter 400ms
-      noteconteiner.style.height = "0px";
+      itemElement.querySelector(".seriename").textContent = item.serial_number || "–";
+      itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
 
-      let isNoteOpen = false;
-      notebuttonshowhide.addEventListener("click", () => {
-        if (!isNoteOpen) {
-          // Åpne notatfelt
-          noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
-          setTimeout(() => {
-            noteconteiner.style.height = "auto"; // Fjern høyde for dynamisk innhold
-          }, 400); // samsvarer med transition-tiden
-        } else {
-          // Lukke notatfelt
-          noteconteiner.style.height = (noteconteiner.scrollHeight + 20) + "px";
-          requestAnimationFrame(() => {
-            noteconteiner.style.height = "0px";
-          });
-        }
-        isNoteOpen = !isNoteOpen;
+      let datofelt = itemElement.querySelector(".installdate");
+      datofelt.value = item.installed_date
+      ? new Date(item.installed_date).toISOString().split("T")[0]
+      : "";
+      datofelt.addEventListener("change", () => {
+          let data = {installed_date: datofelt.value};
+          //live ny utregning
+          calcserviceDate(item, itemElement);
+          sendEditSystemToServer(item, data);
       }
       );
 
-  
-        // Fyll inn verdiene uten labeltekst
-        itemElement.querySelector(".systemname").textContent = item.name || "Ukjent anlegg";
-        itemElement.querySelector(".systemname").setAttribute("data-field", "name");
-
-        let modelselector = itemElement.querySelector(".editselectmodell");
-        //fjern tidligere options
-        modelselector.innerHTML = ""; // Tøm eksisterende options
-        
-        // "Opprett ny modell"-valg øverst
-        const createOption = document.createElement("option");
-        createOption.value = "__create__";
-        createOption.textContent = "➕ Opprett ny modell";
-        modelselector.appendChild(createOption);
-        
-        // Sortert liste over modeller
-        const sortedTypes = [...gSystem_type].sort((a, b) =>
-          a.name.localeCompare(b.name, 'no', { sensitivity: 'base' })
-        );
-        
-        sortedTypes.forEach(type => {
-          const opt = document.createElement("option");
-          opt.value = type.rawid;
-          opt.textContent = type.name;
-          modelselector.appendChild(opt);
-        });
-        
-        // Sett valgt modell hvis finnes
-        if(item.system_type_json && item.system_type_json.length > 0) {
-          modelselector.value = item.system_type_json[0].rawid;
-          
-        }else{
-          //legg til "Velg modell" som første valg
-          const selectOption = document.createElement("option");
-          selectOption.value = "";
-          selectOption.textContent = "Velg modell";
-          modelselector.insertBefore(selectOption, modelselector.firstChild);
-          modelselector.value = ""; // Sett til tomt for å vise "Velg modell"
-        }
-        
-        
-        // Reager på "Opprett ny modell"
-        modelselector.addEventListener("change", () => {
-          if (modelselector.value === "__create__") {
-            handleCreateNewModel();
-            modelselector.value = item.typemodel || "";
-          } else {
-            // Eventuelt send oppdatering til server her
-            let data = {system_type:[modelselector.value]};
-            sendEditSystemToServer(item, data);
-          }
-        });
-
-        itemElement.querySelector(".seriename").textContent = item.serial_number || "–";
-        itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
-
-        let datofelt = itemElement.querySelector(".installdate");
-        datofelt.value = item.installed_date
-        ? new Date(item.installed_date).toISOString().split("T")[0]
-        : "";
-        datofelt.addEventListener("change", () => {
-            let data = {installed_date: datofelt.value};
-            //live ny utregning
-            calcserviceDate(item, itemElement);
-            sendEditSystemToServer(item, data);
-        }
-        );
-
-        // Oppdater service
-        let serviceinfo = findserviceinfo(item);
-        const lastservicelable = itemElement.querySelector(".lastservicelable");
-        lastservicelable.textContent = serviceinfo.lastservice || "Ingen service";
-        
-        // Oppdater farge og dato
-        const nextservicelable = itemElement.querySelector(".nextservicelable");
-        nextservicelable.textContent = serviceinfo.nextservice || "–";
-        nextservicelable.style.color = serviceinfo.color;
-
-        // Oppdater serviceintervall-input
-        const intervallinput = itemElement.querySelector(".serviceintervall");
-        intervallinput.value = item.intervall || "";
-        intervallinput.addEventListener("change", () => {
-            let data = {intervall: intervallinput.value};
-            //live ny utregning 
-            calcserviceDate(item,itemElement);
-          }
-        );
-
-        intervallinput.addEventListener("blur", () => {
-            let data = {intervall: Number(intervallinput.value)};
-            sendEditSystemToServer(item, data);
-            //list servicene på nytt
-            listServiceOnsystem(itemElement, item, customer);
-          }
-        );
-        // Oppdater lokasjon
-        itemElement.querySelector(".locationlable").textContent = item.location || "–";
-        itemElement.querySelector(".locationlable").setAttribute("data-field", "location");
-        
-        // Oppdater notat
-        let noteText = itemElement.querySelector(".notehtmlquill");
-
-        //Opprett Quill-editor
-        var quill = new Quill(noteText, {
-          theme: 'snow',
-          modules: {
-              toolbar: true // Viktig for at den skal bli generert
-          }
-        });
-
-
-        // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
-        setTimeout(() => {
-          quill.clipboard.dangerouslyPasteHTML(item.notes || "");
-        }, 0);
-        
-        // 4. Lytt etter blur (når man forlater editoren)
-        quill.root.addEventListener("blur", function () {
-          // Hent HTML-innholdet fra Quill-editoren
-          let noteContent = quill.root.innerHTML;
-          console.log("Note content:", noteContent);
-          //send til server
-          let data = {notes: noteContent};
-          sendEditSystemToServer(item, data);
-        });
-
-        
-
-        systemListContainer.appendChild(itemElement);
-
-        itemElement.querySelectorAll("[data-field]").forEach((el) => {
-            el.classList.add("editable");
-            el.addEventListener("click", () => handleSystemEdit(el, item, customer));
-        });
-
-      //deletesystembutton
-      const deleteButton = itemElement.querySelector(".deletesystembutton");
-      if (deleteButton) {
-        deleteButton.addEventListener("click", () => {
-          if (confirm("Er du sikker på at du vil slette dette systemet?")) {
-            // Send DELETE forespørsel til server
-            DELETEairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", item.rawid, "responseDeleteSystem");
-
-            // Fjern systemet fra kundens liste
-            const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
-            if (customerIndex !== -1) {
-              const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === item.rawid);
-              if (systemIndex !== -1) {
-                gCustomer[customerIndex].system.splice(systemIndex, 1);
-              }
-            }
-            // Oppdater systemlisten for kunden
-            listSystemOnCustomer(currentCustomer);
-           
-          }
-        });
-      }
-
-      //lage klik event på newservicebutton
-      const newServiceButton = itemElement.querySelector(".newservicebutton");
-      if (newServiceButton) {
-          newServiceButton.addEventListener("click", function () {
-              makeNewService(itemElement,item, customer);
-          });
-      }
-
-      listServiceOnsystem(itemElement, item, customer);
-
+      // Oppdater service
+      let serviceinfo = findserviceinfo(item);
+      const lastservicelable = itemElement.querySelector(".lastservicelable");
+      lastservicelable.textContent = serviceinfo.lastservice || "Ingen service";
       
-    });
+      // Oppdater farge og dato
+      const nextservicelable = itemElement.querySelector(".nextservicelable");
+      nextservicelable.textContent = serviceinfo.nextservice || "–";
+      nextservicelable.style.color = serviceinfo.color;
+
+      // Oppdater serviceintervall-input
+      const intervallinput = itemElement.querySelector(".serviceintervall");
+      intervallinput.value = item.intervall || "";
+      intervallinput.addEventListener("change", () => {
+          let data = {intervall: intervallinput.value};
+          //live ny utregning 
+          calcserviceDate(item,itemElement);
+        }
+      );
+
+      intervallinput.addEventListener("blur", () => {
+          let data = {intervall: Number(intervallinput.value)};
+          sendEditSystemToServer(item, data);
+          //list servicene på nytt
+          listServiceOnsystem(itemElement, item, customer);
+        }
+      );
+      // Oppdater lokasjon
+      itemElement.querySelector(".locationlable").textContent = item.location || "–";
+      itemElement.querySelector(".locationlable").setAttribute("data-field", "location");
+      
+      // Oppdater notat
+      let noteText = itemElement.querySelector(".notehtmlquill");
+
+      //Opprett Quill-editor
+      var quill = new Quill(noteText, {
+        theme: 'snow',
+        modules: {
+            toolbar: true // Viktig for at den skal bli generert
+        }
+      });
+
+
+      // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
+      setTimeout(() => {
+        quill.clipboard.dangerouslyPasteHTML(item.notes || "");
+      }, 0);
+      
+      // 4. Lytt etter blur (når man forlater editoren)
+      quill.root.addEventListener("blur", function () {
+        // Hent HTML-innholdet fra Quill-editoren
+        let noteContent = quill.root.innerHTML;
+        console.log("Note content:", noteContent);
+        //send til server
+        let data = {notes: noteContent};
+        sendEditSystemToServer(item, data);
+      });
+
+      itemElement.querySelectorAll("[data-field]").forEach((el) => {
+          el.classList.add("editable");
+          el.addEventListener("click", () => handleSystemEdit(el, item, customer));
+      });
+
+    //deletesystembutton
+    const deleteButton = itemElement.querySelector(".deletesystembutton");
+    if (deleteButton) {
+      deleteButton.addEventListener("click", () => {
+        if (confirm("Er du sikker på at du vil slette dette systemet?")) {
+          // Send DELETE forespørsel til server
+          DELETEairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", item.rawid, "responseDeleteSystem");
+
+          // Fjern systemet fra kundens liste
+          const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
+          if (customerIndex !== -1) {
+            const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === item.rawid);
+            if (systemIndex !== -1) {
+              gCustomer[customerIndex].system.splice(systemIndex, 1);
+            }
+          }
+          // Oppdater systemlisten for kunden
+          listSystemOnCustomer(currentCustomer);
+         
+        }
+      });
+    }
+
+    //lage klik event på newservicebutton
+    const newServiceButton = itemElement.querySelector(".newservicebutton");
+    if (newServiceButton) {
+        newServiceButton.addEventListener("click", function () {
+            makeNewService(itemElement,item, customer);
+        });
+    }
+
+    listServiceOnsystem(itemElement, item, customer);
+
+  
+    // Returner det oppdaterte elementet
+    return itemElement;
+
 }
 
 function openServiceEditModal(service, system, customer) {

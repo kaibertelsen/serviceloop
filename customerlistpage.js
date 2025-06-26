@@ -173,7 +173,16 @@ function listSystemInCustomer(data, element) {
         if (name) name.textContent = system.name|| "Ukjent system";
 
         const modelname = itemElement.querySelector('.modelname');
-        if (modelname) modelname.textContent = system.typemodel || "";
+        //finne modellnavn basert på system.typemodel og gSystem_type
+        let modelnametext = "";
+        if (system.typemodel) {
+            const typeModel = gSystem_type.find(type => type.id === system.system_type_id);
+            if (typeModel) {
+                modelnametext = typeModel.name;
+            }
+        }
+        if (modelname) modelname.textContent = modelnametext;
+        
 
         systemList.appendChild(itemElement);
     });

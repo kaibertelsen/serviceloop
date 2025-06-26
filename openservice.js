@@ -575,7 +575,6 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
     //lagre airtableobject til seinere. Må motta serviceid først content,date,email,user, service 
     const airtableData = { 
         content: htmlBody,
-        date: new Date().toISOString(),
         email: email,
         user: [gUser.rawid]
     };

@@ -468,22 +468,11 @@ function responseNewModel(data) {
     let dataToUpdate = {system_type: [newModel.rawid]};
     sendEditSystemToServer(currentSystem, dataToUpdate);
 
-    //Legg til oppdatert system i kundens systemliste   
-    const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
-    if (customerIndex !== -1) {
-        const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === currentSystem.rawid);
-        if (systemIndex !== -1) {
-            gCustomer[customerIndex].system[systemIndex] = currentSystem; // Oppdater systemet i kundens liste
-        }
-    }
-
     // Fjern loaderen
     const systemListContainer = document.getElementById("systemlist");
     const loaderElement = systemListContainer.querySelector(".loaderconteiner");
     if (loaderElement) loaderElement.remove();
     
-
-
     //last inn systemer på nytt
     if (systemListContainer) {
         listSystemOnCustomer(currentCustomer);

@@ -46,6 +46,7 @@ function  calcserviceDate(system, itemElement) {
 
   const intervallinput = itemElement.querySelector(".serviceintervall");
   const intervall = intervallinput.value;
+  system.intervall = intervall; // oppdater systemet med intervall
 
 
     const today = new Date();

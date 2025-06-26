@@ -190,6 +190,7 @@ function createSystemElement(nodeElement, item, customer){
       );
 
       intervallinput.addEventListener("blur", () => {
+        
           calcserviceDate(item,itemElement);
           let data = {intervall: Number(intervallinput.value)};
           sendEditSystemToServer(item, data);
@@ -313,7 +314,7 @@ function createNewSystem() {
     );
 }
   
-  function responseNewSystem(response) {
+function responseNewSystem(response) {
     console.log("System opprettet:", response);
   
    let newSystem = JSON.parse(response.fields.json);

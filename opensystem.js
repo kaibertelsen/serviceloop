@@ -263,6 +263,12 @@ function createSystemElement(nodeElement, item, customer){
         });
     }
 
+    //sett bakgrunsfarge på knappen som tilsvarer status "kalkulert"
+    const statusObj = statusService.find(status => status.value.toLowerCase() === "kalkulert");
+    if (statusObj) {
+        newServiceButton.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
+    }
+
     // Liste opp servicer
     listServiceOnsystem(itemElement, item, customer);
 

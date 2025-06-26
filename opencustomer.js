@@ -1,9 +1,9 @@
 let currentCustomer = {};
 
-document.getElementById("createNewSystemButton").addEventListener("click", createNewSystem);
 
-
-
+document.getElementById("createNewSystemButton").addEventListener("click", function () {
+  createNewSystem();
+});
 
 document.getElementById("fromCustomerToListButton").addEventListener("click", function () {
     listCustomers(gCustomer);

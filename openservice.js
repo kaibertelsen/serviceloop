@@ -572,11 +572,10 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
     // Send til Zapier webhook
     sendDataToZapierWebhookCreatUser(payload);
 
-    //send til airtable content,date,email,user, service
+    //lagre airtableobject til seinere. Må motta serviceid først content,date,email,user, service 
     const airtableData = { 
         email: email,
-        user: [gUser.rawid],
-        service: [service.rawid]
+        user: [gUser.rawid]
     };
 
     // Send til Airtable

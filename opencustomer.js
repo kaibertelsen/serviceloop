@@ -42,7 +42,10 @@ function openCustomer(customer) {
 
 
   
-function  calcserviceDate(system, itemElement) {
+function  calcserviceDate(system,intervallinput, itemElement) {
+    // Hent intervall fra input
+    system.intervall = Number(intervallinput.value);
+
     let serviceinfo = findserviceinfo(system);
     // Oppdater visning
     itemElement.querySelector(".lastservicelable").textContent = serviceinfo.lastService || "–";

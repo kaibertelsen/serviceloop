@@ -183,9 +183,9 @@ function createSystemElement(nodeElement, item, customer){
       const intervallinput = itemElement.querySelector(".serviceintervall");
       intervallinput.value = item.intervall || "";
       intervallinput.addEventListener("change", () => {
-          let data = {intervall: intervallinput.value};
           //live ny utregning og oppdater lable
-          calcserviceDate(item,itemElement);
+
+          calcserviceDate(item,intervallinput,itemElement);
         }
       );
 

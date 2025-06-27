@@ -524,7 +524,9 @@ function responseNewService(data) {
     ${address}
     ${postcode} ${city}
 
-    Anlegg: ${systemName}`;
+    Anlegg:${systemName}
+    Serviceid:${newService.rawid}`;
+   
 
     const startDate = newService.date ? new Date(newService.date) : new Date();
 
@@ -545,7 +547,8 @@ function responseNewService(data) {
       color: eventColor,
       serviceId: newService.rawid,
       reminderMinutesBefore: reminderMinutesBefore,
-      location: location || "Ingen adresse oppgitt"
+      location: location || "Ingen adresse oppgitt",
+      serviceid: newService.rawid, // Legg til service ID i kalenderhendelsen
     };
 
     // Send til Zapier

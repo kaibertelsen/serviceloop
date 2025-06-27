@@ -10,7 +10,6 @@ document.getElementById("fromServicetoCustomer").addEventListener("click", funct
 
 });
 
-
 function listServiceOnsystem(itemElement, item, customer) {
 
     //list opp servicer
@@ -478,7 +477,19 @@ function makeNewService(itemElement, item, service,serviceelement) {
 
     }
 
+    //Opprett i kalender
+    let calendarEvent = {
+        title: `Service for ${item.name || "Ukjent system"}`,
+        start: nextServiceDate,
+        end: nextServiceDate,
+        description: `Service for ${item.name || "Ukjent system"} - ${service.type || "Ingen type"}`
+    };
+    // Send kalenderhendelse til Zapier
+    sendCalendarEventToZapier(calendarEvent);
+
 }
+
+
 
 function responseNewService(data) {
    
@@ -693,14 +704,25 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
 
 }
   
-async function sendDataToZapierWebhookCreatUser(data) {
+function sendDataToZapierWebhookCreatUser(data) {
+  let url = "https://hooks.zapier.com/hooks/catch/10455257/ubd0mdj/"
+  sendDataToZapierWebhook(data, url);
+}
+
+function sendCalendarEventToZapier(data) {
+    let url = "https://hooks.zapier.com/hooks/catch/10455257/ub5xabo/"
+    sendDataToZapierWebhook(data, url);
+
+}
+
+async function sendDataToZapierWebhook(data,url) {
     const formData = new FormData();
     for (const key in data) {
         const value = data[key];
         formData.append(key, typeof value === 'object' ? JSON.stringify(value) : value);
     }
 
-    const response = await fetch("https://hooks.zapier.com/hooks/catch/10455257/ubd0mdj/", {
+    const response = await fetch(url, {
         method: "POST",
         body: formData
     });
@@ -709,7 +731,6 @@ async function sendDataToZapierWebhookCreatUser(data) {
         console.error("Error sending data to Zapier:", response.statusText);
     }
 }
-
 
 function formatDateAndTime(isoDateStr) {
   const date = new Date(isoDateStr);

@@ -515,9 +515,9 @@ function responseNewService(data) {
 
     // Bygg beskrivelse
     const customerName = customer?.name || "Ukjent kunde";
-    const address = customer?.address || "";
-    const postcode = customer?.postcode || "";
-    const city = customer?.city || "";
+    const address = system.address || customer.address || "";
+    const postcode = system.postcode || customer.postcode || "";
+    const city = system.city || customer.city || "";
     const systemName = system?.name || "Ukjent anlegg";
 
     const description = `${customerName}
@@ -534,8 +534,8 @@ function responseNewService(data) {
     // Påminnelse: standard er 2880 minutter (2 dager)
     const reminderMinutesBefore = 2880; // Du kan justere denne verdien ved behov
 
-    // Hent adresseinfo fra systemet
-    const location = `${system.address || ""}, ${system.postcode || ""} ${system.city || ""}`.trim();
+    // Bygg full adresse
+    const location = [address, `${postcode} ${city}`.trim()].filter(Boolean).join(", ");
     
     const calendarEvent = {
       title: `${customerName} anlegg: ${systemName}`,

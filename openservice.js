@@ -346,8 +346,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
     
 
-    //sorter service.followup etter dato
-    service.followup.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    
 
     listFollowupOnService(serviceElement, service);
 
@@ -363,6 +362,9 @@ function listFollowupOnService(serviceElement, service) {
     listFollowup.innerHTML = ''; // Tøm listen
     // Hent mal for followup-element
     let nodeElement = document.getElementById("elementlibrary").querySelector(".followupraeelement");
+
+    //sorter service.followup etter dato
+    service.followup.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
     service.followup.forEach(followup => {
         

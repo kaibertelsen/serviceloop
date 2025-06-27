@@ -477,16 +477,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
 
     }
 
-    //Opprett i kalender
-    let calendarEvent = {
-        title: `Service for ${item.name || "Ukjent system"}`,
-        start: nextServiceDate,
-        end: nextServiceDate,
-        description: `Service for ${item.name || "Ukjent system"} - ${service.type || "Ingen type"}`
-    };
-    // Send kalenderhendelse til Zapier
-    sendCalendarEventToZapier(calendarEvent);
-
+    
 }
 
 
@@ -516,20 +507,54 @@ function responseNewService(data) {
         }
     }
 
+    // Hent status-objekt og farge fra global statusService
+    const statusKey = (newService.status || "").toLowerCase();
+    const statusObj = statusService.find(s => s.value === statusKey);
+    const eventColor = statusObj?.color || "#CCCCCC"; // fallback-farge
+
+    // Bygg beskrivelse
+    const customerName = customer?.name || "Ukjent kunde";
+    const address = customer?.address || "";
+    const postcode = customer?.postcode || "";
+    const city = customer?.city || "";
+    const systemName = system?.name || "Ukjent anlegg";
+
+    const description = `${customerName}
+    ${address}
+    ${postcode} ${city}
+
+    Anlegg: ${systemName}`;
+
+    // Lag kalenderhendelse
+    const calendarEvent = {
+    title: `Service: ${systemName}`,
+    start: newService.date ? new Date(newService.date).toISOString() : new Date().toISOString(),
+    end: newService.date ? new Date(newService.date).toISOString() : new Date().toISOString(),
+    description: description,
+    color: eventColor,
+    serviceId: newService.rawid
+    };
+
+    // Send til Zapier
+    sendCalendarEventToZapier(calendarEvent);
+
+
     //sjekk om den skal lagre en followup
     if (currentFollowingUp) {
-    let body = currentFollowingUp;
-    body.service = [newService.rawid]; // Legg til service ID i followup-dataen
+        let body = currentFollowingUp;
+        body.service = [newService.rawid]; // Legg til service ID i followup-dataen
 
-    //send til airtable
-    POSTairtable(
-        "appuUESr4s93SWaS7",
-        "tblSm8gaXkWw7PFJ8", // followup-tabell
-        JSON.stringify(body),
-        "responseFollowUp"
-    );
-    currentFollowingUp = null; // Nullstill global variabel etter sending
+        //send til airtable
+        POSTairtable(
+            "appuUESr4s93SWaS7",
+            "tblSm8gaXkWw7PFJ8", // followup-tabell
+            JSON.stringify(body),
+            "responseFollowUp"
+        );
+        currentFollowingUp = null; // Nullstill global variabel etter sending
     }
+
+
     
     
 }

@@ -330,6 +330,18 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         });
     }
 
+    //knapp for å påminne på nytt
+    const sendnewfollowupbutton = serviceElement.querySelector(".sendnewfollowupbutton");
+    if (sendnewfollowupbutton) {
+        sendnewfollowupbutton.addEventListener("click", function () {
+            // Bekreft sending av ny oppfølging
+            if (confirm("Er du sikker på at du vil sende en ny oppfølging for denne servicen?")) {
+                // Lag en ny followup
+                sendwarningToCustomer(item, service);
+            }
+        });
+    }
+    
     //list opp followingup 
     let listFollowup = serviceElement.querySelector(".followuplistonservice");
     let nodeElement = document.getElementById("elementlibrary").querySelector(".followupraeelement");
@@ -596,7 +608,7 @@ function sendwarningToCustomer(item, service){
 }
 
 function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernavn, email, service }) {
-    const subject = `Servicepåminnelse: Vi foreslår service på ${servicedato}`;
+    const subject = `Servicepåminnelse for ${anleggsnavn}`;
   
     const htmlBody = `
       <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;padding:30px;background:#fff;border-radius:8px;box-shadow:0 3px 12px rgba(0,0,0,0.05)">
@@ -620,7 +632,7 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
           Regelmessig service sikrer effektiv drift og lengre levetid. Gi oss gjerne en tilbakemelding så vi kan bekrefte tidspunktet eller avtale en annen dag som passer deg bedre.
         </p>
         <p style="font-size:16px;line-height:1.6">
-          Du kan svare direkte på denne e-posten dersom du har spørsmål eller ønsker å avtale noe spesielt.
+          Du kan svare direkte på denne e-posten dersom du ønsker å avtale noe spesielt.
         </p>
   
         <p style="margin-top:30px;">
@@ -653,6 +665,7 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
     };
 
     if (service && service.rawid) {
+        //har den rawid så kan denne lagres med en gang på servicen
         currentFollowingUp = null; // Nullstill global variabel for å indikere at vi ikke følger opp
         airtableData.service = [service.rawid]; // Legg til service ID i followup-dataen
         //send til airtable
@@ -667,7 +680,6 @@ function sendServiceReminderToZapier({ navn, anleggsnavn, servicedato, brukernav
         currentFollowingUp = airtableData; 
     }
 
-    currentFollowingUp = airtableData;
 
 }
   

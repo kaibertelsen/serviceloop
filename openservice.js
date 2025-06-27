@@ -525,7 +525,7 @@ function responseNewService(data) {
     ${postcode} ${city}
 
     Anlegg:${systemName}
-    Serviceid:${newService.rawid}`;
+    [Serviceid: ${newService.rawid}]`;
    
 
     const startDate = newService.date ? new Date(newService.date) : new Date();

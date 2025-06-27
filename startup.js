@@ -151,5 +151,7 @@ function ruteresponse(data,id){
         responseEditService(data);
     }else if(id == "responseNewModel"){
         responseNewModel(data);
+    }else if(id == "responseFollowUp"){
+        responseFollowUp(data);
     }
 }

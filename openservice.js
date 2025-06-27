@@ -507,21 +507,27 @@ function responseFollowUp(data) {
     console.log("Follow-up opprettet:", followUp);
 
     //oppdatere service med den nye follow-up
+    let serviceId = followUp.serviceid // Forvent at service er en array med minst ett element
 
-    //finne customer og systemet
-    let service = gCustomer.flatMap(c => c.system).find(s => s.rawid === followUp.service[0]);
-    if (service && service.followup) {
-        // Legg til den nye follow-up i service.followup
-        service.followup.push(followUp);
-    } else {
-        console.error("Service ikke funnet for follow-up:", followUp.service[0]);
-        return;
-    }
+    //finne denne servicen på currentcustomer (ligger ikke i gService)
+    let systems = currentCustomer.system || [];
 
-    // Oppdater visningen av service
-    if (currentItemElement) {
-        listServiceOnsystem(currentItemElement, service, gCustomer.find(c => c.rawid === service.customerid));
+    systems.forEach(system => {
+        if (system.service) {
+            let service = system.service.find(s => s.rawid === serviceId);
+            if (service) {
+                // Legg til follow-up i servicen
+                if (!service.followup) {
+                    service.followup = [];
+                }
+                service.followup.push(followUp);
+
+                // Oppdater visningen av systemet
+                listServiceOnsystem(currentItemElement, system, currentCustomer);
+            }
+        }
     }
+    );
     
 }
 

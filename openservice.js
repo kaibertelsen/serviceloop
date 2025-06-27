@@ -533,6 +533,9 @@ function responseNewService(data) {
     
     // Påminnelse: standard er 2880 minutter (2 dager)
     const reminderMinutesBefore = 2880; // Du kan justere denne verdien ved behov
+
+    // Hent adresseinfo fra systemet
+    const location = `${system.address || ""}, ${system.postcode || ""} ${system.city || ""}`.trim();
     
     const calendarEvent = {
       title: `${customerName} anlegg: ${systemName}`,
@@ -541,7 +544,8 @@ function responseNewService(data) {
       description: description,
       color: eventColor,
       serviceId: newService.rawid,
-      reminderMinutesBefore: reminderMinutesBefore
+      reminderMinutesBefore: reminderMinutesBefore,
+      location: location || "Ingen adresse oppgitt"
     };
 
     // Send til Zapier

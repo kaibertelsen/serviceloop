@@ -341,18 +341,30 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             }
         });
     }
+
     
-    //list opp followingup 
-    let listFollowup = serviceElement.querySelector(".followuplistonservice");
-    let nodeElement = document.getElementById("elementlibrary").querySelector(".followupraeelement");
 
     //sorter service.followup etter dato
     service.followup.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
+    listFollowupOnService(serviceElement, service);
+
+    // Returner det ferdige service-elementet
+    return serviceElement;
+
+}
+
+function listFollowupOnService(serviceElement, service) {
+
+    //list opp followingup 
+    let listFollowup = serviceElement.querySelector(".followuplistonservice");
+    listFollowup.innerHTML = ''; // Tøm listen
+    // Hent mal for followup-element
+    let nodeElement = document.getElementById("elementlibrary").querySelector(".followupraeelement");
+
     service.followup.forEach(followup => {
-        //sjekk om followup er en array, hvis ikke gjør den til en array
+        
         let followupElement = nodeElement.cloneNode(true);
-        //dato og klikkeslett
         // Formatert dato og klokkeslett
         const formattedDateTime = formatDateAndTime(followup.date);
         followupElement.querySelector(".followupdasteonservice").textContent = formattedDateTime
@@ -361,17 +373,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         listFollowup.appendChild(followupElement);
         
     });
-
-
-    
-
-    
-
-
-
-
-    // Returner det ferdige service-elementet
-    return serviceElement;
 
 }
 
@@ -534,8 +535,8 @@ function responseFollowUp(data) {
                 }
                 service.followup.push(followUp);
 
-                // Oppdater visningen av systemet
-                listServiceOnsystem(currentItemElement, system, currentCustomer);
+                // Oppdater visningen av followup
+                listFollowupOnService(currentItemElement, service);
             }
         }
     }

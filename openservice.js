@@ -1,5 +1,6 @@
 
 var currentItemElement = null; // Global variabel for å holde styr på gjeldende service-liste
+var currentServiceElement = null; // Global variabel for å holde styr på gjeldende service-element
 
 document.getElementById("fromServicetoCustomer").addEventListener("click", function () {
    
@@ -337,6 +338,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             // Bekreft sending av ny oppfølging
             if (confirm("Er du sikker på at du vil sende en ny oppfølging for denne servicen?")) {
                 // Lag en ny followup
+                currentServiceElement = serviceElement; // Oppdater global variabel
                 sendwarningToCustomer(item, service);
             }
         });
@@ -400,7 +402,7 @@ function deleteService(service, itemElement, item, customer){
 
 function makeNewService(itemElement, item, service,serviceelement) {
 
-    currentItemElement = itemElement; // Oppdater global variabel
+    currentServiceElement = itemElement; // Oppdater global variabel
 
   
     let serviceinfo = findserviceinfo(item);
@@ -491,7 +493,7 @@ function responseNewService(data) {
             system.service.push(newService);
 
             // Oppdater visningen av systemet
-            listServiceOnsystem(currentItemElement, system, customer);
+            listServiceOnsystem(currentServiceElement, system, customer);
 
         }
     }
@@ -536,7 +538,7 @@ function responseFollowUp(data) {
                 service.followup.push(followUp);
 
                 // Oppdater visningen av followup
-                listFollowupOnService(currentItemElement, service);
+                listFollowupOnService(currentServiceElement, service);
             }
         }
     }

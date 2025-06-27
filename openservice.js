@@ -496,9 +496,32 @@ function responseNewService(data) {
         "responseFollowUp"
     );
     currentFollowingUp = null; // Nullstill global variabel etter sending
-        
     }
     
+    
+}
+
+function responseFollowUp(data) {
+    //oppdater gFollowUp med den oppdaterte followupen
+    const followUp = JSON.parse(data.fields.json);
+    console.log("Follow-up opprettet:", followUp);
+
+    //oppdatere service med den nye follow-up
+
+    //finne customer og systemet
+    let service = gCustomer.flatMap(c => c.system).find(s => s.rawid === followUp.service[0]);
+    if (service && service.followup) {
+        // Legg til den nye follow-up i service.followup
+        service.followup.push(followUp);
+    } else {
+        console.error("Service ikke funnet for follow-up:", followUp.service[0]);
+        return;
+    }
+
+    // Oppdater visningen av service
+    if (currentItemElement) {
+        listServiceOnsystem(currentItemElement, service, gCustomer.find(c => c.rawid === service.customerid));
+    }
     
 }
 

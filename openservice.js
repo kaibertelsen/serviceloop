@@ -491,9 +491,10 @@ function responseNewService(data) {
   
     //oppdater kunde 
     let customer = gCustomer.find(c => c.rawid === newService.customerid);
+    let system = null;
     if (customer) {
         // Finn systemet i kundens systemliste
-        let system = customer.system.find(s => s.rawid === newService.systemid);
+        system = customer.system.find(s => s.rawid === newService.systemid);
         if (system) {
             // Legg til den nye servicen i systemets service-liste
             if (!system.service) {

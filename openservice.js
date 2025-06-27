@@ -528,7 +528,7 @@ function responseNewService(data) {
 
     // Lag kalenderhendelse
     const calendarEvent = {
-    title: `Service: ${systemName}`,
+    title: `${customerName} anlegg:${systemName}`,
     start: newService.date ? new Date(newService.date).toISOString() : new Date().toISOString(),
     end: newService.date ? new Date(newService.date).toISOString() : new Date().toISOString(),
     description: description,

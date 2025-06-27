@@ -101,7 +101,8 @@ function findserviceinfo(system) {
     suggestedService = {
       date: nextService.toISOString(),
       status: "kalkulert",
-      user: [gUser.rawid]
+      user: [gUser.rawid],
+      followup:[]
     };
   }
 

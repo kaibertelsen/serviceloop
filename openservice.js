@@ -385,8 +385,6 @@ function deleteService(service, itemElement, item, customer){
 
 }
 
-
-
 function makeNewService(itemElement, item, service,serviceelement) {
 
     currentItemElement = itemElement; // Oppdater global variabel

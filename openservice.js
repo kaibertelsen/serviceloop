@@ -526,14 +526,22 @@ function responseNewService(data) {
 
     Anlegg: ${systemName}`;
 
-    // Lag kalenderhendelse
+    const startDate = newService.date ? new Date(newService.date) : new Date();
+
+    // Legg til 2 timer
+    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+    
+    // Påminnelse: standard er 2880 minutter (2 dager)
+    const reminderMinutesBefore = 2880; // Du kan justere denne verdien ved behov
+    
     const calendarEvent = {
-    title: `${customerName} anlegg:${systemName}`,
-    start: newService.date ? new Date(newService.date).toISOString() : new Date().toISOString(),
-    end: newService.date ? new Date(newService.date).toISOString() : new Date().toISOString(),
-    description: description,
-    color: eventColor,
-    serviceId: newService.rawid
+      title: `${customerName} anlegg: ${systemName}`,
+      start: startDate.toISOString(),
+      end: endDate.toISOString(),
+      description: description,
+      color: eventColor,
+      serviceId: newService.rawid,
+      reminderMinutesBefore: reminderMinutesBefore
     };
 
     // Send til Zapier

@@ -359,6 +359,11 @@ function listFollowupOnService(serviceElement, service) {
 
     //list opp followingup 
     let listFollowup = serviceElement.querySelector(".followuplistonservice");
+
+    if (!listFollowup) {
+        return; // Avbryt hvis listen ikke finnes
+    }
+
     listFollowup.innerHTML = ''; // Tøm listen
     // Hent mal for followup-element
     let nodeElement = document.getElementById("elementlibrary").querySelector(".followupraeelement");

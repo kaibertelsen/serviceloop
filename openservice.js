@@ -617,7 +617,6 @@ function creatCalendarEventObject(service) {
       serviceId: service.rawid,
       reminderMinutesBefore: reminderMinutesBefore,
       location: location,
-      serviceid: service.rawid,
       calendarid: calendarid
     };
 

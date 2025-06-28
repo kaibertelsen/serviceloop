@@ -99,6 +99,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             openservicebutton.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
         }
     }
+
+    //sett servicenumber
+    const serviceNumber = serviceElement.querySelector(".servicenumber");
+    if (serviceNumber) {
+        serviceNumber.textContent = service.servicenumber || "Ikke tilordnet";
+    }
     
     //sette dato
     const dateInput = serviceElement.querySelector(".servicedate");

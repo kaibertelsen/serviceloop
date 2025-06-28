@@ -647,7 +647,7 @@ function creatCalendarEventObject(service) {
     const calendarid = gClient.calendarid || service.calendarid;
     const calendereventid = service.calendareventid || "";
 
-    const serviceNumber = service.servicenumber || "Ikke tilordnet";
+    const serviceNumber = service.servicenumber || "";
 
     let returnObject = {
         title: `${serviceNumber} - ${customerName} anlegg: ${systemName}`,

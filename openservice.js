@@ -616,11 +616,15 @@ function creatCalendarEventObject(service) {
     const customerName = gCustomer.find(c => c.rawid === service.customerid)?.name || "Ukjent kunde";
     const systemName = service.systemname || "Anlegg";
   
-    const description = `${customerName}
-    Status: ${service.status || "Ukjent status"}
-    Lokasjon: ${service.location || "Ingen plasering oppgitt"}
-    Anlegg: ${systemName}
-    [Serviceid: ${service.rawid}]`;
+    const description = `
+    <b>👤 Kunde:</b> ${customerName}<br>
+    <b>📦 Status:</b> ${service.status || "Ukjent status"}<br>
+    <b>🏠 Plassering:</b> ${service.location || "Ingen plassering oppgitt"}<br>
+    <b>🏗️ Anlegg:</b> ${systemName}<br>
+    <b>👷 Utføres av:</b> ${service.performed_by || "Ukjent bruker"}<br><br>
+    [Serviceid: ${service.rawid}]
+    `;
+    
   
     const startDate = new Date(service.date);
     const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);

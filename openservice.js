@@ -428,22 +428,20 @@ function makeNewService(itemElement, item, service,serviceelement) {
     ? serviceinfo.nextserviceDate.toISOString()
     : new Date().toISOString();
 
-    //sjekk om service.date er satt, hvis ikke bruk nextServiceDate
-    if (service.date) {
-        //da er dette fra et kalkulert service element
-        //hent dato fra input
-        const dateInput = serviceelement.querySelector(".servicedate");
-        if (dateInput && dateInput.value) {
-            // Bruk dato fra input hvis den er satt
-            nextServiceDate = new Date(dateInput.value).toISOString();
-        } else {
-            // Hvis ingen dato er satt, bruk kalkulert dato
-            nextServiceDate = service.date;
-        }
-       
-        //fjern elementet mens den oppretter på server
-        serviceelement.remove();
+   
+    //hent dato fra input
+    const dateInput = serviceelement.querySelector(".servicedate");
+    if (dateInput && dateInput.value) {
+        // Bruk dato fra input hvis den er satt
+        nextServiceDate = new Date(dateInput.value).toISOString();
+    } else {
+        // Hvis ingen dato er satt, bruk kalkulert dato
+        nextServiceDate = service.date;
     }
+    
+    //fjern elementet mens den oppretter på server
+    serviceelement.remove();
+    
 
 
     let userid = gUser.rawid || "";

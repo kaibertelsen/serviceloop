@@ -103,7 +103,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     //sett servicenumber
     const serviceNumber = serviceElement.querySelector(".servicenumber");
     if (serviceNumber) {
-        serviceNumber.textContent = service.servicenumber || "Ikke tilordnet";
+        serviceNumber.textContent = service.nr || "Ikke tilordnet";
     }
     
     //sette dato
@@ -647,7 +647,7 @@ function creatCalendarEventObject(service) {
     const calendarid = gClient.calendarid || service.calendarid;
     const calendereventid = service.calendareventid || "";
 
-    const serviceNumber = service.servicenumber || "";
+    const serviceNumber = service.nr || "";
 
     let returnObject = {
         title: `${serviceNumber} - ${customerName} anlegg: ${systemName}`,

@@ -266,9 +266,10 @@ function createSystemElement(nodeElement, item, customer){
 
 function deleteSystem(itemElement, system, customer) {
 
-    //sjekk om det er servicer på dette systemet
-    if (system.service && system.service.length > 0) {
-        alert("Kan ikke slette system med tilknyttede servicer. Fjern servicer først.");
+    //sjekk om det er servicer på dette systemet, har den status "kalkulert" så kan systemet slettes
+    const hasKalkulertService = system.service && system.service.some(s => s.status && s.status.toLowerCase() === "kalkulert");
+    if (system.service && system.service.length > 0 && !hasKalkulertService) {
+        alert("Dette systemet har registrerte servicer. Du kan ikke slette systemet før alle servicer er slettet.");
         return;
     }
 

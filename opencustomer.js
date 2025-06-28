@@ -99,7 +99,7 @@ function findserviceinfo(system) {
   // 4. Bestem om det skal foreslås service
   if (!serviceInWindow && nextService) {
     suggestedService = {
-      date: nextService.toISOString(),
+      date: nextService,
       status: "kalkulert",
       user: [gUser.rawid],
       followup: []

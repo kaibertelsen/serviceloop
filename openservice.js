@@ -413,6 +413,8 @@ function deleteService(service, itemElement, item, customer){
 
 function responseGetServiceForDelete(data) {
 
+    let service = JSON.parse(data.fields.json);
+
     //selt fra kalenderen
     let calendarEvent = creatCalendarEventObject(service);
     calendarEvent.delete = true; // Marker for sletting
@@ -420,7 +422,7 @@ function responseGetServiceForDelete(data) {
     // Send kalenderhendelsen til Zapier for sletting
     sendCalendarEventToZapier(calendarEvent);
 
-    let serviceId = data.id // Hent rawid fra responsen
+    let serviceId = service.rawid; // Forvent at service er en array med minst ett element
     DELETEairtable(
         "appuUESr4s93SWaS7",
         "tblPWerScR5AbxnlJ", // system-tabell

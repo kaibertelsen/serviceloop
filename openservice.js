@@ -591,7 +591,7 @@ function creatCalendarEventObject(service) {
     const eventColor = statusObj?.color || "#CCCCCC";
   
     const customerName = gCustomer.find(c => c.rawid === service.customerid)?.name || "Ukjent kunde";
-    const systemName = service.system_name || "Ukjent anlegg";
+    const systemName = service.systemname || "Anlegg";
   
     const description = `${customerName}
   Status: ${service.status || "Ukjent status"}

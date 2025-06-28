@@ -433,8 +433,6 @@ function responseGetServiceForDelete(data) {
 
 }
 
-
-
 function makeNewService(itemElement, item, service,serviceelement) {
 
     currentServiceElement = itemElement; // Oppdater global variabel
@@ -622,31 +620,37 @@ function creatCalendarEventObject(service) {
     const systemName = service.systemname || "Anlegg";
   
     const description = `${customerName}
-  Status: ${service.status || "Ukjent status"}
-  Anlegg: ${systemName}
-  [Serviceid: ${service.rawid}]`;
+    Status: ${service.status || "Ukjent status"}
+    Lokasjon: ${service.location || "Ingen plasering oppgitt"}
+    Anlegg: ${systemName}
+    [Serviceid: ${service.rawid}]`;
   
     const startDate = new Date(service.date);
     const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
   
     const reminderMinutesBefore = 2880;
   
-    const location = service.location || "Ingen adresse oppgitt";
+    const adresse = service.adress || currentCustomer.adress || "";
+    const postalCode = service.postalcode || currentCustomer.postalcode || "";
+    const city = service.city || currentCustomer.city || "";
+
+    const fulladress = [adresse, postalCode, city].filter(part => part).join(", ");
   
     const calendarid = gClient.calendarid || service.calendarid;
     const calendereventid = service.calendareventid || "";
 
     let returnObject = {
-      title: `${customerName} anlegg: ${systemName}`,
-      start: startDate.toISOString(),
-      end: endDate.toISOString(),
-      description: description,
-      color: eventColor,
-      colorId: colorId,
-      serviceId: service.rawid,
-      reminderMinutesBefore: reminderMinutesBefore,
-      location: location,
-      calendarid: calendarid
+        title: `${customerName} anlegg: ${systemName}`,
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
+        description: description,
+        color: eventColor,
+        colorId: colorId,
+        serviceId: service.rawid,
+        reminderMinutesBefore: reminderMinutesBefore,
+        location: location,
+        fullAddress: fulladress,
+        calendarid: calendarid
     };
 
    

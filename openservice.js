@@ -435,8 +435,9 @@ function makeNewService(itemElement, item, service,serviceelement) {
     let startDate = service.date || nextServiceDate;
     
     //fjern elementet mens den oppretter på server
-    serviceelement.remove();
-    
+    if (serviceelement){
+        serviceelement.remove();
+    }
 
 
     let userid = gUser.rawid || "";

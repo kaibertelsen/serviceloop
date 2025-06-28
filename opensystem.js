@@ -236,22 +236,7 @@ function createSystemElement(nodeElement, item, customer){
     const deleteButton = itemElement.querySelector(".deletesystembutton");
     if (deleteButton) {
       deleteButton.addEventListener("click", () => {
-        if (confirm("Er du sikker på at du vil slette dette systemet?")) {
-          // Send DELETE forespørsel til server
-          DELETEairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", item.rawid, "responseDeleteSystem");
-
-          // Fjern systemet fra kundens liste
-          const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
-          if (customerIndex !== -1) {
-            const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === item.rawid);
-            if (systemIndex !== -1) {
-              gCustomer[customerIndex].system.splice(systemIndex, 1);
-            }
-          }
-          // Oppdater systemlisten for kunden
-          listSystemOnCustomer(currentCustomer);
-         
-        }
+        deleteSystem(itemElement, item, customer);
       });
     }
 
@@ -276,6 +261,34 @@ function createSystemElement(nodeElement, item, customer){
     // Returner det oppdaterte elementet
     return itemElement;
 
+}
+
+
+function deleteSystem(itemElement, system, customer) {
+
+    //sjekk om det er servicer på dette systemet
+    if (system.service && system.service.length > 0) {
+        alert("Kan ikke slette system med tilknyttede servicer. Fjern servicer først.");
+        return;
+    }
+
+
+    if (confirm("Er du sikker på at du vil slette dette systemet?")) {
+        // Send DELETE forespørsel til server
+        DELETEairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", item.rawid, "responseDeleteSystem");
+
+        // Fjern systemet fra kundens liste
+        const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);
+        if (customerIndex !== -1) {
+          const systemIndex = gCustomer[customerIndex].system.findIndex(s => s.rawid === system.rawid);
+          if (systemIndex !== -1) {
+            gCustomer[customerIndex].system.splice(systemIndex, 1);
+          }
+        }
+        // Oppdater systemlisten for kunden
+        listSystemOnCustomer(currentCustomer);
+       
+      }
 }
 
 function openServiceEditModal(service, system, customer) {

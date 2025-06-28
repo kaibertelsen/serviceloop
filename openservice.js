@@ -113,23 +113,23 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     dateInput.value = "";
     }
 
-    if(!isdummy) {
-        //når dato settes send dette til server
-        dateInput.addEventListener("change", function () {
-            const newDate = new Date(dateInput.value);
-            if (isNaN(newDate)) {
-                console.error("Ugyldig dato:", dateInput.value);
-                return;
-            }
-            // Oppdater service med ny dato
-            service.date = newDate.toISOString(); // Lagre dato i ISO-format
-
+   
+    //når dato settes send dette til server
+    dateInput.addEventListener("change", function () {
+        const newDate = new Date(dateInput.value);
+        if (isNaN(newDate)) {
+            console.error("Ugyldig dato:", dateInput.value);
+            return;
+        }
+        // Oppdater service med ny dato
+        service.date = newDate.toISOString(); // Lagre dato i ISO-format
+        if(!isdummy) {
             //send til server
             let data = {date: newDate.toISOString()};
             sendEditServiceToServer(service, data);
         }
-        );
-    }
+    });
+    
     //Load status selectoren med arrayen statusService
     const statusSelect = serviceElement.querySelector(".editstatusservice");
     if (statusSelect) {
@@ -429,15 +429,8 @@ function makeNewService(itemElement, item, service,serviceelement) {
     : new Date().toISOString();
 
    
-    //hent dato fra input
-    const dateInput = serviceelement.querySelector(".servicedate");
-    if (dateInput && dateInput.value) {
-        // Bruk dato fra input hvis den er satt
-        nextServiceDate = new Date(dateInput.value).toISOString();
-    } else {
-        // Hvis ingen dato er satt, bruk kalkulert dato
-        nextServiceDate = service.date;
-    }
+    nextServiceDate = service.date;
+    let startDate = service.date || nextServiceDate;
     
     //fjern elementet mens den oppretter på server
     serviceelement.remove();
@@ -463,7 +456,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
         system: [item.rawid],
         status: status,
         user: [userid],
-        date: nextServiceDate
+        date: startDate
     };
 
     const elementLibrary = document.getElementById("elementlibrary");

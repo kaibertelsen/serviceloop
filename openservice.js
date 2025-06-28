@@ -405,15 +405,17 @@ function deleteService(service, itemElement, item, customer){
         system.service = system.service.filter(s => s.rawid !== serviceId);
     }
 
-    // lag listen på nytt
-    listServiceOnsystem(itemElement, system, customer);
-
-    //seltt fra kalenderen
+    //selt fra kalenderen
     let calendarEvent = creatCalendarEventObject(service);
     calendarEvent.delete = true; // Marker for sletting
 
     // Send kalenderhendelsen til Zapier for sletting
     sendCalendarEventToZapier(calendarEvent);
+
+    // lag listen på nytt
+    listServiceOnsystem(itemElement, system, customer);
+
+  
 
 
 }

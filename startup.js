@@ -13,7 +13,7 @@ const statusService = [
     { value: "påminnet", text: "Påminnet", color: "#17a2b8", colorId: "7" },      // #46D6DB (cyan)
     { value: "planlagt", text: "Planlagt", color: "#ffc107", colorId: "5" },     // #FBD75B (gul)
     { value: "utført", text: "Utført", color: "#28a745", colorId: "10" },        // #51B749 (grønn)
-    { value: "fakturert", text: "Fakturert", color: "#000000", colorId: "11" }   // #DC2127 (rød)
+    { value: "fakturert", text: "Fakturert", color: "#000000", colorId: "8" }   //sort #000000
   ];
   
 
@@ -106,15 +106,9 @@ function parseCustomerJsonArray(jsonArray) {
         return null;
       }
     }).filter(Boolean);
-  }
+}
   
-  
-  
-  
-  
-  
-  
-  
+
 
 function convertJSONArrayToObject(array) {
     let result = [];

@@ -596,6 +596,7 @@ function creatCalendarEventObject(service) {
     const statusKey = (service.status || "").toLowerCase();
     const statusObj = statusService.find(s => s.value === statusKey);
     const eventColor = statusObj?.color || "#CCCCCC";
+    const colorId = statusObj?.colorid || "1"; // Standard farge-ID hvis ikke funnet
   
     const customerName = gCustomer.find(c => c.rawid === service.customerid)?.name || "Ukjent kunde";
     const systemName = service.systemname || "Anlegg";
@@ -621,6 +622,7 @@ function creatCalendarEventObject(service) {
       end: endDate.toISOString(),
       description: description,
       color: eventColor,
+      colorId: colorId,
       serviceId: service.rawid,
       reminderMinutesBefore: reminderMinutesBefore,
       location: location,

@@ -432,48 +432,6 @@ function responseGetServiceForDelete(data) {
 }
 
 
-    currentServiceElement = itemElement; // Oppdater global variabel
-
-    if (!service || !service.rawid) {
-        console.error("Ingen gyldig service å slette:", service);
-        return;
-
-
-
-}
-
-    let serviceId = service.rawid; 
-    DELETEairtable(
-        "appuUESr4s93SWaS7",
-        "tblPWerScR5AbxnlJ", // system-tabell
-        serviceId,
-        "responseDeleteService"
-    );
-    
-     //selt fra kalenderen
-     let calendarEvent = creatCalendarEventObject(service);
-     calendarEvent.delete = true; // Marker for sletting
-
-    // Send kalenderhendelsen til Zapier for sletting
-     sendCalendarEventToZapier(calendarEvent);
-
-    //fjern servicen fra systemet
-    let system = customer.system.find(s => s.rawid === item.rawid);
-    if (system && system.service) {
-        system.service = system.service.filter(s => s.rawid !== serviceId);
-    }
-
-   
-
-   
-
-    // lag listen på nytt
-    listServiceOnsystem(itemElement, system, customer);
-
-  
-
-
-}
 
 function makeNewService(itemElement, item, service,serviceelement) {
 

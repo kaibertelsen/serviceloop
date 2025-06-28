@@ -433,7 +433,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
     const dateInput = serviceelement.querySelector(".servicedate");
     if (dateInput && dateInput.value) {
         // Bruk dato fra input hvis den er satt
-        nextServiceDate = new Date(dateInput.value).toISOString();
+        nextServiceDate = dateInput.value;
     } else {
         // Hvis ingen dato er satt, bruk kalkulert dato
         nextServiceDate = service.date;

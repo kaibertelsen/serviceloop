@@ -7,13 +7,13 @@ var gSystem_type = []; // Global variable to store system data
 var gServicetype = []; // Global variable to store service type data
 
 const statusService = [
-    { value: "", text: "Ingen status", color: "white" }, // hvit
-    { value: "kalkulert", text: "Kalkulert", color: "gray" },
-    { value: "registrert", text: "Registrert", color: "#007bff" },   // blå
-    { value: "påminnet", text: "Påminnet", color: "#17a2b8" },       // cyan
-    { value: "planlagt", text: "Planlagt", color: "#ffc107" },       // gul
-    { value: "utført", text: "Utført", color: "#28a745" },           // grønn
-    { value: "fakturert", text: "Fakturert", color: "#000000" }      // svart
+    { value: "", text: "Ingen status", color: "white", colorId: "8" },         // #E1E1E1 (lys grå)
+    { value: "kalkulert", text: "Kalkulert", color: "gray", colorId: "8" },    // #E1E1E1 (lys grå)
+    { value: "registrert", text: "Registrert", color: "#007bff", colorId: "9" },  // #5484ED (blå)
+    { value: "påminnet", text: "Påminnet", color: "#17a2b8", colorId: "7" },      // #46D6DB (cyan)
+    { value: "planlagt", text: "Planlagt", color: "#ffc107", colorId: "5" },     // #FBD75B (gul)
+    { value: "utført", text: "Utført", color: "#28a745", colorId: "10" },        // #51B749 (grønn)
+    { value: "fakturert", text: "Fakturert", color: "#000000", colorId: "11" }   // #DC2127 (rød)
   ];
   
 

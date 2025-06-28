@@ -408,6 +408,14 @@ function deleteService(service, itemElement, item, customer){
     // lag listen på nytt
     listServiceOnsystem(itemElement, system, customer);
 
+    //seltt fra kalenderen
+    let calendarEvent = creatCalendarEventObject(service);
+    calendarEvent.delete = true; // Marker for sletting
+
+    // Send kalenderhendelsen til Zapier for sletting
+    sendCalendarEventToZapier(calendarEvent);
+
+
 }
 
 function makeNewService(itemElement, item, service,serviceelement) {
@@ -483,7 +491,6 @@ function makeNewService(itemElement, item, service,serviceelement) {
 
     
 }
-
 
 function responseNewService(data) {
    
@@ -631,7 +638,6 @@ function creatCalendarEventObject(service) {
     return returnObject;
 }
   
-
 function responseEditService(data) {
     //oppdater gService med den oppdaterte servicen
     const updatedService = JSON.parse(data.fields.json);

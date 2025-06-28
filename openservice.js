@@ -630,11 +630,11 @@ function creatCalendarEventObject(service) {
   
     const reminderMinutesBefore = 2880;
   
-    const adresse = service.adress || currentCustomer.adress || "";
-    const postalCode = service.postalcode || currentCustomer.postalcode || "";
+    const address = service.address || currentCustomer.address || "";
+    const postalCode = service.postcode || currentCustomer.postcode || "";
     const city = service.city || currentCustomer.city || "";
 
-    const fulladress = [adresse, postalCode, city].filter(part => part).join(", ");
+    const fulladress = [address, postalCode, city].filter(part => part).join(", ");
   
     const calendarid = gClient.calendarid || service.calendarid;
     const calendereventid = service.calendareventid || "";

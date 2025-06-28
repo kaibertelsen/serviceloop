@@ -434,27 +434,29 @@ function makeNewService(itemElement, item, service,serviceelement) {
     
     let startDate = service.date || nextServiceDate;
     
+    let warnCustomer = false;
     //fjern elementet mens den oppretter på server
     if (serviceelement){
         serviceelement.remove();
+
+         //skal kunden varsles om denne servicen?
+        const warncustomerswitch = serviceelement.querySelector(".warncustomerswitch");
+        
+        if (warncustomerswitch) {
+            warnCustomer = warncustomerswitch.checked;
+        }
+
     }
 
-
-    let userid = gUser.rawid || "";
-
-    //skal kunden varsles om denne servicen?
-    const warncustomerswitch = serviceelement.querySelector(".warncustomerswitch");
-    let warnCustomer = false;
-    if (warncustomerswitch) {
-        warnCustomer = warncustomerswitch.checked;
-    }
 
     let status = "Registrert"; // Standard status for ny service
     //hvis kunden skal varsles, sett status til "Påminnet"
     if (warnCustomer) {
         status = "Påminnet";
     }
-  
+
+    let userid = gUser.rawid || "";
+
     let body = {
         system: [item.rawid],
         status: status,

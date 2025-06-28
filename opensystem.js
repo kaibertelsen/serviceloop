@@ -276,7 +276,7 @@ function deleteSystem(itemElement, system, customer) {
 
     if (confirm("Er du sikker på at du vil slette dette systemet?")) {
         // Send DELETE forespørsel til server
-        DELETEairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", item.rawid, "responseDeleteSystem");
+        DELETEairtable("appuUESr4s93SWaS7", "tbloIYTeuqo36rupe", system.rawid, "responseDeleteSystem");
 
         // Fjern systemet fra kundens liste
         const customerIndex = gCustomer.findIndex(c => c.rawid === currentCustomer.rawid);

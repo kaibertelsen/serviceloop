@@ -481,7 +481,6 @@ function makeNewService(itemElement, item, service,serviceelement) {
 }
 
 
-
 function responseNewService(data) {
    
     let newService = JSON.parse(data.fields.json);
@@ -508,50 +507,9 @@ function responseNewService(data) {
         }
     }
 
-    // Hent status-objekt og farge fra global statusService
-    const statusKey = (newService.status || "").toLowerCase();
-    const statusObj = statusService.find(s => s.value === statusKey);
-    const eventColor = statusObj?.color || "#CCCCCC"; // fallback-farge
-
-    // Bygg beskrivelse
-    const customerName = customer?.name || "Ukjent kunde";
-    const address = system.address || customer.address || "";
-    const postcode = system.postcode || customer.postcode || "";
-    const city = system.city || customer.city || "";
-    const systemName = system?.name || "Ukjent anlegg";
-
-    const description = `${customerName}
-    ${address}
-    ${postcode} ${city}
-
-    Anlegg:${systemName}
-    [Serviceid: ${newService.rawid}]`;
    
-
-    const startDate = newService.date ? new Date(newService.date) : new Date();
-
-    // Legg til 2 timer
-    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-    
-    // Påminnelse: standard er 2880 minutter (2 dager)
-    const reminderMinutesBefore = 2880; // Du kan justere denne verdien ved behov
-
-    // Bygg full adresse
-    const location = [address, `${postcode} ${city}`.trim()].filter(Boolean).join(", ");
-    
-    const calendarEvent = {
-      title: `${customerName} anlegg: ${systemName}`,
-      start: startDate.toISOString(),
-      end: endDate.toISOString(),
-      description: description,
-      color: eventColor,
-      serviceId: newService.rawid,
-      reminderMinutesBefore: reminderMinutesBefore,
-      location: location || "Ingen adresse oppgitt",
-      serviceid: newService.rawid, // Legg til service ID i kalenderhendelsen
-    };
-
-    // Send til Zapier
+    // Lag kalenderhendelse for den nye servicen
+    const calendarEvent = creatCalendarEventObject(newService);
     sendCalendarEventToZapier(calendarEvent);
 
 
@@ -614,7 +572,63 @@ function sendEditServiceToServer(service, data) {
     let body = JSON.stringify(data);
     let rawid = service.rawid;
     PATCHairtable("appuUESr4s93SWaS7", "tblPWerScR5AbxnlJ", rawid, body, "responseEditService");
+
+
+    //hvis det er date eller status som er endret, så må vi oppdatere kalenderhendelsen
+    if (data.date || data.status) {
+        const calendarEvent = creatCalendarEventObject(service, data);
+        // Send til Zapier
+        sendCalendarEventToZapier(calendarEvent);
+    }
 }
+
+function creatCalendarEventObject(service) {
+    const statusKey = (service.status || "").toLowerCase();
+    const statusObj = statusService.find(s => s.value === statusKey);
+    const eventColor = statusObj?.color || "#CCCCCC";
+  
+    const customerName = gCustomer.find(c => c.rawid === service.customerid)?.name || "Ukjent kunde";
+    const systemName = service.system_name || "Ukjent anlegg";
+  
+    const description = `${customerName}
+  Status: ${service.status || "Ukjent status"}
+  Anlegg: ${systemName}
+  [Serviceid: ${service.rawid}]`;
+  
+    const startDate = new Date(service.date);
+    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+  
+    const reminderMinutesBefore = 2880;
+  
+    const location = service.location || "Ingen adresse oppgitt";
+  
+    const calendarid = gClient.calendarid || service.calendarid;
+    const calendereventid = service.calendareventid || "";
+
+    let returnObject = {
+      title: `${customerName} anlegg: ${systemName}`,
+      start: startDate.toISOString(),
+      end: endDate.toISOString(),
+      description: description,
+      color: eventColor,
+      serviceId: service.rawid,
+      reminderMinutesBefore: reminderMinutesBefore,
+      location: location,
+      serviceid: service.rawid,
+      calendarid: calendarid
+    };
+
+   
+    // Hvis kalenderhendelses-ID er tilgjengelig, legg den til i objektet
+    if (calendereventid) {
+        //da blir det en update
+        returnObject.calendereventid = calendereventid;
+    }
+
+  
+    return returnObject;
+  }
+  
 
 function responseEditService(data) {
     //oppdater gService med den oppdaterte servicen

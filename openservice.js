@@ -390,6 +390,58 @@ function listFollowupOnService(serviceElement, service) {
 
 function deleteService(service, itemElement, item, customer){
 
+    //må hentes fra airtable for å kunne få med oppdatert informajson f.eks eventid
+    GETairtable(
+        "appuUESr4s93SWaS7",
+        "tblPWerScR5AbxnlJ", // system-tabell
+        service.rawid,
+        "responseGetServiceForDelete"
+    );
+
+    let serviceId = service.rawid; 
+    //fjern servicen fra systemet
+    let system = customer.system.find(s => s.rawid === item.rawid);
+    if (system && system.service) {
+        system.service = system.service.filter(s => s.rawid !== serviceId);
+    }
+
+    
+    // lag listen på nytt
+    listServiceOnsystem(itemElement, system, customer);
+
+}
+
+function responseGetServiceForDelete(data) {
+
+    //selt fra kalenderen
+    let calendarEvent = creatCalendarEventObject(service);
+    calendarEvent.delete = true; // Marker for sletting
+
+    // Send kalenderhendelsen til Zapier for sletting
+    sendCalendarEventToZapier(calendarEvent);
+
+    let serviceId = data.id // Hent rawid fra responsen
+    DELETEairtable(
+        "appuUESr4s93SWaS7",
+        "tblPWerScR5AbxnlJ", // system-tabell
+        serviceId,
+        "responseDeleteService"
+    );
+
+
+}
+
+
+    currentServiceElement = itemElement; // Oppdater global variabel
+
+    if (!service || !service.rawid) {
+        console.error("Ingen gyldig service å slette:", service);
+        return;
+
+
+
+}
+
     let serviceId = service.rawid; 
     DELETEairtable(
         "appuUESr4s93SWaS7",
@@ -398,6 +450,12 @@ function deleteService(service, itemElement, item, customer){
         "responseDeleteService"
     );
     
+     //selt fra kalenderen
+     let calendarEvent = creatCalendarEventObject(service);
+     calendarEvent.delete = true; // Marker for sletting
+
+    // Send kalenderhendelsen til Zapier for sletting
+     sendCalendarEventToZapier(calendarEvent);
 
     //fjern servicen fra systemet
     let system = customer.system.find(s => s.rawid === item.rawid);
@@ -405,12 +463,9 @@ function deleteService(service, itemElement, item, customer){
         system.service = system.service.filter(s => s.rawid !== serviceId);
     }
 
-    //selt fra kalenderen
-    let calendarEvent = creatCalendarEventObject(service);
-    calendarEvent.delete = true; // Marker for sletting
+   
 
-    // Send kalenderhendelsen til Zapier for sletting
-    sendCalendarEventToZapier(calendarEvent);
+   
 
     // lag listen på nytt
     listServiceOnsystem(itemElement, system, customer);

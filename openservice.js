@@ -431,7 +431,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
     : new Date().toISOString();
 
    
-    nextServiceDate = service.date;
+    
     let startDate = service.date || nextServiceDate;
     
     //fjern elementet mens den oppretter på server

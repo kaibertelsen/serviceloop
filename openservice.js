@@ -103,15 +103,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     //sette dato
     const dateInput = serviceElement.querySelector(".servicedate");
 
-    if (service.date) {
-    const d = new Date(service.date);
-    // Formatér til YYYY-MM-DDTHH:mm
-    const formatted =
-        d.toISOString().slice(0, 16); // "2025-06-01T00:00"
-    dateInput.value = formatted;
-    } else {
-    dateInput.value = "";
-    }
+        if (service.date) {
+        const d = new Date(service.date);
+        dateInput.value = toLocalInputString(d);
+        } else {
+        dateInput.value = "";
+        }
 
    
     //når dato settes send dette til server
@@ -839,3 +836,8 @@ function formatDateAndTime(isoDateStr) {
 
   return `${day}.${month}.${year} ${hours}:${minutes}`;
 }
+
+function toLocalInputString(date) {
+    const pad = n => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }

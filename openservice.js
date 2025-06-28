@@ -601,7 +601,7 @@ function sendEditServiceToServer(service, data) {
 
 
     //hvis det er date eller status som er endret, så må vi oppdatere kalenderhendelsen
-    if (data.date || data.status) {
+    if (data.date || data.status || data.user || data.type) {
        //denne må også oppdateres i kalenderen etter respons fra airtable
        updateServiceInCalendar = true; // Sett en global variabel for å indikere at vi må oppdatere kalenderen
     }
@@ -621,6 +621,7 @@ function creatCalendarEventObject(service) {
     <b>📦 Status:</b> ${service.status || "Ukjent status"}<br>
     <b>🏠 Plassering:</b> ${service.location || "Ingen plassering oppgitt"}<br>
     <b>🏗️ Anlegg:</b> ${systemName}<br>
+    <b>🛠️ Type:</b> ${service.typename || "Ikke spesifisert"}<br>
     <b>👷 Utføres av:</b> ${service.performed_by || "Ukjent bruker"}<br><br>
     [Serviceid: ${service.rawid}]
     `;

@@ -60,7 +60,6 @@ function findserviceinfo(system) {
   let suggestedService = null;
 
   const validStatuses = ["utført", "fakturert"];
-
   const services = Array.isArray(system.service) ? system.service : [];
 
   // 1. Finn siste service som er ferdigstilt (utført/fakturert)
@@ -70,15 +69,17 @@ function findserviceinfo(system) {
 
   lastService = completedServices.length > 0 ? new Date(completedServices[0].date) : null;
 
-  // 2. Beregn neste service
+  // 2. Beregn neste service og sett tid til 08:00
   const interval = parseInt(system.intervall || "0");
   if (lastService && interval > 0) {
     nextService = new Date(lastService);
     nextService.setMonth(nextService.getMonth() + interval);
+    nextService.setHours(8, 0, 0, 0); // Sett klokkeslett til 08:00
   } else if (system.installed_date && interval > 0) {
     const installed = new Date(system.installed_date);
     nextService = new Date(installed);
     nextService.setMonth(installed.getMonth() + interval);
+    nextService.setHours(8, 0, 0, 0); // Sett klokkeslett til 08:00
   }
 
   // 3. Finn service innenfor nextService-vinduet (ekskluder lastService selv)
@@ -90,7 +91,6 @@ function findserviceinfo(system) {
     serviceInWindow = services.some(s => {
       if (!s.date) return false;
       const d = new Date(s.date);
-      // Ikke ta med lastService selv
       if (lastService && d.getTime() === lastService.getTime()) return false;
       return d > lastService && d <= plus2Months;
     });
@@ -102,7 +102,7 @@ function findserviceinfo(system) {
       date: nextService.toISOString(),
       status: "kalkulert",
       user: [gUser.rawid],
-      followup:[]
+      followup: []
     };
   }
 
@@ -122,6 +122,7 @@ function findserviceinfo(system) {
     suggestedService
   };
 }
+
 
 
 function formatDate(date) {

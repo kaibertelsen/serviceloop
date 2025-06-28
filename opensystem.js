@@ -263,7 +263,6 @@ function createSystemElement(nodeElement, item, customer){
 
 }
 
-
 function deleteSystem(itemElement, system, customer) {
 
     //sjekk om det er servicer på dette systemet, har den status "kalkulert" så kan systemet slettes

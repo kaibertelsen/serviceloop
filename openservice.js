@@ -56,8 +56,10 @@ function listServiceOnsystem(itemElement, item, customer) {
 function makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement) {
 
     let serviceElement;
+    let isdummy = false; // Variabel for å sjekke om det er en dummy service
 
     if(service.status === "Kalkulert" || service.status === "kalkulert") {
+        isdummy = true; // Marker som dummy service
         serviceElement = servicecalcElement.cloneNode(true);
 
             //lage klik event på newservicebutton
@@ -110,22 +112,23 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     dateInput.value = "";
     }
 
-    //når dato settes send dette til server
-    dateInput.addEventListener("change", function () {
-        const newDate = new Date(dateInput.value);
-        if (isNaN(newDate)) {
-            console.error("Ugyldig dato:", dateInput.value);
-            return;
-        }
-        // Oppdater service med ny dato
-        service.date = newDate.toISOString(); // Lagre dato i ISO-format
+    if(!isdummy) {
+        //når dato settes send dette til server
+        dateInput.addEventListener("change", function () {
+            const newDate = new Date(dateInput.value);
+            if (isNaN(newDate)) {
+                console.error("Ugyldig dato:", dateInput.value);
+                return;
+            }
+            // Oppdater service med ny dato
+            service.date = newDate.toISOString(); // Lagre dato i ISO-format
 
-        //send til server
-        let data = {date: newDate.toISOString()};
-        sendEditServiceToServer(service, data);
+            //send til server
+            let data = {date: newDate.toISOString()};
+            sendEditServiceToServer(service, data);
+        }
+        );
     }
-    );
-    
     //Load status selectoren med arrayen statusService
     const statusSelect = serviceElement.querySelector(".editstatusservice");
     if (statusSelect) {
@@ -627,7 +630,7 @@ function creatCalendarEventObject(service) {
 
   
     return returnObject;
-  }
+}
   
 
 function responseEditService(data) {

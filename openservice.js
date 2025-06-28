@@ -1,6 +1,7 @@
 
 var currentItemElement = null; // Global variabel for å holde styr på gjeldende service-liste
 var currentServiceElement = null; // Global variabel for å holde styr på gjeldende service-element
+var updateServiceInCalendar = false; // Global variabel for å indikere om vi må oppdatere kalenderen
 
 document.getElementById("fromServicetoCustomer").addEventListener("click", function () {
    
@@ -579,9 +580,8 @@ function sendEditServiceToServer(service, data) {
 
     //hvis det er date eller status som er endret, så må vi oppdatere kalenderhendelsen
     if (data.date || data.status) {
-        const calendarEvent = creatCalendarEventObject(service, data);
-        // Send til Zapier
-        sendCalendarEventToZapier(calendarEvent);
+       //denne må også oppdateres i kalenderen etter respons fra airtable
+       updateServiceInCalendar = true; // Sett en global variabel for å indikere at vi må oppdatere kalenderen
     }
 }
 
@@ -636,6 +636,13 @@ function responseEditService(data) {
     //oppdater gService med den oppdaterte servicen
     const updatedService = JSON.parse(data.fields.json);
   console.log("Service oppdatert:", updatedService);
+
+  if (updateServiceInCalendar) {
+    // Oppdater kalenderhendelsen
+    const calendarEvent = creatCalendarEventObject(updatedService);
+    sendCalendarEventToZapier(calendarEvent);
+    updateServiceInCalendar = false; // Nullstill etter oppdatering
+  }
 
 }
 

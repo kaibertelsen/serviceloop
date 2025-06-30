@@ -27,7 +27,7 @@ function listCustomers(customers) {
 
     const selectedCategory = categorySelector ? categorySelector.value.trim().toLowerCase() : "";
     const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
-    const selectedSystem = systemSelector ? systemSelector.value.trim().toLowerCase() : "";
+    const selectedSystemId = systemSelector ? systemSelector.value.trim().toLowerCase() : "";
     const customerType = customerTypeSelector ? customerTypeSelector.value.trim().toLowerCase() : "";
 
     const filtered = customers.filter(customer => {
@@ -40,9 +40,10 @@ function listCustomers(customers) {
         const matchesCustomerType = customerType === "" || type.includes(customerType);
         const matchesSearch = searchTerm === "" || name.includes(searchTerm);
 
-        const matchesSystem = selectedSystem === "" || systems.some(sys => {
-            const sysName = typeof sys === "string" ? sys.toLowerCase() : (sys.name || "").toLowerCase();
-            return sysName.includes(selectedSystem);
+        // Nå matcher vi på system_type_id
+        const matchesSystem = selectedSystemId === "" || systems.some(sys => {
+            const sysTypeId = (sys.system_type_id || "").toLowerCase();
+            return sysTypeId === selectedSystemId;
         });
 
         return matchesCategory && matchesSearch && matchesSystem && matchesCustomerType;
@@ -57,6 +58,7 @@ function listCustomers(customers) {
 
     listDatainList(filtered);
 }
+
 
 function loadSystemTypeSelector() {
     const customerSystemType = document.getElementById("customerSystemType");

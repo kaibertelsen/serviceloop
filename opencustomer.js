@@ -108,6 +108,15 @@ function openCustomer(customer) {
     }
   });
 
+  const phonenumberElement = customerinfoconteiner.querySelector('.phonenumber');
+  phonenumberElement.value = customer.phonenumber || "-";
+  phonenumberElement.addEventListener('blur', function () {
+    const newPhoneNumber = phonenumberElement.value.trim();
+    if (newPhoneNumber !== customer.phonenumber) {
+      editCustomerFiels(customer, 'phone', newPhoneNumber);
+    }
+  });
+
 
     //list opp anlegg/ systems
     listSystemOnCustomer(customer);

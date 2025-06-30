@@ -29,7 +29,8 @@ if (createnewcustomer) {
     }
     // Opprett nytt kundeobjekt
     const newCustomer = {
-        name: modelName
+        name: modelName,
+        client: [gClient.rawid], // Bruker gClient.rawid for å sette klienten
     }
 
   

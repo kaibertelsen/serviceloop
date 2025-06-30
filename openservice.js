@@ -416,17 +416,19 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         quill.clipboard.dangerouslyPasteHTML(service.note || "");
         }, 0);
         
-        // 4. Lytt etter blur (når man forlater editoren)
+        let lastNoteContent = quill.root.innerHTML;
+
         quill.root.addEventListener("blur", function () {
-        // Hent HTML-innholdet fra Quill-editoren
-        let noteContent = quill.root.innerHTML;
-        console.log("Note content:", noteContent);
-        // Oppdater tjenesten med det nye notatet
-        service.note = noteContent;
-        // Send oppdateringen til serveren
-        let data = {note: noteContent};
-        sendEditServiceToServer(service, data);
+          let noteContent = quill.root.innerHTML;
+        
+          if (noteContent !== lastNoteContent) {
+            lastNoteContent = noteContent;
+            service.note = noteContent;
+            let data = { note: noteContent };
+            sendEditServiceToServer(service, data);
+          }
         });
+        
     }
 
     // Sett border på høyre side av systemelement basert på siste status

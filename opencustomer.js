@@ -236,6 +236,12 @@ function editCustomerFiels(customer, field, newValue) {
   };
 
   sendUpdateToServer(customer, body);
+
+
+  //hvis det er type så må vi oppdaterer selector
+  if (field === 'type') {
+    loadCustomerTypeSelector(gCustomer);
+  }
 }
 
 

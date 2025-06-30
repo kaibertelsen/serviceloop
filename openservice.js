@@ -133,7 +133,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 // Klikk på kortet for å åpne kundesiden
                 if (customer && customer.rawid) {
                     currentItemElement = itemElement; // Oppdater global variabel
-                    openCustomer(customer.rawid);
+                    openCustomer(customer);
                 }
             }
             );

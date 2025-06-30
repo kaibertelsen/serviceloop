@@ -139,7 +139,9 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
 
     }else{
+        if (customercard){
         customercard.style.display = "none"; // Skjul kortet hvis vi ikke er på service-siden
+        }
     }
 
 

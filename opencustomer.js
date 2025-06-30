@@ -22,19 +22,35 @@ function openCustomer(customer) {
   const customerTabButton = document.getElementById("customertabbutton");
   if (customerTabButton) customerTabButton.click();
 
-  document.querySelector("[data-field='type']").textContent = "Kundenummer: " + (customer.customernr || "");
-  document.querySelector("[data-field='name']").textContent = customer.name || "";
-  document.querySelector("[data-field='address']").textContent = customer.address || "";
+  const customerinfoconteiner = document.querySelector('.customerinfoconteiner');
 
-  const postAndCity = [customer.postcode, customer.city].filter(Boolean).join(" ");
-  document.querySelector("[data-field='postcode_city']").textContent = postAndCity;
+  const customernameelement = customerinfoconteiner.querySelector('.customername');
+  customernameelement.value = customer.name || "-";
 
-  const emailContainer = document.querySelector("[data-field='email']");
-    if (customer.email) {
-    emailContainer.innerHTML = `E-post: <span class="email-text">${customer.email}</span>`;
-    } else {
-    emailContainer.textContent = "E-post: –";
-    }
+  const primarycontactelement = customerinfoconteiner.querySelector('.primarycontact');
+  primarycontactelement.value = customer.primary_contact || "-";
+
+
+  const customeremailelement = customerinfoconteiner.querySelector('.customeremail');
+  customeremailelement.value = customer.email || "-";
+
+  const customernumberelement = customerinfoconteiner.querySelector('.customernumber');
+  customernumberelement.value = customer.customernr || "-";
+
+  const editselectcustomertypeSelector = customerinfoconteiner.querySelector('.editselectcustomertype');
+  //sette valget i select-elementet
+  editselectcustomertypeSelector.value = customer.type || "privat";
+
+  const customercategoryelement = customerinfoconteiner.querySelector('.customercategory');
+  customercategoryelement.value = customer.category || "-";
+
+  const customeraddressElement = customerinfoconteiner.querySelector('.customeraddress');
+  customeraddressElement.value = customer.address || "-";
+  const customerpostcodeElement = customerinfoconteiner.querySelector('.customerpostcode');
+  customerpostcodeElement.value = customer.postcode || "-";
+  const customercityElement = customerinfoconteiner.querySelector('.customercity');
+  customercityElement.value = customer.city || "-";
+
 
     //list opp anlegg/ systems
     listSystemOnCustomer(customer);

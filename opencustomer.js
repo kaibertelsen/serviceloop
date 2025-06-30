@@ -24,7 +24,7 @@ function openCustomer(customer) {
 
   const customerinfoconteiner = document.querySelector('.customerinfoconteiner');
 
-  const customernameelement = customerinfoconteiner.querySelector('.customername');
+  const customernameelement = customerinfoconteiner.querySelector('.customernameelement');
   customernameelement.value = customer.name || "-";
 
   const primarycontactelement = customerinfoconteiner.querySelector('.primarycontact');

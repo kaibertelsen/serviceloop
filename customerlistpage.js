@@ -18,6 +18,79 @@ document.getElementById("customerType").addEventListener("change", () => listCus
 document.getElementById("customerSearchfield").addEventListener("input", () => listCustomers(gCustomer));
 
 
+let createnewcustomer = document.getElementById("createNewCustomerButton");
+if (createnewcustomer) {
+    createnewcustomer.addEventListener("click", function () {
+        // Vis f.eks. et popup-skjema hvor en kan angi kundenavn
+    const modelName = prompt("Skriv inn navnet på den nye modellen:");
+    if (!modelName) {
+        alert("Kundenavnet kan ikke være tomt.");
+        return;
+    }
+    // Opprett nytt kundeobjekt
+    const newCustomer = {
+        name: modelName
+    }
+
+  
+     // Send til server
+     POSTairtable(
+        "appuUESr4s93SWaS7",
+        "tblPWerScR5AbxnlJ", // system-tabell
+        JSON.stringify(newCustomer),
+        "responseNewCustomer"
+    );
+
+    //legg loaderen øverst i listen
+    const customerListContainer = document.getElementById("customerlistelement");
+    if (!customerListContainer) {
+        console.error("Ingen 'customerlistelement' funnet.");
+        return;
+    }
+
+    const elementLibrary = document.getElementById("elementlibrary");
+    const loaderElement = elementLibrary?.querySelector(".loaderconteiner");
+   
+
+    if (loaderElement && customerListContainer) {
+        const loaderClone = loaderElement.cloneNode(true);
+        const textinfo = loaderClone.querySelector(".textinfo");
+        if (textinfo) {
+            textinfo.textContent = "Oppretter ny kunde...";
+        }
+        customerListContainer.prepend(loaderClone);
+    }
+
+
+
+
+ } );
+} 
+
+function responseNewCustomer(data) {
+
+    // Fjern loaderen
+    const customerListContainer = document.getElementById("customerlistelement");
+    if (!customerListContainer) {
+        console.error("Ingen 'customerlistelement' funnet.");
+        return;
+    }
+    const loaderElement = customerListContainer.querySelector(".loaderconteiner");
+    if (loaderElement) {
+        loaderElement.remove();
+    }
+    // Oppdater gCustomer med den nye kunden
+    const newCustomer = JSON.parse(data.fields.json);
+    gCustomer.push(newCustomer);
+    // Oppdater listen
+    listCustomers(gCustomer);
+
+    //åpne den nye kunden
+    openCustomer(newCustomer);
+    
+}
+
+
 
 function listCustomers(customers) {
     const categorySelector = document.getElementById("customerCategory");

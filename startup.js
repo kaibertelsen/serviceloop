@@ -150,5 +150,7 @@ function ruteresponse(data,id){
         responseFollowUp(data);
     }else if(id == "responseGetServiceForDelete"){
         responseGetServiceForDelete(data);
+    }else if(id == "responseNewCustomer"){
+        responseNewCustomer(data);   
     }
 }

@@ -14,32 +14,38 @@ function startCustomerListPage(customers) {
 
 document.getElementById("customerCategory").addEventListener("change", () => listCustomers(gCustomer));
 document.getElementById("customerSystemType").addEventListener("change", () => listCustomers(gCustomer));
+document.getElementById("customerType").addEventListener("change", () => listCustomers(gCustomer));
 document.getElementById("customerSearchfield").addEventListener("input", () => listCustomers(gCustomer));
 
 
 
 function listCustomers(customers) {
     const categorySelector = document.getElementById("customerCategory");
+    const customerTypeSelector = document.getElementById("customerType");
     const searchInput = document.getElementById("customerSearchfield");
     const systemSelector = document.getElementById("customerSystemType");
 
     const selectedCategory = categorySelector ? categorySelector.value.trim().toLowerCase() : "";
     const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
     const selectedSystem = systemSelector ? systemSelector.value.trim().toLowerCase() : "";
+    const customerType = customerTypeSelector ? customerTypeSelector.value.trim().toLowerCase() : "";
 
     const filtered = customers.filter(customer => {
         const name = (customer.name || "").toLowerCase();
         const category = (customer.category || "").toLowerCase();
         const systems = Array.isArray(customer.system) ? customer.system : [customer.system];
+        const type = (customer.type || "").toLowerCase();
 
         const matchesCategory = selectedCategory === "" || category === selectedCategory;
+        const matchesCustomerType = customerType === "" || type.includes(customerType);
         const matchesSearch = searchTerm === "" || name.includes(searchTerm);
+
         const matchesSystem = selectedSystem === "" || systems.some(sys => {
             const sysName = typeof sys === "string" ? sys.toLowerCase() : (sys.name || "").toLowerCase();
             return sysName.includes(selectedSystem);
         });
 
-        return matchesCategory && matchesSearch && matchesSystem;
+        return matchesCategory && matchesSearch && matchesSystem && matchesCustomerType;
     });
 
     // Sorter alfabetisk

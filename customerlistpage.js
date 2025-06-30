@@ -4,13 +4,8 @@ document.getElementById("elementlibrary").style.display = "none"; // Skjul eleme
 function startCustomerListPage(customers) {
     //last inn selectorfilter
     loadSystemTypeSelector();
-
     loadCategorySelector(customers);
-
-
-
-
-
+    loadCustomerTypeSelector(customers);
 
     // Initialize the customer list page
     listCustomers(customers);
@@ -85,6 +80,30 @@ function loadSystemTypeSelector() {
         customerSystemType.appendChild(option);
     });
    
+}
+
+function loadCustomerTypeSelector(customers) {
+    const customerType = document.getElementById("customerType");
+    if (!customerType) {
+        console.error("Ingen 'customerType' funnet.");
+        return;
+    }
+    // Tøm eksisterende alternativer
+    customerType.innerHTML = '';
+    // Legg til en tom valgmulighet
+    const emptyOption = document.createElement("option");
+    emptyOption.value = "";
+    emptyOption.textContent = "Alle typer";
+    customerType.appendChild(emptyOption);
+    // Hent unike typer fra gCustomer
+    const types = new Set(customers.map(customer => customer.type).filter(Boolean));
+    // Legg til typer i select-elementet
+    types.forEach(type => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.textContent = type;
+        customerType.appendChild(option);
+    });
 }
 
 function loadCategorySelector(customers) {

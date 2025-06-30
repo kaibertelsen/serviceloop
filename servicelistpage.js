@@ -4,6 +4,7 @@ document.getElementById('systemTypes')?.addEventListener('change', renderFiltere
 
 
 
+
 function renderFilteredServiceList() {
     const raw = convertDataTOServiceList(gCustomer);                   // Alle rådata
     const grouped = groupServicesByCustomerAndDate(raw);              // Slår sammen på dato + kunde
@@ -172,6 +173,10 @@ function listSystemInService(data, element) {
     }
   
     systemArray.forEach(system => {
+
+      let serviceElement = makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement,true);
+
+      /*
       const itemElement = systemElementLibrary.cloneNode(true);
 
       const name = itemElement.querySelector('.systemname');
@@ -200,7 +205,7 @@ function listSystemInService(data, element) {
         }
   
       
-
+*/
       systemList.appendChild(itemElement);
     });
   

@@ -48,16 +48,17 @@ function listServiceOnsystem(itemElement, item, customer) {
 
     item.service.forEach((service) => {
 
-        let serviceElement = makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement);
+        let serviceElement = makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement,false);
         serviceListContainer.appendChild(serviceElement);
 
     });
 }
 
-function makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement) {
+function makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement,isInServicePage) {
 
     let serviceElement;
     let isdummy = false; // Variabel for å sjekke om det er en dummy service
+
 
     if(service.status === "Kalkulert" || service.status === "kalkulert") {
         isdummy = true; // Marker som dummy service
@@ -90,6 +91,17 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     }else{
         serviceElement = serviceElementTemplate.cloneNode(true);
     }
+
+    const customercard = serviceElement.querySelector(".customercard");
+    if (isInServicePage) {
+        customercard.style.display = "inline-block"; // Vis kortet hvis vi er på service-siden
+    }else{
+        customercard.style.display = "none"; // Skjul kortet hvis vi ikke er på service-siden
+    }
+
+
+
+
     //knappen moreinfo
     const openservicebutton = serviceElement.querySelector(".openservicebutton");
     //sett farge på openservicebutton

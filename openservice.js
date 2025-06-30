@@ -247,7 +247,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 if (existingServiceIndex !== -1) {
                     item.service[existingServiceIndex].status = selectedStatus; // Oppdater status
                 }
-                
+
                 //send til server
                 let data = {status: selectedStatus};
                 sendEditServiceToServer(service, data);
@@ -513,10 +513,13 @@ function deleteService(service, itemElement, item, customer){
         system.service = system.service.filter(s => s.rawid !== serviceId);
     }
 
-    
-    // lag listen på nytt
-    listServiceOnsystem(itemElement, system, customer);
-
+    if(isInCustomarpage) {
+        // Oppdater visningen av systemet
+        listServiceOnsystem(currentServiceElement, system, customer);
+    }else  {
+        // Oppdater visningen av serviceliste
+        renderFilteredServiceList();
+    }
 }
 
 function responseGetServiceForDelete(data) {

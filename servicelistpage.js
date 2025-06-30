@@ -21,7 +21,8 @@ function renderFilteredServiceList() {
     const filtered = filterServices(servicelist);                       // Bruker valgte filtre
     //filtrer vekk alle med "kalkulert" status
     const nonCalculated = filtered.filter(service => service.status.toLowerCase() !== "kalkulert");
-    startServiceListPage(nonCalculated);                                   // Viser
+    startServiceListPage(nonCalculated);   
+    document.getElementById("customerserviceSearchfield").focus();
 }
 function loadeUserInSelector() {
     const userSelector = document.getElementById("userOnServiceSelector");

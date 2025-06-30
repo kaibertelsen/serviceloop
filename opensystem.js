@@ -157,19 +157,36 @@ function createSystemElement(nodeElement, item, customer){
       itemElement.querySelector(".seriename").setAttribute("data-field", "serial_number");
 
     //Datofelt
-        let datofelt = itemElement.querySelector(".installdate");
+    let datofelt = itemElement.querySelector(".installdate");
+
+        // Sett inn verdien hvis eksisterende
         datofelt.value = item.installed_date
         ? new Date(item.installed_date).toISOString().split("T")[0]
         : "";
-        datofelt.addEventListener("change", () => {
-          let data = {installed_date: datofelt.value};
-          //live ny utregning
-          item.installed_date = datofelt.value;
-          calcserviceDate(item,intervallinput,itemElement);
-          sendEditSystemToServer(item, data);
-          //list servicene på nytt
-          listServiceOnsystem(itemElement, item, customer);
+        
+        let lastValidInstallDate = datofelt.value;
+        
+        datofelt.addEventListener("blur", () => {
+        const newValue = datofelt.value;
+        
+        // Ikke gjør noe hvis datoen er uendret
+        if (newValue === lastValidInstallDate) return;
+        
+        lastValidInstallDate = newValue;
+        item.installed_date = newValue;
+        
+        let data = { installed_date: newValue };
+        
+        // Live kalkulering av service-dato
+        calcserviceDate(item, intervallinput, itemElement);
+        
+        // Send oppdatering til server
+        sendEditSystemToServer(item, data);
+        
+        // Oppdater servicer
+        listServiceOnsystem(itemElement, item, customer);
         });
+    
 
         // Oppdater service
         let serviceinfo = findserviceinfo(item);

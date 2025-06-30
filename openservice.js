@@ -106,37 +106,39 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
     const customercard = serviceElement.querySelector(".customercard");
     if (isInServicePage) {
-        customercard.style.display = "inline-block"; // Vis kortet hvis vi er på service-siden
-
-        const customername = customercard.querySelector(".customeronservicename");
-        if (customername) {
-            customername.textContent = customer.name || "";
-        }
-
-        const customeronserviceaddress = customercard.querySelector(".customeronserviceaddress");
-        if (customeronserviceaddress) {
-            let fulladress = customer.address || "";
-            if (customer.postalcode && customer.city) {
-                fulladress += `, ${customer.postalcode} ${customer.city}`;
+        if (customercard){
+            customercard.style.display = "inline-block"; // Vis kortet hvis vi er på service-siden
+            
+            const customername = customercard.querySelector(".customeronservicename");
+            if (customername) {
+                customername.textContent = customer.name || "";
             }
-            customeronserviceaddress.textContent = fulladress || "";
-        }
 
-        const systemnameandmodell = customercard.querySelector(".systemnameandmodell");
-        if (systemnameandmodell) {
-            systemnameandmodell.textContent = `${item.name || ""} ${item.model || ""}`.trim();
-        }
-
-        //lage klikk event på customercard
-        customercard.addEventListener("click", function () {
-            // Klikk på kortet for å åpne kundesiden
-            if (customer && customer.rawid) {
-                currentItemElement = itemElement; // Oppdater global variabel
-                openCustomer(customer.rawid);
+            const customeronserviceaddress = customercard.querySelector(".customeronserviceaddress");
+            if (customeronserviceaddress) {
+                let fulladress = customer.address || "";
+                if (customer.postalcode && customer.city) {
+                    fulladress += `, ${customer.postalcode} ${customer.city}`;
+                }
+                customeronserviceaddress.textContent = fulladress || "";
             }
-        }
-        );
 
+            const systemnameandmodell = customercard.querySelector(".systemnameandmodell");
+            if (systemnameandmodell) {
+                systemnameandmodell.textContent = `${item.name || ""} ${item.model || ""}`.trim();
+            }
+
+            //lage klikk event på customercard
+            customercard.addEventListener("click", function () {
+                // Klikk på kortet for å åpne kundesiden
+                if (customer && customer.rawid) {
+                    currentItemElement = itemElement; // Oppdater global variabel
+                    openCustomer(customer.rawid);
+                }
+            }
+            );
+
+        }
 
     }else{
         if (customercard){

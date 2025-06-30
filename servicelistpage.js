@@ -1,7 +1,7 @@
 document.getElementById('serviceForwardSelector')?.addEventListener('change', renderFilteredServiceList);
 document.getElementById('serviceStatusSelector')?.addEventListener('change', renderFilteredServiceList);
 document.getElementById('userOnServiceSelector')?.addEventListener('change', renderFilteredServiceList);
-document.getElementById("customerserviceSearchfield").addEventListener("input", () => renderFilteredServiceList);
+document.getElementById("customerserviceSearchfield").addEventListener("input", () => renderFilteredServiceList());
 document.getElementById('systemTypes')?.addEventListener('change', renderFilteredServiceList);
 
 

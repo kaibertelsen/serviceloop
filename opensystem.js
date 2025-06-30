@@ -244,7 +244,7 @@ function createSystemElement(nodeElement, item, customer){
     const newServiceButton = itemElement.querySelector(".newservicebutton");
     if (newServiceButton) {
         newServiceButton.addEventListener("click", function () {
-            makeNewService(itemElement,item, customer, null);
+            makeNewService(itemElement,item, null, null);
         });
     }
 

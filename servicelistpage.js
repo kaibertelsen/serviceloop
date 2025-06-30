@@ -3,6 +3,11 @@ document.getElementById('serviceStatusSelector')?.addEventListener('change', ren
 document.getElementById('systemTypes')?.addEventListener('change', renderFilteredServiceList);
 
 
+document.getElementById('servicelisttabbutton')?.addEventListener('click', function() {
+  renderFilteredServiceList();
+});
+
+
 
 
 function renderFilteredServiceList() {
@@ -39,119 +44,6 @@ function startServiceListPage(services) {
   
     services.forEach(service => {
 
-      /*
-      const itemElement = nodeElement.cloneNode(true);
-      const date = new Date(item.dato);
-  
-      // Dato
-      const dateElement = itemElement.querySelector('.datelable');
-      if (dateElement) {
-        dateElement.textContent = date.toLocaleDateString("no-NO", {
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric'
-        });
-      }
-  
-      // Ukedag
-      const daylable = itemElement.querySelector('.daylable');
-      if (daylable) {
-        const dayNames = ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"];
-        daylable.textContent = dayNames[date.getDay()];
-      }
-  
-      // Tid
-      const timeElement = itemElement.querySelector('.timeelement');
-      if (timeElement) {
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        timeElement.textContent = `KL ${hours}:${minutes}`;
-      }
-  
-      // Status tekst
-      const statusElement = itemElement.querySelector('.statuselement');
-      if (statusElement) {
-        statusElement.textContent = item.status || "Ukjent status";
-        statusElement.className = `servicestatus ${item.status ? item.status.toLowerCase() : "unknown"}`;
-      }
-  
-      // Fargeboks og checkbox
-      const colorElement = itemElement.querySelector('.colorstatus');
-      const checkboxElement = itemElement.querySelector('.remindercheckbox');
-  
-      if (checkboxElement) checkboxElement.style.display = "none";
-      if (colorElement) colorElement.style.display = "none";
-  
-      const status = item.status?.toLowerCase() || "";
-  
-      switch (status) {
-        case "kalkulert":
-          if (checkboxElement) checkboxElement.style.display = "flex";
-          break;
-        case "registrert":
-          if (colorElement) {
-            colorElement.style.backgroundColor = "#cccccc"; // grå
-            colorElement.style.display = "block";
-          }
-          break;
-        case "påminnet":
-          if (colorElement) {
-            colorElement.style.backgroundColor = "#ffcc00"; // gul
-            colorElement.style.display = "block";
-          }
-          break;
-        case "planlagt":
-          if (colorElement) {
-            colorElement.style.backgroundColor = "#3399ff"; // blå
-            colorElement.style.display = "block";
-          }
-          break;
-        case "utført":
-          if (colorElement) {
-            colorElement.style.backgroundColor = "#00cc66"; // grønn
-            colorElement.style.display = "block";
-          }
-          break;
-        case "fakturert":
-          if (colorElement) {
-            colorElement.style.backgroundColor = "#000000"; // sort
-            colorElement.style.display = "block";
-          }
-          break;
-        default:
-          if (colorElement) {
-            colorElement.style.backgroundColor = "#cccccc"; // fallback grå
-            colorElement.style.display = "block";
-          }
-          break;
-      }
-  
-      // Kundenavn
-      const name = itemElement.querySelector('.customerlable');
-      if (name) name.textContent = item.customername || "Ukjent navn";
-
-      const customeraddress = itemElement.querySelector('.customeraddress');
-      if (customeraddress) customeraddress.textContent = item.address || "Ukjent adresse";
-      const customerpoststed = itemElement.querySelector('.customerpoststed');
-      let postadresse = item.poststed || "";
-      //postnummer + poststed
-      if (item.postcode && item.city) {
-        postadresse = `${item.postcode} ${item.city}`;
-      }
-      if (customerpoststed) customerpoststed.textContent = postadresse || "Ukjent postadresse";
-   
-      
-      
-  
-      // System(er)
-      listSystemInService(item, itemElement);
-  
-      // Åpne service
-      const button = itemElement.querySelector('.openservice');
-      if (button) {
-        button.addEventListener("click", () => openService(item));
-      }
-  */
       let serviceElement = makeServiceElement(service, listContainer, null, null, serviceElementTemplate, servicecalcElement,true);
       listContainer.appendChild(serviceElement);
     });

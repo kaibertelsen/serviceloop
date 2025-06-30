@@ -784,6 +784,8 @@ function responseEditService(data) {
     updateServiceInCalendar = false; // Nullstill etter oppdatering
   }
 
+  renderFilteredServiceList();
+
 }
 
 function sendwarningToCustomer(item, service){

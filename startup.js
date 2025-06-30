@@ -68,11 +68,7 @@ function responsClient(data) {
     
     //start kundelisten
     startCustomerListPage(gCustomer);
-
-    //last inn Servicelisten
-    renderFilteredServiceList(gCustomer)
-    
-    
+ 
 }
 
 function parseItemJson(jsonArray) {

@@ -276,6 +276,8 @@ function filterServices(rawServices) {
     const forwardFilter = document.getElementById("serviceForwardSelector")?.value || "";
     const statusFilter = document.getElementById("serviceStatusSelector")?.value.toLowerCase() || "";
     const typeFilter = document.getElementById("systemTypes")?.value.toLowerCase() || "";
+    const userFilter = document.getElementById("userOnServiceSelector")?.value || "";
+
     const now = new Date();
   
     const result = rawServices.filter(service => {
@@ -305,6 +307,12 @@ function filterServices(rawServices) {
       if (typeFilter) {
         const model = (service.modelname || "").toLowerCase();
         if (!model.includes(typeFilter)) return false;
+      }
+
+      // === Filter 4: Bruker ===
+      if (userFilter) {
+        const userOnService = service.user || "";
+        if (userOnService !== userFilter) return false;
       }
   
       return true;

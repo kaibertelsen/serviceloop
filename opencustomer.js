@@ -219,6 +219,9 @@ document.querySelector('.customerinfoconteiner').addEventListener('click', funct
 
 function editCustomerFiels(customer, field, newValue) {
 
+  //oppdater customer objektet
+  customer[field] = newValue;
+
   let body = {
     [field]: newValue
   };

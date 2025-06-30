@@ -38,7 +38,7 @@ function loadeUserInSelector() {
     userSelector.appendChild(defaultOption);
 
     //sorter bruker etter Navn
-    const sortedUser = gUser.sort((a, b) => {
+    const sortedUser = gUsers.sort((a, b) => {
         const nameA = (a.name || "").toLowerCase();
         const nameB = (b.name || "").toLowerCase();
         return nameA.localeCompare(nameB);

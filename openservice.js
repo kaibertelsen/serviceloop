@@ -117,21 +117,30 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         }
 
    
-    //når dato settes send dette til server
-    dateInput.addEventListener("change", function () {
-        const newDate = new Date(dateInput.value);
-        if (isNaN(newDate)) {
-            console.error("Ugyldig dato:", dateInput.value);
-            return;
-        }
-        // Oppdater service med ny dato
-        service.date = newDate.toISOString(); // Lagre dato i ISO-format
-        if(!isdummy) {
-            //send til server
-            let data = {date: newDate.toISOString()};
-            sendEditServiceToServer(service, data);
-        }
-    });
+        let lastValidDate = service.date; // husk for å unngå unødvendige kall
+
+        dateInput.addEventListener("blur", function () {
+            const newDate = new Date(dateInput.value);
+        
+            if (isNaN(newDate)) {
+                console.error("Ugyldig dato:", dateInput.value);
+                return;
+            }
+        
+            const newDateISO = newDate.toISOString();
+        
+            // Bare send hvis datoen faktisk er endret
+            if (newDateISO !== lastValidDate) {
+                lastValidDate = newDateISO;
+                service.date = newDateISO;
+        
+                if (!isdummy) {
+                    let data = { date: newDateISO };
+                    sendEditServiceToServer(service, data);
+                }
+            }
+        });
+        
     
     //Load status selectoren med arrayen statusService
     const statusSelect = serviceElement.querySelector(".editstatusservice");

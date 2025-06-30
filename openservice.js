@@ -633,8 +633,14 @@ function responseNewService(data) {
             }
             system.service.push(newService);
 
-            // Oppdater visningen av systemet
-            listServiceOnsystem(currentServiceElement, system, customer);
+            //kun hvis vi er på kundeside
+            if(isInCustomarpage) {
+                // Oppdater visningen av systemet
+                listServiceOnsystem(currentServiceElement, system, customer);
+            }else  {
+                // Oppdater visningen av serviceliste
+                renderFilteredServiceList();
+            }
 
         }
     }

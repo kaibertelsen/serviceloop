@@ -5,6 +5,7 @@ var gClient = null; // Global variable to store client data
 var gService = []; // Global variable to store service data
 var gSystem_type = []; // Global variable to store system data
 var gServicetype = []; // Global variable to store service type data
+var isInCustomarpage = false; // Global variable to track if in service page
 
 const statusService = [
     { value: "", text: "Ingen status", color: "white", colorId: "8" },         // #E1E1E1 (lys grå)

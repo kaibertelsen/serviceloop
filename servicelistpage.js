@@ -4,6 +4,7 @@ document.getElementById('systemTypes')?.addEventListener('change', renderFiltere
 
 
 document.getElementById('servicelisttabbutton')?.addEventListener('click', function() {
+  isInCustomarpage = false; // Set global variable to false
  renderFilteredServiceList();
 });
 

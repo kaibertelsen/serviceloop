@@ -7,7 +7,7 @@ document.getElementById("createNewSystemButton").addEventListener("click", funct
 
 document.getElementById("fromCustomerToListButton").addEventListener("click", function () {
     listCustomers(gCustomer);
-
+    isInCustomarpage = false;
       // Trykk på faneknappen
     const listTabButton = document.getElementById("listpagetabbutton");
     if (listTabButton) listTabButton.click();
@@ -16,6 +16,9 @@ document.getElementById("fromCustomerToListButton").addEventListener("click", fu
 
   
 function openCustomer(customer) {
+
+  isInCustomarpage = true;
+
   currentCustomer = customer;
 
   // Trykk på faneknappen for kunden

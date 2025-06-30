@@ -644,14 +644,16 @@ function creatCalendarEventObject(service) {
     const systemName = service.systemname || "Anlegg";
   
     const description = `
-    <b>👤 Kunde:</b> ${customerName}<br>
-    <b>📦 Status:</b> ${service.status || "Ukjent status"}<br>
-    <b>🏠 Plassering:</b> ${service.location || "Ingen plassering oppgitt"}<br>
-    <b>🏗️ Anlegg:</b> ${systemName}<br>
-    <b>🛠️ Type:</b> ${service.typename || "Ikke spesifisert"}<br>
-    <b>👷 Utføres av:</b> ${service.performed_by || "Ukjent bruker"}<br><br>
+    👤 Kunde: ${customerName}
+    📦 Status: ${service.status || "Ukjent status"}
+    🏠 Plassering: ${service.location || "Ingen plassering oppgitt"}
+    🏗️ Anlegg: ${systemName}
+    🛠️ Type: ${service.typename || "Ikke spesifisert"}
+    👷 Utføres av: ${service.performed_by || "Ukjent bruker"}
+    
     [Serviceid: ${service.rawid}]
     `;
+    
     
   
     const startDate = new Date(service.date);

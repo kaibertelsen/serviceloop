@@ -196,7 +196,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     if (confirm("Vil du generere neste service for dette anlegget?")) {
                         // Lag en ny service med kalkulert status
                         const newService = {
-                            status: "Registrert", // Sett status til Registrert
                             systemid: item.rawid,
                             customerid: customer.rawid,
                             date: serviceInfo.nextserviceDate.toISOString(), // Sett dato til neste service dato
@@ -483,7 +482,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
     }
 
 
-    let status = service?.status || "Registrert"; // Standard status for ny service
+    let status = "Registrert"; // Standard status for ny service
 
     let serviceType = service?.type || "recBhSZeD5yow6mUM"; // Standard annet service hvis ikke spesifisert
 

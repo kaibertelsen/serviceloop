@@ -84,7 +84,9 @@ function openCustomer(customer) {
   });
 
   const customeraddressElement = customerinfoconteiner.querySelector('.customeraddress');
+  if (customer.address) {
   customeraddressElement.value = customer.address || "-";
+  }
   customeraddressElement.addEventListener('blur', function () {
     const newAddress = customeraddressElement.value.trim();
     if (newAddress !== customer.address) {
@@ -93,7 +95,9 @@ function openCustomer(customer) {
   });
 
   const customerpostcodeElement = customerinfoconteiner.querySelector('.customerpostcode');
+  if (customer.postcode) {
   customerpostcodeElement.value = customer.postcode || "-";
+  }
   customerpostcodeElement.addEventListener('blur', function () {
     const newPostcode = customerpostcodeElement.value.trim();
     if (newPostcode !== customer.postcode) {
@@ -103,7 +107,9 @@ function openCustomer(customer) {
 
 
   const customercityElement = customerinfoconteiner.querySelector('.customercity');
+  if (customer.city) {
   customercityElement.value = customer.city || "-";
+  }
   customercityElement.addEventListener('blur', function () {
     const newCity = customercityElement.value.trim();
     if (newCity !== customer.city) {

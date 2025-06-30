@@ -35,6 +35,8 @@ function startServiceListPage(services) {
     services = filterServices(services);
   
     services.forEach(item => {
+
+      /*
       const itemElement = nodeElement.cloneNode(true);
       const date = new Date(item.dato);
   
@@ -146,8 +148,9 @@ function startServiceListPage(services) {
       if (button) {
         button.addEventListener("click", () => openService(item));
       }
-  
-      listContainer.appendChild(itemElement);
+  */
+      let serviceElement = makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement,true);
+      listContainer.appendChild(serviceElement);
     });
 }
   
@@ -174,9 +177,6 @@ function listSystemInService(data, element) {
   
     systemArray.forEach(system => {
 
-      let serviceElement = makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement,true);
-
-      /*
       const itemElement = systemElementLibrary.cloneNode(true);
 
       const name = itemElement.querySelector('.systemname');
@@ -205,8 +205,8 @@ function listSystemInService(data, element) {
         }
   
       
-*/
-      systemList.appendChild(itemElement);
+
+      systemList.appendChild(serviceElement);
     });
   
     systemList.removeChild(systemElementLibrary); // fjern mal

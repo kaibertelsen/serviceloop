@@ -488,7 +488,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
     let serviceType = service?.type || "recBhSZeD5yow6mUM"; // Standard annet service hvis ikke spesifisert
 
     if (item?.intervall == 12) {
-        serviceType = "recJTPhTWc2kFgOp2"; // Årlig service type
+        serviceType = "recEDfBodkFDgsaSG"; // Årlig service type
     }else if(item?.intervall == 6){
         serviceType = "rec44YJ3P160vm5vp"; // Halvårlig service type
     }else if(item?.intervall == 3){

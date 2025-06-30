@@ -316,7 +316,7 @@ function filterServices(rawServices) {
 
       // === Filter 5: Søkeord ===
       if (searchInput) {
-        const searchText = `${service.customername} ${service.systemname} ${service.modelname} ${service.address} ${service.poststed}`.toLowerCase();
+        const searchText = `${service.customerName} ${service.systemName}`.toLowerCase();
         if (!searchText.includes(searchInput)) return false;
       }
   

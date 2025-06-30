@@ -63,12 +63,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
     if(!customer){
         //finne customer på bakgrunn av serviceen
-        customer = gCustomer.find(c => c.rawid === service.customerid);
+        customer = gCustomer.find(c => c.rawid === service.customerId);
     }
 
     if(!item){
         //finne systemet på bakgrunn av serviceen
-        item = customer.system.find(s => s.rawid === service.systemid);
+        item = customer.system.find(s => s.rawid === service.systemId);
     }
 
 

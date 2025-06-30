@@ -270,6 +270,7 @@ function groupServicesByCustomerAndDate(services) {
 }
 
 function filterServices(rawServices) {
+    const  searchInput = document.getElementById("customerserviceSearchfield")?.value.toLowerCase() || "";
     const forwardFilter = document.getElementById("serviceForwardSelector")?.value || "";
     const statusFilter = document.getElementById("serviceStatusSelector")?.value.toLowerCase() || "";
     const typeFilter = document.getElementById("systemTypes")?.value.toLowerCase() || "";
@@ -310,6 +311,12 @@ function filterServices(rawServices) {
       if (userFilter) {
         const userOnService = service.user || "";
         if (userOnService !== userFilter) return false;
+      }
+
+      // === Filter 5: Søkeord ===
+      if (searchInput) {
+        const searchText = `${service.customername} ${service.systemname} ${service.modelname} ${service.address} ${service.poststed}`.toLowerCase();
+        if (!searchText.includes(searchInput)) return false;
       }
   
       return true;

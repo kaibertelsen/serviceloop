@@ -228,75 +228,7 @@ function editCustomerFiels(customer, field, newValue) {
 
 
 
-function handleEditField(fieldEl, field) {
-    let currentValue = currentCustomer[field];
-  
-    if (field === 'postcode_city') {
-      currentValue = [currentCustomer.postcode, currentCustomer.city].filter(Boolean).join(" ");
-    } else if (field === 'email') {
-      currentValue = currentCustomer.email || "";
-    }
-  
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = currentValue || '';
-    input.className = 'edit-input';
-  
-    fieldEl.innerHTML = '';
-    fieldEl.appendChild(input);
-    input.focus();
-  
-    input.addEventListener('blur', async () => {
-      const newValue = input.value.trim();
-  
-      if (field === 'postcode_city') {
-        const [postcode, ...cityParts] = newValue.split(' ');
-        const city = cityParts.join(' ').trim();
-  
-        currentCustomer.postcode = postcode || '';
-        currentCustomer.city = city || '';
-  
-        const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
-        if (customerIndex !== -1) {
-          gCustomer[customerIndex].postcode = postcode || '';
-          gCustomer[customerIndex].city = city || '';
-        }
-  
-        openCustomer(currentCustomer);
-  
-        let body = {
-          postcode: Number(postcode),
-          city: city
-        };
-        sendUpdateToServer(currentCustomer, body);
-  
-      } else {
-        if (field === 'email' && newValue !== '') {
-          // Valider e-post
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(newValue)) {
-            alert("Ugyldig e-postadresse");
-            openCustomer(currentCustomer); // tilbakestill visning
-            return;
-          }
-        }
-  
-        currentCustomer[field] = newValue;
-  
-        const customerIndex = gCustomer.findIndex(c => c.client === currentCustomer.client);
-        if (customerIndex !== -1) {
-          gCustomer[customerIndex][field] = newValue;
-        }
-  
-        openCustomer(currentCustomer);
-  
-        let body = {
-          [field]: newValue
-        };
-        sendUpdateToServer(currentCustomer, body);
-      }
-    });
-}
+
   
 function sendUpdateToServer(customer, data) {
 
@@ -308,7 +240,7 @@ function sendUpdateToServer(customer, data) {
 
 function responseEditCustomer(data){
   //oppdater gCustomer med den oppdaterte kunden
-  const updatedCustomer = JSON.parse(data.fields);
+  const updatedCustomer = JSON.parse(data.fields.json);
   const customerIndex = gCustomer.findIndex(c => c.rawid === updatedCustomer.rawid);
   if (customerIndex !== -1) {
     gCustomer[customerIndex] = updatedCustomer;

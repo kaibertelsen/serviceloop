@@ -1,5 +1,6 @@
 document.getElementById('serviceForwardSelector')?.addEventListener('change', renderFilteredServiceList);
 document.getElementById('serviceStatusSelector')?.addEventListener('change', renderFilteredServiceList);
+document.getElementById('userOnServiceSelector')?.addEventListener('change', renderFilteredServiceList);
 document.getElementById('systemTypes')?.addEventListener('change', renderFilteredServiceList);
 
 
@@ -12,6 +13,10 @@ document.getElementById('servicelisttabbutton')?.addEventListener('click', funct
 
 
 function renderFilteredServiceList() {
+
+    loadeUserInSelector(); // Laster inn bruker i selector
+
+
    // const raw = convertDataTOServiceList(gCustomer);                   // Alle rådata
    // const grouped = groupServicesByCustomerAndDate(raw);   
      var servicelist = getAllServicesFromCustomers(gCustomer)  ;        // Slår sammen på dato + kunde
@@ -20,7 +25,33 @@ function renderFilteredServiceList() {
     const nonCalculated = filtered.filter(service => service.status.toLowerCase() !== "kalkulert");
     startServiceListPage(nonCalculated);                                   // Viser
 }
+function loadeUserInSelector() {
+    const userSelector = document.getElementById("userOnServiceSelector");
+    if (!userSelector) return console.error("Ingen 'userSelector' funnet.");
 
+    userSelector.innerHTML = ''; // Tømmer eksisterende innhold
+
+    //en Velg bruker med value "" som ligger først i listen
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Velg bruker";
+    userSelector.appendChild(defaultOption);
+
+    //sorter bruker etter Navn
+    const sortedUser = gUser.sort((a, b) => {
+        const nameA = (a.name || "").toLowerCase();
+        const nameB = (b.name || "").toLowerCase();
+        return nameA.localeCompare(nameB);
+    }
+    );
+
+    sortedUser.forEach(user => {
+        const option = document.createElement("option");
+        option.value = user.rawid;
+        option.textContent = user.name || "Ukjent bruker";
+        userSelector.appendChild(option);
+    });
+}
 
 function startServiceListPage(services) {
     const listContainer = document.getElementById("servicelistelement");

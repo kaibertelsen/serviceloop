@@ -26,30 +26,87 @@ function openCustomer(customer) {
 
   const customernameelement = customerinfoconteiner.querySelector('.customernameelement');
   customernameelement.value = customer.name || "-";
+  customernameelement.addEventListener('blur', function () {
+    const newName = customernameelement.value.trim();
+    if (newName !== customer.name) {
+      editCustomerFiels(customer, 'name', newName);
+    }
+  });
 
   const primarycontactelement = customerinfoconteiner.querySelector('.primarycontact');
   primarycontactelement.value = customer.primary_contact || "-";
-
+  primarycontactelement.addEventListener('blur', function () {
+    const newContact = primarycontactelement.value.trim();
+    if (newContact !== customer.primary_contact) {
+      editCustomerFiels(customer, 'primarycontact', newContact);
+    }
+  });
 
   const customeremailelement = customerinfoconteiner.querySelector('.customeremail');
   customeremailelement.value = customer.email || "-";
+  customeremailelement.addEventListener('blur', function () {
+    const newEmail = customeremailelement.value.trim();
+    if (newEmail !== customer.email) {
+      editCustomerFiels(customer, 'email', newEmail);
+    }
+  }
+  );
 
   const customernumberelement = customerinfoconteiner.querySelector('.customernumber');
   customernumberelement.value = customer.customernr || "-";
+  customernumberelement.addEventListener('blur', function () {
+    const newNumber = customernumberelement.value.trim();
+    if (newNumber !== customer.customernr) {
+      editCustomerFiels(customer, 'customernr', newNumber);
+    }
+  });
 
   const editselectcustomertypeSelector = customerinfoconteiner.querySelector('.editselectcustomertype');
-  //sette valget i select-elementet
   editselectcustomertypeSelector.value = customer.type || "privat";
+  editselectcustomertypeSelector.addEventListener('change', function () {
+    const newType = editselectcustomertypeSelector.value;
+    if (newType !== customer.type) {
+      editCustomerFiels(customer, 'type', newType);
+    }
+  });
+
 
   const customercategoryelement = customerinfoconteiner.querySelector('.customercategory');
   customercategoryelement.value = customer.category || "-";
+  customercategoryelement.addEventListener('blur', function () {
+    const newCategory = customercategoryelement.value.trim();
+    if (newCategory !== customer.category) {
+      editCustomerFiels(customer, 'category', newCategory);
+    }
+  });
 
   const customeraddressElement = customerinfoconteiner.querySelector('.customeraddress');
   customeraddressElement.value = customer.address || "-";
+  customeraddressElement.addEventListener('blur', function () {
+    const newAddress = customeraddressElement.value.trim();
+    if (newAddress !== customer.address) {
+      editCustomerFiels(customer, 'address', newAddress);
+    }
+  });
+
   const customerpostcodeElement = customerinfoconteiner.querySelector('.customerpostcode');
   customerpostcodeElement.value = customer.postcode || "-";
+  customerpostcodeElement.addEventListener('blur', function () {
+    const newPostcode = customerpostcodeElement.value.trim();
+    if (newPostcode !== customer.postcode) {
+      editCustomerFiels(customer, 'postcode', newPostcode);
+    }
+  });
+
+
   const customercityElement = customerinfoconteiner.querySelector('.customercity');
   customercityElement.value = customer.city || "-";
+  customercityElement.addEventListener('blur', function () {
+    const newCity = customercityElement.value.trim();
+    if (newCity !== customer.city) {
+      editCustomerFiels(customer, 'city', newCity);
+    }
+  });
 
 
     //list opp anlegg/ systems
@@ -158,6 +215,27 @@ document.querySelector('.customerinfoconteiner').addEventListener('click', funct
 
   handleEditField(fieldEl, field);
 });
+
+
+function editCustomerFiels(customer, field, newValue) {
+
+  customer[field] = newValue;
+  const customerIndex = gCustomer.findIndex(c => c.client === customer.client);
+  if (customerIndex !== -1) {
+    gCustomer[customerIndex][field] = newValue;
+  }
+
+  let body = {
+    [field]: newValue
+  };
+
+
+  sendUpdateToServer(customer, body);
+
+
+}
+
+
 
 function handleEditField(fieldEl, field) {
     let currentValue = currentCustomer[field];

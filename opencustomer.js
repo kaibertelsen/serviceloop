@@ -37,7 +37,7 @@ function openCustomer(customer) {
   primarycontactelement.value = customer.primary_contact || "-";
   primarycontactelement.addEventListener('blur', function () {
     const newContact = primarycontactelement.value.trim();
-    if (newContact !== customer.primary_contact) {
+    if (newContact !== customer.primarycontact) {
       editCustomerFiels(customer, 'primarycontact', newContact);
     }
   });

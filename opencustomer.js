@@ -240,7 +240,7 @@ function editCustomerFiels(customer, field, newValue) {
 
   //hvis det er type så må vi oppdaterer selector
   if (field === 'category') {
-    loadCustomerTypeSelector(gCustomer);
+    loadCategorySelector(gCustomer);
   }
 }
 

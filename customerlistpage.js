@@ -2,6 +2,14 @@ document.getElementById("elementlibrary").style.display = "none"; // Skjul eleme
 
 
 function startCustomerListPage(customers) {
+    //last inn selectorfilter
+    loadSystemTypeSelector();
+
+
+
+
+
+
     // Initialize the customer list page
     listCustomers(customers);
    
@@ -47,7 +55,30 @@ function listCustomers(customers) {
     listDatainList(filtered);
 }
 
+function loadSystemTypeSelector() {
+    const customerSystemType = document.getElementById("customerSystemType");
+    if (!customerSystemType) {
+        console.error("Ingen 'customerSystemType' funnet.");
+        return;
 
+    }
+
+    // Tøm eksisterende alternativer
+    customerSystemType.innerHTML = '';
+    // Legg til en tom valgmulighet
+    const emptyOption = document.createElement("option");
+    emptyOption.value = "";
+    emptyOption.textContent = "Alle systemer";
+    customerSystemType.appendChild(emptyOption);
+    
+    // Legg til systemtyper fra gSystem_type
+    gSystem_type.forEach(type => {
+        const option = document.createElement("option");
+        option.value = type.rawid; // Bruk rawid som value
+        option.textContent = type.name; // Bruk name som tekst
+        customerSystemType.appendChild(option);
+    });
+}
 
 
 

@@ -43,6 +43,7 @@ function responsUser(data) {
 }
 
 function responsClient(data) {
+    
     //hente teamid
     gClient = data.fields;
     gCustomer = [];

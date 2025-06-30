@@ -4,7 +4,7 @@ document.getElementById('systemTypes')?.addEventListener('change', renderFiltere
 
 
 document.getElementById('servicelisttabbutton')?.addEventListener('click', function() {
-  renderFilteredServiceList();
+ renderFilteredServiceList();
 });
 
 

@@ -786,7 +786,7 @@ function responseEditService(data) {
     updateServiceInCalendar = false; // Nullstill etter oppdatering
   }
 
-  renderFilteredServiceList();
+ 
 
 }
 

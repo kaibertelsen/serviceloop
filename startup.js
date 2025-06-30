@@ -69,6 +69,8 @@ function responsClient(data) {
     
     //start kundelisten
     startCustomerListPage(gCustomer);
+
+    loadeUserInSelector(); // Laster inn bruker i selector
  
 }
 

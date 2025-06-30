@@ -14,9 +14,6 @@ document.getElementById('servicelisttabbutton')?.addEventListener('click', funct
 
 function renderFilteredServiceList() {
 
-    loadeUserInSelector(); // Laster inn bruker i selector
-
-
    // const raw = convertDataTOServiceList(gCustomer);                   // Alle rådata
    // const grouped = groupServicesByCustomerAndDate(raw);   
      var servicelist = getAllServicesFromCustomers(gCustomer)  ;        // Slår sammen på dato + kunde

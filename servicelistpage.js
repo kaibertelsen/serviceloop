@@ -227,7 +227,7 @@ function convertDataTOServiceList(customers) {
 }
 
 function getAllServicesFromCustomers(customers) {
-  const allServices = [];
+  var allServices = [];
 
   customers.forEach(customer => {
       const systems = Array.isArray(customer.system) ? customer.system : [];

@@ -135,34 +135,36 @@ function listCustomers(customers) {
 
 
 function loadSystemTypeSelector() {
-    const customerSystemType = document.getElementById("customerSystemType");
-    if (!customerSystemType) {
-        console.error("Ingen 'customerSystemType' funnet.");
-        return;
+    const systemTypes = (gSystem_type || []).sort((a, b) => a.name.localeCompare(b.name));
 
-    }
+    const selectorIds = ["customerSystemType", "systemTypes"]; // begge ID-er
 
-    // Tøm eksisterende alternativer
-    customerSystemType.innerHTML = '';
-    // Legg til en tom valgmulighet
-    const emptyOption = document.createElement("option");
-    emptyOption.value = "";
-    emptyOption.textContent = "Alle systemer";
-    customerSystemType.appendChild(emptyOption);
+    selectorIds.forEach(id => {
+        const select = document.getElementById(id);
+        if (!select) {
+            console.warn(`Fant ikke select med ID: ${id}`);
+            return;
+        }
 
-    let systemTypes = gSystem_type || [];
-    //sorter alfabetisk på name
-    systemTypes.sort((a, b) => a.name.localeCompare(b.name));
+        // Tøm eksisterende
+        select.innerHTML = "";
 
-    // Legg til systemtyper fra systemTypes
-    systemTypes.forEach(type => {
-        const option = document.createElement("option");
-        option.value = type.rawid;
-        option.textContent = type.name;
-        customerSystemType.appendChild(option);
+        // Legg til "Alle systemer"
+        const emptyOption = document.createElement("option");
+        emptyOption.value = "";
+        emptyOption.textContent = "Alle systemer";
+        select.appendChild(emptyOption);
+
+        // Legg til systemtyper
+        systemTypes.forEach(type => {
+            const option = document.createElement("option");
+            option.value = type.rawid;
+            option.textContent = type.name;
+            select.appendChild(option);
+        });
     });
-   
 }
+
 
 function loadCustomerTypeSelector(customers) {
     const customerType = document.getElementById("customerType");

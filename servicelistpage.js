@@ -6,9 +6,10 @@ document.getElementById('systemTypes')?.addEventListener('change', renderFiltere
 
 
 function renderFilteredServiceList() {
-    const raw = convertDataTOServiceList(gCustomer);                   // Alle rådata
-    const grouped = groupServicesByCustomerAndDate(raw);              // Slår sammen på dato + kunde
-    const filtered = filterServices(grouped);                         // Bruker valgte filtre
+   // const raw = convertDataTOServiceList(gCustomer);                   // Alle rådata
+   // const grouped = groupServicesByCustomerAndDate(raw);   
+     var servicelist = getAllServicesFromCustomers(gCustomer)           // Slår sammen på dato + kunde
+    const filtered = filterServices(servicelist);                         // Bruker valgte filtre
     startServiceListPage(filtered);                                   // Viser
 }
 
@@ -300,6 +301,31 @@ function convertDataTOServiceList(customers) {
   
     return serviceList;
 }
+
+function getAllServicesFromCustomers(customers) {
+  const allServices = [];
+
+  customers.forEach(customer => {
+      const systems = Array.isArray(customer.system) ? customer.system : [];
+
+      systems.forEach(system => {
+          const services = Array.isArray(system.service) ? system.service : [];
+
+          services.forEach(service => {
+              allServices.push({
+                  ...service,
+                  customerName: customer.name,
+                  customerId: customer.rawid,
+                  systemName: system.name,
+                  systemId: system.rawid
+              });
+          });
+      });
+  });
+
+  return allServices;
+}
+
   
 function groupServicesByCustomerAndDate(services) {
     const grouped = {};

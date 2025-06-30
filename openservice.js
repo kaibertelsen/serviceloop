@@ -169,26 +169,44 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 const borderColor = statusObj ? statusObj.color : "gray";
                 serviceElement.style.borderLeft = `6px solid ${borderColor}`;
 
-                    // Oppdater lastservice datoen
-                    const lastServiceLabel = itemElement.querySelector(".lastservicelable");
-                    let serviceInfo = findserviceinfo(item);
-                    if (lastServiceLabel) {
-                        lastServiceLabel.textContent = serviceInfo.lastservice || "–";
-                    }
-                    // Oppdater neste service datoen
-                    const nextServiceLabel = itemElement.querySelector(".nextservicelable");
-                    if (nextServiceLabel) {
-                        nextServiceLabel.textContent = serviceInfo.nextservice || "–";
-                        nextServiceLabel.style.color = serviceInfo.color || "black"; // Sett farge basert på status
-                    }
+                // Oppdater lastservice datoen
+                const lastServiceLabel = itemElement.querySelector(".lastservicelable");
+                let serviceInfo = findserviceinfo(item);
+                if (lastServiceLabel) {
+                    lastServiceLabel.textContent = serviceInfo.lastservice || "–";
+                }
+                // Oppdater neste service datoen
+                const nextServiceLabel = itemElement.querySelector(".nextservicelable");
+                if (nextServiceLabel) {
+                    nextServiceLabel.textContent = serviceInfo.nextservice || "–";
+                    nextServiceLabel.style.color = serviceInfo.color || "black"; // Sett farge basert på status
+                }
 
-                    //oppdater farge på moreInfo
-                    if (openservicebutton) {
-                        const statusObj = statusService.find(status => status.value.toLowerCase() === selectedStatus.toLowerCase());
-                        if (statusObj) {
-                            openservicebutton.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
-                        }
+                //oppdater farge på moreInfo
+                if (openservicebutton) {
+                    const statusObj = statusService.find(status => status.value.toLowerCase() === selectedStatus.toLowerCase());
+                    if (statusObj) {
+                        openservicebutton.style.backgroundColor = statusObj.color; // Sett bakgrunnsfarge basert på status
                     }
+                }
+
+                //om det er utført status som blir satt spørr om å generer neste service
+                if (selectedStatus.toLowerCase() === "utført") {
+                    // Spør brukeren om de vil generere neste service
+                    if (confirm("Vil du generere neste service for dette anlegget?")) {
+                        // Lag en ny service med kalkulert status
+                        const newService = {
+                            status: "Registrert", // Sett status til Registrert
+                            systemid: item.rawid,
+                            customerid: customer.rawid,
+                            date: serviceInfo.nextserviceDate.toISOString(), // Sett dato til neste service dato
+                            type: service.type, // Behold samme type som den forrige servicen
+                            userid: gUser.rawid, // Sett bruker til den innloggede brukeren
+                        };
+                        // Opprett den nye servicen
+                        makeNewService(itemElement, item, newService, null); // Passer inn null for serviceelement siden vi oppretter en ny
+                    }
+                }
                 
 
             }
@@ -853,4 +871,4 @@ function formatDateAndTime(isoDateStr) {
 function toLocalInputString(date) {
     const pad = n => String(n).padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-  }
+}

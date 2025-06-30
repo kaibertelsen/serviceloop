@@ -483,7 +483,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
     }
 
 
-    let status = service.status || "Registrert"; // Standard status for ny service
+    let status = service?.status || "Registrert"; // Standard status for ny service
 
 
     //hvis kunden skal varsles, sett status til "Påminnet"

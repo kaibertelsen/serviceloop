@@ -485,6 +485,16 @@ function makeNewService(itemElement, item, service,serviceelement) {
 
     let status = service?.status || "Registrert"; // Standard status for ny service
 
+    let serviceType = service?.type || "recBhSZeD5yow6mUM"; // Standard annet service hvis ikke spesifisert
+
+    if (item?.intervall == 12) {
+        serviceType = "recJTPhTWc2kFgOp2"; // Årlig service type
+    }else if(item?.intervall == 6){
+        serviceType = "rec44YJ3P160vm5vp"; // Halvårlig service type
+    }else if(item?.intervall == 3){
+        serviceType = "recXobQDZlGH5UhVF"; // Kvartalsvis service type
+    }
+
 
     //hvis kunden skal varsles, sett status til "Påminnet"
     if (warnCustomer) {

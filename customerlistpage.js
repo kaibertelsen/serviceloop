@@ -70,14 +70,19 @@ function loadSystemTypeSelector() {
     emptyOption.value = "";
     emptyOption.textContent = "Alle systemer";
     customerSystemType.appendChild(emptyOption);
-    
-    // Legg til systemtyper fra gSystem_type
-    gSystem_type.forEach(type => {
+
+    let systemTypes = gSystem_type || [];
+    //sorter alfabetisk på name
+    systemTypes.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Legg til systemtyper fra systemTypes
+    systemTypes.forEach(type => {
         const option = document.createElement("option");
-        option.value = type.rawid; // Bruk rawid som value
-        option.textContent = type.name; // Bruk name som tekst
+        option.value = type.rawid;
+        option.textContent = type.name;
         customerSystemType.appendChild(option);
     });
+   
 }
 
 

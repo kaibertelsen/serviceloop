@@ -125,7 +125,11 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
             const systemnameandmodell = customercard.querySelector(".systemnameandmodell");
             if (systemnameandmodell) {
-                systemnameandmodell.textContent = `${item.name || ""} ${item.system_type_name || ""}`.trim();
+                let systemmodellId = item.system_type_id || "";
+                let systemmodell = gSystem_type.find(s => s.rawid === systemmodellId);  
+                let systemTypeName = item.system_type_name || "";
+            
+                systemnameandmodell.textContent = `${item.name || ""} ${systemTypeName || ""}`.trim();
             }
 
             //lage klikk event på customercard

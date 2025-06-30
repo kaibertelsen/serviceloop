@@ -219,20 +219,11 @@ document.querySelector('.customerinfoconteiner').addEventListener('click', funct
 
 function editCustomerFiels(customer, field, newValue) {
 
-  customer[field] = newValue;
-  const customerIndex = gCustomer.findIndex(c => c.client === customer.client);
-  if (customerIndex !== -1) {
-    gCustomer[customerIndex][field] = newValue;
-  }
-
   let body = {
     [field]: newValue
   };
 
-
   sendUpdateToServer(customer, body);
-
-
 }
 
 

@@ -200,7 +200,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                             systemid: item.rawid,
                             customerid: customer.rawid,
                             date: serviceInfo.nextserviceDate.toISOString(), // Sett dato til neste service dato
-                            type: service.type, // Behold samme type som den forrige servicen
+                            type: [service.type], // Behold samme type som den forrige servicen
                             userid: gUser.rawid, // Sett bruker til den innloggede brukeren
                         };
                         // Opprett den nye servicen
@@ -483,7 +483,9 @@ function makeNewService(itemElement, item, service,serviceelement) {
     }
 
 
-    let status = "Registrert"; // Standard status for ny service
+    let status = service.status || "Registrert"; // Standard status for ny service
+
+
     //hvis kunden skal varsles, sett status til "Påminnet"
     if (warnCustomer) {
         status = "Påminnet";
@@ -495,7 +497,8 @@ function makeNewService(itemElement, item, service,serviceelement) {
         system: [item.rawid],
         status: status,
         user: [userid],
-        date: startDate
+        date: startDate,
+        type: service.type || [recJTPhTWc2kFgOp2] // Standard Årsservicetype hvis ikke spesifisert
     };
 
     const elementLibrary = document.getElementById("elementlibrary");

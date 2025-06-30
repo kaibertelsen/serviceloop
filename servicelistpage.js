@@ -21,6 +21,8 @@ function startServiceListPage(services) {
   
     const elementLibrary = document.getElementById("elementlibrary");
     if (!elementLibrary) return console.error("Ingen 'elementlibrary' funnet.");
+    const serviceElementTemplate = elementLibrary.querySelector(".servicerow");
+    const servicecalcElement = elementLibrary.querySelector(".servicecalc");
   
     const nodeElement = elementLibrary.querySelector(".serviceelement");
     if (!nodeElement) return console.error("Ingen '.serviceelement' i biblioteket.");
@@ -34,7 +36,7 @@ function startServiceListPage(services) {
     // Filter
     services = filterServices(services);
   
-    services.forEach(item => {
+    services.forEach(service => {
 
       /*
       const itemElement = nodeElement.cloneNode(true);
@@ -149,7 +151,7 @@ function startServiceListPage(services) {
         button.addEventListener("click", () => openService(item));
       }
   */
-      let serviceElement = makeServiceElement(service, itemElement, item, customer, serviceElementTemplate, servicecalcElement,true);
+      let serviceElement = makeServiceElement(service, listContainer, null, null, serviceElementTemplate, servicecalcElement,true);
       listContainer.appendChild(serviceElement);
     });
 }

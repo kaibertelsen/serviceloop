@@ -60,6 +60,18 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     let isdummy = false; // Variabel for å sjekke om det er en dummy service
 
 
+
+    if(!customer){
+        //finne customer på bakgrunn av serviceen
+        customer = gCustomer.find(c => c.rawid === service.customerid);
+    }
+
+    if(!item){
+        //finne systemet på bakgrunn av serviceen
+        item = customer.system.find(s => s.rawid === service.systemid);
+    }
+
+
     if(service.status === "Kalkulert" || service.status === "kalkulert") {
         isdummy = true; // Marker som dummy service
         serviceElement = servicecalcElement.cloneNode(true);

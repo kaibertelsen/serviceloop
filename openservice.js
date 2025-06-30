@@ -230,6 +230,24 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             if (selectedStatus) {
                 // Oppdater tjenestens status
                 service.status = selectedStatus;
+                // oppdater cunde og system med ny status
+                //finne kunde
+                if (!customer) {
+                    customer = gCustomer.find(c => c.rawid === service.customerid);
+                }
+                //finne system
+                if (!item) {
+                    item = customer.system.find(s => s.rawid === service.systemid);
+                }
+                // Oppdater systemets service med ny status
+                if (!item.service) {
+                    item.service = [];
+                }
+                const existingServiceIndex = item.service.findIndex(s => s.rawid === service.rawid);
+                if (existingServiceIndex !== -1) {
+                    item.service[existingServiceIndex].status = selectedStatus; // Oppdater status
+                }
+                
                 //send til server
                 let data = {status: selectedStatus};
                 sendEditServiceToServer(service, data);

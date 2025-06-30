@@ -36,7 +36,7 @@ if (createnewcustomer) {
      // Send til server
      POSTairtable(
         "appuUESr4s93SWaS7",
-        "tblPWerScR5AbxnlJ", // system-tabell
+        "tblB0ZV5s0oXiAP6x", 
         JSON.stringify(newCustomer),
         "responseNewCustomer"
     );
@@ -87,7 +87,7 @@ function responseNewCustomer(data) {
 
     //åpne den nye kunden
     openCustomer(newCustomer);
-    
+
 }
 
 

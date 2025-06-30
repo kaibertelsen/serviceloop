@@ -466,7 +466,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
 
    
     
-    let startDate = service.date || nextServiceDate;
+    let startDate = service?.date || nextServiceDate;
     
     let warnCustomer = false;
     //fjern elementet mens den oppretter på server
@@ -498,7 +498,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
         status: status,
         user: [userid],
         date: startDate,
-        type: service.type || [recJTPhTWc2kFgOp2] // Standard Årsservicetype hvis ikke spesifisert
+        type: service?.type || [recJTPhTWc2kFgOp2] // Standard Årsservicetype hvis ikke spesifisert
     };
 
     const elementLibrary = document.getElementById("elementlibrary");

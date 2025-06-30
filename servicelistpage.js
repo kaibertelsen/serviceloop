@@ -13,9 +13,11 @@ document.getElementById('servicelisttabbutton')?.addEventListener('click', funct
 function renderFilteredServiceList() {
    // const raw = convertDataTOServiceList(gCustomer);                   // Alle rådata
    // const grouped = groupServicesByCustomerAndDate(raw);   
-     var servicelist = getAllServicesFromCustomers(gCustomer)           // Slår sammen på dato + kunde
-    const filtered = filterServices(servicelist);                         // Bruker valgte filtre
-    startServiceListPage(filtered);                                   // Viser
+     var servicelist = getAllServicesFromCustomers(gCustomer)  ;        // Slår sammen på dato + kunde
+    const filtered = filterServices(servicelist);                       // Bruker valgte filtre
+    //filtrer vekk alle med "kalkulert" status
+    const nonCalculated = filtered.filter(service => service.status.toLowerCase() !== "kalkulert");
+    startServiceListPage(nonCalculated);                                   // Viser
 }
 
 

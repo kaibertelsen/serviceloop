@@ -92,7 +92,6 @@ function responseNewCustomer(data) {
 }
 
 
-
 function listCustomers(customers) {
     const categorySelector = document.getElementById("customerCategory");
     const customerTypeSelector = document.getElementById("customerType");

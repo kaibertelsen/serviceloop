@@ -194,6 +194,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 service.date = newDateISO;
         
                 if (!isdummy) {
+                    //oppdater dato lokalt
+                    service.date = newDateISO; // Oppdater service dato lokalt
                     let data = { date: newDateISO };
                     sendEditServiceToServer(service, data);
                 }

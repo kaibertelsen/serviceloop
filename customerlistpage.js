@@ -5,6 +5,8 @@ function startCustomerListPage(customers) {
     //last inn selectorfilter
     loadSystemTypeSelector();
 
+    loadCategorySelector(customers);
+
 
 
 
@@ -85,6 +87,29 @@ function loadSystemTypeSelector() {
    
 }
 
+function loadCategorySelector(customers) {
+    const customerCategory = document.getElementById("customerCategory");
+    if (!customerCategory) {
+        console.error("Ingen 'customerCategory' funnet.");
+        return;
+    }
+    // Tøm eksisterende alternativer
+    customerCategory.innerHTML = '';
+    // Legg til en tom valgmulighet
+    const emptyOption = document.createElement("option");
+    emptyOption.value = "";
+    emptyOption.textContent = "Alle kategorier";
+    customerCategory.appendChild(emptyOption);
+    // Hent unike kategorier fra gCustomer
+    const categories = new Set(customers.map(customer => customer.category).filter(Boolean));
+    // Legg til kategorier i select-elementet
+    categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        customerCategory.appendChild(option);
+    });
+}
 
 
 function listDatainList(data) {

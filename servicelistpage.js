@@ -310,7 +310,7 @@ function filterServices(rawServices) {
 
       // === Filter 4: Bruker ===
       if (userFilter) {
-        const userOnService = service.user || "";
+        const userOnService = service.userid || "";
         if (userOnService !== userFilter) return false;
       }
 

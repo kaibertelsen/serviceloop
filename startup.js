@@ -71,6 +71,8 @@ function responsClient(data) {
     startCustomerListPage(gCustomer);
 
     loadeUserInSelector(); // Laster inn bruker i selector
+
+    loadServiceForwardSelector(); //Last inn perioder i service forward selector
  
 }
 

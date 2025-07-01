@@ -271,62 +271,147 @@ function groupServicesByCustomerAndDate(services) {
 }
 
 function filterServices(rawServices) {
-    const  searchInput = document.getElementById("customerserviceSearchfield")?.value.toLowerCase() || "";
-    const forwardFilter = document.getElementById("serviceForwardSelector")?.value || "";
-    const statusFilter = document.getElementById("serviceStatusSelector")?.value.toLowerCase() || "";
-    const typeFilter = document.getElementById("systemTypes")?.value.toLowerCase() || "";
-    const userFilter = document.getElementById("userOnServiceSelector")?.value || "";
+  const searchInput = document.getElementById("customerserviceSearchfield")?.value.toLowerCase() || "";
+  const forwardFilter = document.getElementById("serviceForwardSelector")?.value || "";
+  const statusFilter = document.getElementById("serviceStatusSelector")?.value.toLowerCase() || "";
+  const typeFilter = document.getElementById("systemTypes")?.value.toLowerCase() || "";
+  const userFilter = document.getElementById("userOnServiceSelector")?.value || "";
 
-    const now = new Date();
-  
-    const result = rawServices.filter(service => {
-      const date = new Date(service.date);
-  
-      // === Filter 1: Fremtid / fortid / hittil i år ===
-      if (forwardFilter) {
-        if (forwardFilter === "YTD") {
-          const startOfYear = new Date(now.getFullYear(), 0, 1);
-          if (date < startOfYear || date > now) return false;
-        } else {
-          const days = parseInt(forwardFilter, 10);
-          const filterDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
-  
-          if (days > 0 && (date < now || date > filterDate)) return false;
-          if (days < 0 && (date > now || date < filterDate)) return false;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // kl 00:00 i dag
+
+  const result = rawServices.filter(service => {
+    const date = new Date(service.date);
+
+    // === Filter 1: Dato-filter (forwardFilter) ===
+    if (forwardFilter && forwardFilter !== "all") {
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const day = now.getDate();
+
+      let start = null;
+      let end = null;
+
+      switch (forwardFilter) {
+        case "today":
+          start = new Date(year, month, day);
+          end = new Date(year, month, day + 1);
+          break;
+
+        case "thisWeek": {
+          const dayOfWeek = now.getDay(); // 0 (søndag) til 6 (lørdag)
+          const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+          start = new Date(year, month, day + diffToMonday);
+          end = new Date(start);
+          end.setDate(start.getDate() + 7);
+          break;
         }
-      }
-  
-      // === Filter 2: Status ===
-      if (statusFilter) {
-        const serviceStatus = (service.status || "").toLowerCase();
-        if (serviceStatus !== statusFilter) return false;
-      }
-  
-      // === Filter 3: Systemtype ===
-      if (typeFilter) {
-        const model = (service.system_type_id || "").toLowerCase();
-        if (!model.includes(typeFilter)) return false;
+
+        case "nextWeek": {
+          const dayOfWeek = now.getDay();
+          const diffToNextMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+          start = new Date(year, month, day + diffToNextMonday);
+          end = new Date(start);
+          end.setDate(start.getDate() + 7);
+          break;
+        }
+
+        case "thisMonth":
+          start = new Date(year, month, 1);
+          end = new Date(year, month + 1, 1);
+          break;
+
+        case "next2Months":
+          start = new Date(today);
+          end = new Date(today);
+          end.setMonth(end.getMonth() + 2);
+          break;
+
+        case "next3Months":
+          start = new Date(today);
+          end = new Date(today);
+          end.setMonth(end.getMonth() + 3);
+          break;
+
+        case "thisYear":
+          start = new Date(year, 0, 1);
+          end = new Date(year + 1, 0, 1);
+          break;
+
+        case "yearToDate":
+          start = new Date(year, 0, 1);
+          end = today;
+          end.setDate(end.getDate() + 1); // inkluderer i dag
+          break;
       }
 
-      // === Filter 4: Bruker ===
-      if (userFilter) {
-        const userOnService = service.userid || "";
-        if (userOnService !== userFilter) return false;
-      }
+      if (start && end && (date < start || date >= end)) return false;
+    }
 
-      // === Filter 5: Søkeord ===
-      if (searchInput) {
-        const searchText = `${service.customerName} ${service.systemName} ${service.nr}`.toLowerCase();
-        if (!searchText.includes(searchInput)) return false;
-      }
-  
-      return true;
-    });
-  
-    // Sorter nyeste øverst
-    result.sort((a, b) => new Date(b.dato) - new Date(a.dato));
-  
-    return result;
+    // === Filter 2: Status ===
+    if (statusFilter) {
+      const serviceStatus = (service.status || "").toLowerCase();
+      if (serviceStatus !== statusFilter) return false;
+    }
+
+    // === Filter 3: Systemtype ===
+    if (typeFilter) {
+      const model = (service.system_type_id || "").toLowerCase();
+      if (!model.includes(typeFilter)) return false;
+    }
+
+    // === Filter 4: Bruker ===
+    if (userFilter) {
+      const userOnService = service.userid || "";
+      if (userOnService !== userFilter) return false;
+    }
+
+    // === Filter 5: Søkeord ===
+    if (searchInput) {
+      const searchText = `${service.customerName} ${service.systemName} ${service.nr}`.toLowerCase();
+      if (!searchText.includes(searchInput)) return false;
+    }
+
+    return true;
+  });
+
+  // Sorter nyeste øverst
+  result.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  return result;
 }
+
   
   
+function loadServiceForwardSelector() {
+  const selector = document.getElementById("serviceForwardSelector");
+  if (!selector) return;
+
+  // Tøm eksisterende alternativer
+  selector.innerHTML = "";
+
+  // Definer valgmulighetene
+  const options = [
+    { value: "all", label: "Alle datoer" },
+    { value: "thisWeek", label: "Denne uken" },
+    { value: "today", label: "I dag" },
+    { value: "nextWeek", label: "Neste uke" },
+    { value: "thisMonth", label: "Denne måneden" },
+    { value: "next2Months", label: "2 måneder frem" },
+    { value: "next3Months", label: "3 måneder frem" },
+    { value: "thisYear", label: "I år" },
+    { value: "yearToDate", label: "Hittil i år" }
+  ];
+
+  // Legg inn i DOM
+  options.forEach(opt => {
+    const option = document.createElement("option");
+    option.value = opt.value;
+    option.textContent = opt.label;
+    if (opt.value === "thisWeek") {
+      option.selected = true; // Sett "Denne uken" som forhåndsvalgt
+    }
+    selector.appendChild(option);
+  });
+}
+

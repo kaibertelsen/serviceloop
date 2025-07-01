@@ -84,9 +84,8 @@ function openCustomer(customer) {
   });
 
   const customeraddressElement = customerinfoconteiner.querySelector('.customeraddress');
-  if (customer.address) {
-  customeraddressElement.value = customer.address || "-";
-  }
+  customeraddressElement.value = customer.address || "";
+  
   customeraddressElement.addEventListener('blur', function () {
     const newAddress = customeraddressElement.value.trim();
     if (newAddress !== customer.address) {

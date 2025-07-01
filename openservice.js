@@ -1006,17 +1006,19 @@ function formatDateAndTime(isoDateStr) {
 function formatDateAndTimeReadable(isoDateStr) {
     const date = new Date(isoDateStr);
   
-    const day = String(date.getDate()).padStart(2, '0'); // f.eks. "02"
+    const day = String(date.getDate()).padStart(2, '0');
     const monthNames = [
       "januar", "februar", "mars", "april", "mai", "juni",
       "juli", "august", "september", "oktober", "november", "desember"
     ];
-    const month = monthNames[date.getMonth()]; // f.eks. "juni"
-    const hours = String(date.getHours()).padStart(2, '0'); // f.eks. "13"
-    const minutes = String(date.getMinutes()).padStart(2, '0'); // f.eks. "25"
+    const month = monthNames[date.getMonth()];
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const shortYear = String(date.getFullYear()).slice(-2); // f.eks. "25"
   
-    return `${day}. ${month} ${hours}:${minutes}`;
+    return `${day}. ${month} ${hours}:${minutes} (${shortYear})`;
   }
+  
   
 
 function toLocalInputString(date) {

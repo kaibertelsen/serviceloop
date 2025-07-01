@@ -109,7 +109,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         if (customercard){
             customercard.style.display = "inline-block"; // Vis kortet hvis vi er på service-siden
 
-            const formateddateandtimeElement = serviceElement.querySelector(".formateddateandtime");
+            const formateddateandtimeElement = customercard.querySelector(".formateddateandtime");
             if (formateddateandtimeElement) {
                 // Formatert dato og klokkeslett slin Mandag 2.juni 13:20"
                 const formattedDateTime = formatDateAndTime(service.date);

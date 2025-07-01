@@ -297,16 +297,16 @@ function filterServices(rawServices) {
           start = new Date(year, month, day);
           end = new Date(year, month, day + 1);
           break;
-
+      
         case "thisWeek": {
-          const dayOfWeek = now.getDay(); // 0 (søndag) til 6 (lørdag)
+          const dayOfWeek = now.getDay(); // 0 (søn) til 6 (lør)
           const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
           start = new Date(year, month, day + diffToMonday);
           end = new Date(start);
           end.setDate(start.getDate() + 7);
           break;
         }
-
+      
         case "nextWeek": {
           const dayOfWeek = now.getDay();
           const diffToNextMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
@@ -315,35 +315,47 @@ function filterServices(rawServices) {
           end.setDate(start.getDate() + 7);
           break;
         }
-
+      
         case "thisMonth":
           start = new Date(year, month, 1);
           end = new Date(year, month + 1, 1);
           break;
-
+      
         case "next2Months":
           start = new Date(today);
           end = new Date(today);
           end.setMonth(end.getMonth() + 2);
           break;
-
+      
         case "next3Months":
           start = new Date(today);
           end = new Date(today);
           end.setMonth(end.getMonth() + 3);
           break;
-
+      
         case "thisYear":
           start = new Date(year, 0, 1);
           end = new Date(year + 1, 0, 1);
           break;
-
+      
         case "yearToDate":
           start = new Date(year, 0, 1);
-          end = today;
+          end = new Date(today);
           end.setDate(end.getDate() + 1); // inkluderer i dag
           break;
+      
+        case "next12Months":
+          start = new Date(today);
+          end = new Date(today);
+          end.setFullYear(end.getFullYear() + 1);
+          break;
+      
+        case "nextYear":
+          start = new Date(year + 1, 0, 1);
+          end = new Date(year + 2, 0, 1);
+          break;
       }
+      
 
       if (start && end && (date < start || date >= end)) return false;
     }
@@ -400,7 +412,10 @@ function loadServiceForwardSelector() {
     { value: "next2Months", label: "2 måneder frem" },
     { value: "next3Months", label: "3 måneder frem" },
     { value: "thisYear", label: "I år" },
-    { value: "yearToDate", label: "Hittil i år" }
+    { value: "yearToDate", label: "Hittil i år" },
+    { value: "next12Months", label: "12 måneder frem" },
+    { value: "nextYear", label: "Neste kalenderår" }
+    
   ];
 
   // Legg inn i DOM
@@ -414,4 +429,5 @@ function loadServiceForwardSelector() {
     selector.appendChild(option);
   });
 }
+
 

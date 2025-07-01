@@ -282,7 +282,7 @@ function filterServices(rawServices) {
     const now = new Date();
   
     const result = rawServices.filter(service => {
-      const date = new Date(service.dato);
+      const date = new Date(service.date);
   
       // === Filter 1: Fremtid / fortid / hittil i år ===
       if (forwardFilter) {

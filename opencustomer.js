@@ -28,7 +28,7 @@ function openCustomer(customer) {
   const customerinfoconteiner = document.querySelector('.customerinfoconteiner');
 
   const customernameelement = customerinfoconteiner.querySelector('.customernameelement');
-  customernameelement.value = customer.name || "-";
+  customernameelement.value = customer.name || "";
   customernameelement.addEventListener('blur', function () {
     const newName = customernameelement.value.trim();
     if (newName !== customer.name) {
@@ -37,7 +37,7 @@ function openCustomer(customer) {
   });
 
   const primarycontactelement = customerinfoconteiner.querySelector('.primarycontact');
-  primarycontactelement.value = customer.primary_contact || "-";
+  primarycontactelement.value = customer.primary_contact || "";
   primarycontactelement.addEventListener('blur', function () {
     const newContact = primarycontactelement.value.trim();
     if (newContact !== customer.primarycontact) {
@@ -46,7 +46,7 @@ function openCustomer(customer) {
   });
 
   const customeremailelement = customerinfoconteiner.querySelector('.customeremail');
-  customeremailelement.value = customer.email || "-";
+  customeremailelement.value = customer.email || "";
   customeremailelement.addEventListener('blur', function () {
     const newEmail = customeremailelement.value.trim();
     if (newEmail !== customer.email) {
@@ -56,7 +56,7 @@ function openCustomer(customer) {
   );
 
   const customernumberelement = customerinfoconteiner.querySelector('.customernumber');
-  customernumberelement.value = customer.customernr || "-";
+  customernumberelement.value = customer.customernr || "";
   customernumberelement.addEventListener('blur', function () {
     const newNumber = customernumberelement.value.trim();
     if (newNumber !== customer.customernr) {
@@ -75,7 +75,7 @@ function openCustomer(customer) {
 
 
   const customercategoryelement = customerinfoconteiner.querySelector('.customercategory');
-  customercategoryelement.value = customer.category || "-";
+  customercategoryelement.value = customer.category || "";
   customercategoryelement.addEventListener('blur', function () {
     const newCategory = customercategoryelement.value.trim();
     if (newCategory !== customer.category) {
@@ -94,9 +94,8 @@ function openCustomer(customer) {
   });
 
   const customerpostcodeElement = customerinfoconteiner.querySelector('.customerpostcode');
-  if (customer.postcode) {
-  customerpostcodeElement.value = customer.postcode || "-";
-  }
+  customerpostcodeElement.value = customer.postcode || "";
+  
   customerpostcodeElement.addEventListener('blur', function () {
     const newPostcode = customerpostcodeElement.value.trim();
     if (newPostcode !== customer.postcode) {
@@ -106,9 +105,9 @@ function openCustomer(customer) {
 
 
   const customercityElement = customerinfoconteiner.querySelector('.customercity');
-  if (customer.city) {
-  customercityElement.value = customer.city || "-";
-  }
+ 
+  customercityElement.value = customer.city || "";
+  
   customercityElement.addEventListener('blur', function () {
     const newCity = customercityElement.value.trim();
     if (newCity !== customer.city) {
@@ -117,7 +116,7 @@ function openCustomer(customer) {
   });
 
   const phonenumberElement = customerinfoconteiner.querySelector('.phonenumber');
-  phonenumberElement.value = customer.phonenumber || "-";
+  phonenumberElement.value = customer.phonenumber || "";
   phonenumberElement.addEventListener('blur', function () {
     const newPhoneNumber = phonenumberElement.value.trim();
     if (newPhoneNumber !== customer.phonenumber) {

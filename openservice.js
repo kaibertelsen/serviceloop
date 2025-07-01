@@ -129,7 +129,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 let systemmodell = gSystem_type.find(s => s.rawid === systemmodellId);  
                 let systemTypeName = item.system_type_name || "";
             
-                systemnameandmodell.textContent = `${item.name || ""} ${systemTypeName || ""}`.trim();
+                systemnameandmodell.textContent = `${item.name || ""} ${systemTypeName || ""} ${systemmodell.name} `.trim();
             }
 
             //lage klikk event på customercard

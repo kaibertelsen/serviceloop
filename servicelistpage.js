@@ -23,11 +23,6 @@ function renderFilteredServiceList() {
     const nonCalculated = filtered.filter(service => service.status.toLowerCase() !== "kalkulert");
     startServiceListPage(nonCalculated);   
 
-    //etter 1000 millisekunder, sett fokus på søkefeltet
-    setTimeout(() => {
-      document.getElementById("customerserviceSearchfield").focus();
-    }
-    , 500);
     
 }
 function loadeUserInSelector() {

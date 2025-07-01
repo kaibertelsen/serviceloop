@@ -241,7 +241,8 @@ function getAllServicesFromCustomers(customers) {
                   customerName: customer.name,
                   customerId: customer.rawid,
                   systemName: system.name,
-                  systemId: system.rawid
+                  systemId: system.rawid,
+                  system_type_id: system.system_type_id || ""
               });
           });
       });
@@ -250,7 +251,6 @@ function getAllServicesFromCustomers(customers) {
   return allServices;
 }
 
-  
 function groupServicesByCustomerAndDate(services) {
     const grouped = {};
   
@@ -304,7 +304,7 @@ function filterServices(rawServices) {
   
       // === Filter 3: Systemtype ===
       if (typeFilter) {
-        const model = (service.modelname || "").toLowerCase();
+        const model = (service.system_type_id || "").toLowerCase();
         if (!model.includes(typeFilter)) return false;
       }
 

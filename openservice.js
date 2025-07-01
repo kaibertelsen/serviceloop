@@ -497,6 +497,13 @@ function listFollowupOnService(serviceElement, service) {
         return; // Avbryt hvis listen ikke finnes
     }
 
+    //sjekk om det er noen followup
+    if (!service.followup || service.followup.length === 0) {
+        //skjul forelderelement til listen
+        listFollowup.parentElement.style.display = "none"; // Skjul listen hvis ingen oppfølginger
+        return; // Avbryt hvis ingen oppfølginger
+    }
+
     listFollowup.innerHTML = ''; // Tøm listen
     // Hent mal for followup-element
     let nodeElement = document.getElementById("elementlibrary").querySelector(".followupraeelement");
@@ -537,7 +544,7 @@ function deleteService(service, itemElement, item, customer){
 
     if(isInCustomarpage) {
         // Oppdater visningen av systemet
-        listServiceOnsystem(currentServiceElement, system, customer);
+        listServiceOnsystem(itemElement, system, customer);
     }else  {
         // Oppdater visningen av serviceliste
         renderFilteredServiceList();

@@ -323,7 +323,7 @@ function filterServices(rawServices) {
 
       // === Filter 5: Søkeord ===
       if (searchInput) {
-        const searchText = `${service.customerName} ${service.systemName}`.toLowerCase();
+        const searchText = `${service.customerName} ${service.systemName} ${service.nr}`.toLowerCase();
         if (!searchText.includes(searchInput)) return false;
       }
   

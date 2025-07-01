@@ -112,7 +112,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             const formateddateandtimeElement = customercard.querySelector(".formateddateandtime");
             if (formateddateandtimeElement) {
                 // Formatert dato og klokkeslett slin Mandag 2.juni 13:20"
-                const formattedDateTime = formatDateAndTime(service.date);
+                const formattedDateTime = formatDateAndTimeReadable(service.date);
                 formateddateandtimeElement.textContent = formattedDateTime || "";
             }
             
@@ -1002,6 +1002,22 @@ function formatDateAndTime(isoDateStr) {
 
   return `${day}.${month}.${year} ${hours}:${minutes}`;
 }
+
+function formatDateAndTimeReadable(isoDateStr) {
+    const date = new Date(isoDateStr);
+  
+    const day = String(date.getDate()).padStart(2, '0'); // f.eks. "02"
+    const monthNames = [
+      "januar", "februar", "mars", "april", "mai", "juni",
+      "juli", "august", "september", "oktober", "november", "desember"
+    ];
+    const month = monthNames[date.getMonth()]; // f.eks. "juni"
+    const hours = String(date.getHours()).padStart(2, '0'); // f.eks. "13"
+    const minutes = String(date.getMinutes()).padStart(2, '0'); // f.eks. "25"
+  
+    return `${day}. ${month} ${hours}:${minutes}`;
+  }
+  
 
 function toLocalInputString(date) {
     const pad = n => String(n).padStart(2, '0');

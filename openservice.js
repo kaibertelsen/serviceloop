@@ -397,39 +397,42 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             moreInfo.style.height = "0px";
             });
         }
-        });
-    }
+        
+        const noteservicequill = serviceElement.querySelector(".noteservicequill");
+        if (noteservicequill) {
+            // Initialize Quill editor for notes
+            const quill = new Quill(noteservicequill, {
+            theme: 'snow',
+            modules: {
+                toolbar: true // Viktig for at den skal bli generert
+            }
+            });
+            
+            // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
+        setTimeout(() => {
+            quill.clipboard.dangerouslyPasteHTML(service.note || "");
+            }, 0);
+            
+            let lastNoteContent = quill.root.innerHTML;
     
-    
-    const noteservicequill = serviceElement.querySelector(".noteservicequill");
-    if (noteservicequill) {
-        // Initialize Quill editor for notes
-        const quill = new Quill(noteservicequill, {
-        theme: 'snow',
-        modules: {
-            toolbar: true // Viktig for at den skal bli generert
+            quill.root.addEventListener("blur", function () {
+              let noteContent = quill.root.innerHTML;
+            
+              if (noteContent !== lastNoteContent) {
+                lastNoteContent = noteContent;
+                service.note = noteContent;
+                let data = { note: noteContent };
+                sendEditServiceToServer(service, data);
+              }
+            });
+            
         }
-        });
-        
-        // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
-    setTimeout(() => {
-        quill.clipboard.dangerouslyPasteHTML(service.note || "");
-        }, 0);
-        
-        let lastNoteContent = quill.root.innerHTML;
 
-        quill.root.addEventListener("blur", function () {
-          let noteContent = quill.root.innerHTML;
-        
-          if (noteContent !== lastNoteContent) {
-            lastNoteContent = noteContent;
-            service.note = noteContent;
-            let data = { note: noteContent };
-            sendEditServiceToServer(service, data);
-          }
         });
-        
     }
+    
+    
+
 
     // Sett border på høyre side av systemelement basert på siste status
     const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());

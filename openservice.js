@@ -368,65 +368,71 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         moreInfo.style.height = "0px"; // Start med høyde 0 for animasjon
 
 
-        
+        var quillisGanarated = false; // Variabel for å sjekke om Quill er generert
+
         openservicebutton.addEventListener("click", () => {
         
-        if (!moreInfo) return;
-        
-        const isCollapsed = moreInfo.offsetHeight === 0;
-        
-        if (isCollapsed) {
-            // Åpne: start fra 0 og gå til scrollHeight
-            moreInfo.style.height = "0px"; // sikker start
-            const fullHeight = moreInfo.scrollHeight + "px";
-        
-            requestAnimationFrame(() => {
-            moreInfo.style.height = fullHeight;
-            });
-        
-            // Etter animasjonen, fjern høyden så den tilpasses innhold automatisk
-            setTimeout(() => {
-            moreInfo.style.height = "auto";
-            }, 400);
-        } else {
-            // Lukk: start fra nåværende høyde og gå til 0
-            const currentHeight = moreInfo.scrollHeight + "px";
-            moreInfo.style.height = currentHeight;
-        
-            requestAnimationFrame(() => {
-            moreInfo.style.height = "0px";
-            });
-        }
-        
-        const noteservicequill = serviceElement.querySelector(".noteservicequill");
-        if (noteservicequill) {
-            // Initialize Quill editor for notes
-            const quill = new Quill(noteservicequill, {
-            theme: 'snow',
-            modules: {
-                toolbar: true // Viktig for at den skal bli generert
+            if (!moreInfo) return;
+            
+            const isCollapsed = moreInfo.offsetHeight === 0;
+            
+            if (isCollapsed) {
+                // Åpne: start fra 0 og gå til scrollHeight
+                moreInfo.style.height = "0px"; // sikker start
+                const fullHeight = moreInfo.scrollHeight + "px";
+            
+                requestAnimationFrame(() => {
+                moreInfo.style.height = fullHeight;
+                });
+            
+                // Etter animasjonen, fjern høyden så den tilpasses innhold automatisk
+                setTimeout(() => {
+                moreInfo.style.height = "auto";
+                }, 400);
+            } else {
+                // Lukk: start fra nåværende høyde og gå til 0
+                const currentHeight = moreInfo.scrollHeight + "px";
+                moreInfo.style.height = currentHeight;
+            
+                requestAnimationFrame(() => {
+                moreInfo.style.height = "0px";
+                });
             }
-            });
+
+            if (!quillisGanarated) {
+                const noteservicequill = serviceElement.querySelector(".noteservicequill");
+                if (noteservicequill) {
+                    // Initialize Quill editor for notes
+                    const quill = new Quill(noteservicequill, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: true // Viktig for at den skal bli generert
+                    }
+                    });
+                    quillisGanarated = true; // Sett variabelen til true når Quill er generert
+                    
+                    // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
+                    setTimeout(() => {
+                        quill.clipboard.dangerouslyPasteHTML(service.note || "");
+                        }, 0);
+                    
+                    let lastNoteContent = quill.root.innerHTML;
             
-            // 3. Lim inn eksisterende HTML-basert notat (kan inneholde <br> osv.)
-        setTimeout(() => {
-            quill.clipboard.dangerouslyPasteHTML(service.note || "");
-            }, 0);
-            
-            let lastNoteContent = quill.root.innerHTML;
-    
-            quill.root.addEventListener("blur", function () {
-              let noteContent = quill.root.innerHTML;
-            
-              if (noteContent !== lastNoteContent) {
-                lastNoteContent = noteContent;
-                service.note = noteContent;
-                let data = { note: noteContent };
-                sendEditServiceToServer(service, data);
-              }
-            });
-            
-        }
+                    quill.root.addEventListener("blur", function () {
+                    let noteContent = quill.root.innerHTML;
+                    
+                    if (noteContent !== lastNoteContent) {
+                        lastNoteContent = noteContent;
+                        service.note = noteContent;
+                        let data = { note: noteContent };
+                        sendEditServiceToServer(service, data);
+                    }
+
+                    });
+                    
+                }
+            }
+
 
         });
     }

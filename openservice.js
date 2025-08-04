@@ -620,6 +620,9 @@ function makeNewService(itemElement, item, service,serviceelement) {
         status = "Påminnet";
     }
 
+    //standard tid
+    let duration = 120; // Standard varighet i minutter
+
     let userid = gUser.rawid || "";
 
     let body = {
@@ -627,7 +630,8 @@ function makeNewService(itemElement, item, service,serviceelement) {
         status: status,
         user: [userid],
         date: startDate,
-        type: [serviceType] // Standard Årsservicetype hvis ikke spesifisert
+        type: [serviceType], // Standard Årsservicetype hvis ikke spesifisert
+        duration: duration // Standard varighet
     };
 
     const elementLibrary = document.getElementById("elementlibrary");

@@ -623,6 +623,11 @@ function makeNewService(itemElement, item, service,serviceelement) {
     //standard tid
     let duration = 120; // Standard varighet i minutter
 
+    //kalkuler enddate - startdate + duration
+    let endDate = new Date(new Date(startDate).getTime() + duration * 60 * 1000); // Legg til varighet i minutter
+
+
+
     let userid = gUser.rawid || "";
 
     let body = {
@@ -630,6 +635,7 @@ function makeNewService(itemElement, item, service,serviceelement) {
         status: status,
         user: [userid],
         date: startDate,
+        enddate: endDate.toISOString(), // Legg til enddate i ISO-format
         type: [serviceType], // Standard Årsservicetype hvis ikke spesifisert
         duration: duration // Standard varighet
     };
@@ -796,9 +802,9 @@ function creatCalendarEventObject(service) {
     
   
     const startDate = new Date(service.date);
-    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+    const endDate = service.enddate || new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
   
-    const reminderMinutesBefore = 2880;
+    const reminderMinutesBefore = 2880; // 2 dager før
   
     const address = service.address || currentCustomer.address || "";
     const postalCode = service.postcode || currentCustomer.postcode || "";

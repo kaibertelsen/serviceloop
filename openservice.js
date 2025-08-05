@@ -456,7 +456,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
         const borderColor = statusObj ? statusObj.color : "gray";
 
-        serviceElement.style.borderLeft = `6px solid ${borderColor}`;
+        serviceElement.style.borderLeft = `10px solid ${borderColor}`;
         serviceElement.style.borderTop = `2px solid ${borderColor}`;
         serviceElement.style.borderRight = `2px solid ${borderColor}`;
         serviceElement.style.borderBottom = `2px solid ${borderColor}`;

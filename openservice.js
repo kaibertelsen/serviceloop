@@ -452,10 +452,15 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     
 
 
-    // Sett border på høyre side av systemelement basert på siste status
-    const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
+    // Finn riktig statusobjekt
+    const statusObj = statusService.find(status => status.value.toLowerCase() === selectedStatus.toLowerCase());
     const borderColor = statusObj ? statusObj.color : "gray";
-    serviceElement.style.borderLeft = `6px solid ${borderColor}`;
+
+    // Sett kantfarger
+    serviceElement.style.borderLeft = `10px solid ${borderColor}`;
+    serviceElement.style.borderTop = `2px solid ${borderColor}`;
+    serviceElement.style.borderRight = `2px solid ${borderColor}`;
+    serviceElement.style.borderBottom = `2px solid ${borderColor}`;
 
     //deleteknapp
     const deleteservicebutton = serviceElement.querySelector(".deleteservicebutton");

@@ -263,10 +263,15 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 let data = {status: selectedStatus};
                 sendEditServiceToServer(service, data);
 
-                //sett riktig bordercolor på serviceelementet
+               // Finn riktig statusobjekt
                 const statusObj = statusService.find(status => status.value.toLowerCase() === selectedStatus.toLowerCase());
                 const borderColor = statusObj ? statusObj.color : "gray";
-                serviceElement.style.borderLeft = `6px solid ${borderColor}`;
+
+                // Sett kantfarger
+                serviceElement.style.borderLeft = `10px solid ${borderColor}`;
+                serviceElement.style.borderTop = `2px solid ${borderColor}`;
+                serviceElement.style.borderRight = `2px solid ${borderColor}`;
+                serviceElement.style.borderBottom = `2px solid ${borderColor}`;
 
                 // Oppdater lastservice datoen
                 const lastServiceLabel = itemElement.querySelector(".lastservicelable");
@@ -1034,10 +1039,8 @@ function formatDateAndTimeReadable(isoDateStr) {
     const shortYear = String(date.getFullYear()).slice(-2); // f.eks. "25"
   
     return `${day}. ${month} ${hours}:${minutes} (${shortYear})`;
-  }
+}
   
-  
-
 function toLocalInputString(date) {
     const pad = n => String(n).padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;

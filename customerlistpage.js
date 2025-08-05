@@ -22,7 +22,7 @@ let createnewcustomer = document.getElementById("createNewCustomerButton");
 if (createnewcustomer) {
     createnewcustomer.addEventListener("click", function () {
         // Vis f.eks. et popup-skjema hvor en kan angi kundenavn
-    const modelName = prompt("Skriv inn navnet på den nye modellen:");
+    const modelName = prompt("Skriv inn navnet på den nye kunden:");
     if (!modelName) {
         alert("Kundenavnet kan ikke være tomt.");
         return;

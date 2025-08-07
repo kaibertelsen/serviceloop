@@ -558,11 +558,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                             
                             // Sett HTML inn i Quill-editor
                             loadHtmlTemplateToQuill(template, datareport, quill);
-
-                            // Oppdater og lagre rapport
-                            service.report = quill.root.innerHTML;
-                            const data = { report: service.report };
-                            sendEditServiceToServer(service, data);
                         });
                     }
 

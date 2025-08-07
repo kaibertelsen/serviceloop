@@ -505,6 +505,30 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         }
 
                     });
+
+                    // sette malvelger
+                    const malselector = serviceElement.querySelector(".servicemal");
+                    if (malselector) {
+                        malselector.addEventListener("change", () => {
+                            const selectedValue = malselector.value;
+                            const template = serviceTemplates[selectedValue];
+
+                            if (template) {
+
+                                loadHtmlTemplateToQuill(template, customer, quill);
+
+                                // Oppdater også service.report direkte (valgfritt)
+                                service.report = quill.root.innerHTML;
+                                let data = { report: service.report };
+                                sendEditServiceToServer(service, data);
+                            } else {
+                                console.warn("❌ Ingen mal funnet for valgt verdi:", selectedValue);
+                            }
+                        });
+                    }
+
+
+
                     
                 }
 
@@ -517,16 +541,17 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     }
     
     
+    
 
 
-        // Sett border på alle sider av serviceElement basert på siste status
-        const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
-        const borderColor = statusObj ? statusObj.color : "gray";
+    // Sett border på alle sider av serviceElement basert på siste status
+    const statusObj = statusService.find(status => status.value.toLowerCase() === (service.status || "").toLowerCase());
+    const borderColor = statusObj ? statusObj.color : "gray";
 
-        serviceElement.style.borderLeft = `10px solid ${borderColor}`;
-        serviceElement.style.borderTop = `2px solid ${borderColor}`;
-        serviceElement.style.borderRight = `2px solid ${borderColor}`;
-        serviceElement.style.borderBottom = `2px solid ${borderColor}`;
+    serviceElement.style.borderLeft = `10px solid ${borderColor}`;
+    serviceElement.style.borderTop = `2px solid ${borderColor}`;
+    serviceElement.style.borderRight = `2px solid ${borderColor}`;
+    serviceElement.style.borderBottom = `2px solid ${borderColor}`;
 
 
     //deleteknapp

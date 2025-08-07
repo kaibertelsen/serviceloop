@@ -91,27 +91,28 @@ function parseItemJson(jsonArray) {
 function parseCustomerJsonArray(jsonArray) {
     return jsonArray.map((item, index) => {
       try {
-        // Hvis item er en streng, rens og parse
+        // Parse bare hvis item er streng
         let customer;
         if (typeof item === "string") {
           item = item.replace(/\uFEFF/g, "");
-          customer = JSON.parse(item);
+          customer = JSON.parse(item);  // Feiler kun hvis JSON er ugyldig
         } else if (typeof item === "object" && item !== null) {
-          customer = item; // Allerede et objekt
+          customer = item; // Allerede parset
         } else {
-          throw new Error("Element er verken streng eller objekt");
+          throw new Error("Ugyldig input: forventet streng eller objekt");
         }
   
-        // Hvis customer har system-array
+        // Rens system/notes/report
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
-            // Sikre at 'notes' og 'report' i system og service er strenger
             if (typeof sys.notes !== "string") sys.notes = sys.notes ?? "";
-  
             if (Array.isArray(sys.service)) {
               sys.service.forEach(service => {
                 if (typeof service.report !== "string") {
                   service.report = service.report ?? "";
+                }
+                if (typeof service.note !== "string") {
+                  service.note = service.note ?? "";
                 }
               });
             }
@@ -124,7 +125,8 @@ function parseCustomerJsonArray(jsonArray) {
         return null;
       }
     }).filter(Boolean);
-}
+  }
+  
   
   
 function convertJSONArrayToObject(array) {

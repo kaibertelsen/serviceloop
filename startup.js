@@ -110,21 +110,21 @@ function parseCustomerJsonArray(jsonArray) {
     jsonArray.forEach((item, index) => {
       console.log(`➡️ Behandler element ${index}, type: ${typeof item}`);
   
-      if (typeof item !== "string") {
+    if (typeof item !== "string") {
         console.warn(`⚠️ Element ${index} er ikke en streng, hopper over.`);
         return;
-      }
+    }
   
       const cleanItem = item.replace(/\uFEFF/g, "");
   
-      if (!isValidJsonString(cleanItem)) {
+    if (!isValidJsonString(cleanItem)) {
         console.error(`❌ Element ${index} er ikke gyldig JSON.`);
         console.log("🔍 Ugyldig item:", cleanItem);
-        return;
-      }
+    }else{
+        const fixed = tryFixJsonString(item);
+    }
   
       try {
-        const fixed = tryFixJsonString(item);
         const customer = JSON.parse(fixed);
   
         // Rens system og service om nødvendig

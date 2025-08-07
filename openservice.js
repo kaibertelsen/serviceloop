@@ -441,6 +441,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             }
 
             if (!quillisGanarated) {
+
+                //note element
                 const noteservicequill = serviceElement.querySelector(".noteservicequill");
                 if (noteservicequill) {
                     // Initialize Quill editor for notes
@@ -472,6 +474,42 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     });
                     
                 }
+                
+                //Report element
+                const reportservicequill = serviceElement.querySelector(".reportservicequill");
+                if (reportservicequill) {
+                    // Initialize Quill editor for report
+                    const quill = new Quill(reportservicequill, {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: true // Viktig for at den skal bli generert
+                        }
+                    });
+                    quillisGanarated = true; // Sett variabelen til true når Quill er generert
+                    
+                    // 3. Lim inn eksisterende HTML-basert rapport (kan inneholde <br> osv.)
+                    setTimeout(() => {
+                        quill.clipboard.dangerouslyPasteHTML(service.report || "");
+                        }, 0);
+                    
+                    let lastReportContent = quill.root.innerHTML;
+            
+                    quill.root.addEventListener("blur", function () {
+                        let reportContent = quill.root.innerHTML;
+                        
+                        if (reportContent !== lastReportContent) {
+                            lastReportContent = reportContent;
+                            service.report = reportContent;
+                            let data = { report: reportContent };
+                            sendEditServiceToServer(service, data);
+                        }
+
+                    });
+                    
+                }
+
+
+
             }
 
 

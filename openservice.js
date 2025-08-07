@@ -839,12 +839,11 @@ function creatCalendarEventObject(service) {
     `;
     
     
-  
+
     const startDate = new Date(service.date);
     let endDate = new Date(startDate);
     endDate.setMinutes(endDate.getMinutes() + Number(service.duration)); // Legg til varighet i minutter
-    service.enddate = endDate.toISOString(); // Oppdater enddate i ISO-format
-    const endDatem =  endDate || new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+    const endDatem =  endDate.toISOString() || new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
   
     const reminderMinutesBefore = 2880; // 2 dager før
   

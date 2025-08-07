@@ -64,36 +64,36 @@ const serviceTemplates = {
     `,
   
     "3": `
-      <h2 style="color: #333;">Servicerapport – Ventilasjon</h2>
-      <p><strong>Dato:</strong> {{dato}}</p>
-  
-      <h3 style="margin-top: 20px;">Kundeinformasjon</h3>
-      <p>
-        <strong>Navn:</strong> {{kundenavn}}<br>
-        <strong>Adresse:</strong> {{adresse}}, {{postnummer}} {{poststed}}<br>
-        <strong>Telefon:</strong> {{telefon}}<br>
-        <strong>E-post:</strong> {{epost}}
-      </p>
-  
-      <h3 style="margin-top: 20px;">Systeminformasjon</h3>
-      <p>
-        <strong>Systemnavn:</strong> {{systemnavn}}<br>
-        <strong>Systemtype:</strong> {{systemTypeName}}<br>
-        <strong>Serienummer:</strong> {{serienummer}}<br>
-        <strong>Plassering:</strong> {{plassering}}
-      </p>
-  
-      <h3 style="margin-top: 20px;">Utførte oppgaver</h3>
-      <ol>
+    <p><strong>Servicerapport – Ventilasjon</strong></p>
+    <p>Dato: {{dato}}</p>
+    <p><br></p>
+
+    <p><strong>Kundeinformasjon</strong></p>
+    <p>Navn: <strong>{{kundenavn}}</strong></p>
+    <p>Adresse: {{adresse}}, {{postnummer}} {{poststed}}</p>
+    <p>Telefon: {{telefon}}</p>
+    <p>E-post: {{epost}}</p>
+    <p><br></p>
+
+    <p><strong>Systeminformasjon</strong></p>
+    <p>Systemnavn: {{systemnavn}}</p>
+    <p>Systemtype: {{systemTypeName}}</p>
+    <p>Serienummer: {{serienummer}}</p>
+    <p>Plassering: {{plassering}}</p>
+    <p><br></p>
+
+    <p><strong>Utførte oppgaver</strong></p>
+    <ol>
         <li>Filterbytte og rens av luftinntak og avkast</li>
         <li>Kontroll av aggregat og viftesystem</li>
         <li>Måling og justering av luftmengder</li>
         <li>Inspeksjon av kanalsystem og ventiler</li>
         <li>Funksjonstest og feilretting ved behov</li>
-      </ol>
-  
-      <h3 style="margin-top: 20px;">Utført av</h3>
-      <p><strong>Tekniker:</strong> {{teknikernavn}}</p>
+    </ol>
+    <p><br></p>
+
+    <p><strong>Utført av</strong></p>
+    <p>Tekniker: {{teknikernavn}}</p>
     `
   };
   

@@ -373,6 +373,29 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         );
     } 
 
+    const durationInput = serviceElement.querySelector(".editdurationservice");
+
+    if (durationInput) {
+        // Sørg for at initial value alltid er en streng som matcher en <option value="...">
+        const initialDuration = parseInt(service.duration, 10); // konverter til tall
+        durationInput.value = !isNaN(initialDuration) ? initialDuration.toString() : "120";
+
+        durationInput.addEventListener("change", function () {
+            const newDuration = parseInt(durationInput.value, 10);
+
+            if (!isNaN(newDuration)) {
+                // Oppdater både som number og send til server
+                service.duration = newDuration;
+
+                const data = { duration: newDuration };
+                sendEditServiceToServer(service, data);
+            }
+        });
+    }
+
+
+
+
     //åpner mer informasjon på service
     const moreInfo = serviceElement.querySelector(".moreserviceinfo");
     if (moreInfo) {

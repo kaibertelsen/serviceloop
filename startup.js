@@ -88,7 +88,6 @@ function parseItemJson(jsonArray) {
 
 function isValidJsonString(str) {
     if (typeof str !== "string") return false;
-  
     try {
       JSON.parse(str);
       return true;
@@ -96,61 +95,78 @@ function isValidJsonString(str) {
       return false;
     }
   }
-
+  
   function tryFixJsonString(str) {
-    // Escape " inne i HTML-attributter
-    return str.replace(/"([^":,{\\[\]}]+?)":/g, (match) => match) // hopp over nøkler
-              .replace(/<a href="(.*?)"/g, '<a href=\\"$1\\"')
-              .replace(/ target="_blank"/g, ' target=\\"_blank\\"');
+    // Escape " inne i HTML <a href="..."> og target="..."
+    return str
+      .replace(/<a href="(.*?)"/g, '<a href=\\"$1\\"')
+      .replace(/ target="_blank"/g, ' target=\\"_blank\\"');
   }
   
-function parseCustomerJsonArray(jsonArray) {
+  function parseCustomerJsonArray(jsonArray) {
     const parsedCustomers = [];
   
     jsonArray.forEach((item, index) => {
       console.log(`➡️ Behandler element ${index}, type: ${typeof item}`);
   
-    if (typeof item !== "string") {
+      if (typeof item !== "string") {
         console.warn(`⚠️ Element ${index} er ikke en streng, hopper over.`);
         return;
-    }
+      }
   
       const cleanItem = item.replace(/\uFEFF/g, "");
   
-    if (!isValidJsonString(cleanItem)) {
-        console.error(`❌ Element ${index} er ikke gyldig JSON.`);
-        console.log("🔍 Ugyldig item:", cleanItem);
-    }else{
-        const fixed = tryFixJsonString(item);
-    }
+      let customer;
   
-      try {
-        const customer = JSON.parse(fixed);
-  
-        // Rens system og service om nødvendig
-        if (Array.isArray(customer.system)) {
-          customer.system.forEach(sys => {
-            if (typeof sys.notes !== "string") sys.notes = sys.notes ?? "";
-  
-            if (Array.isArray(sys.service)) {
-              sys.service.forEach(service => {
-                if (typeof service.report !== "string") service.report = service.report ?? "";
-                if (typeof service.note !== "string") service.note = service.note ?? "";
-              });
-            }
-          });
+      // Første forsøk: parse direkte
+      if (isValidJsonString(cleanItem)) {
+        try {
+          customer = JSON.parse(cleanItem);
+          console.log(`✅ Element ${index} parsed OK (uten fix).`);
+        } catch (err) {
+          console.error(`❌ Parsing-feil på index ${index} selv om valid:`, err.message);
+          return;
         }
+      } else {
+        // Forsøk å fikse og parse på nytt
+        const fixed = tryFixJsonString(cleanItem);
   
-        parsedCustomers.push(customer);
-        console.log(`✅ Element ${index} parsed OK:`, customer.name);
-      } catch (err) {
-        console.error(`❌ Parsing-feil etter validering på index ${index}: ${err.message}`);
-        console.log("🔍 Item:", cleanItem);
+        if (isValidJsonString(fixed)) {
+          try {
+            customer = JSON.parse(fixed);
+            console.log(`✅ Element ${index} parsed OK etter fix.`);
+          } catch (err) {
+            console.error(`❌ Parsing-feil etter fix på index ${index}:`, err.message);
+            console.log("🔍 Item:", fixed);
+            return;
+          }
+        } else {
+          console.error(`❌ Element ${index} er ikke gyldig JSON – selv etter fix.`);
+          console.log("🔍 Ugyldig item:", cleanItem);
+          return;
+        }
       }
+  
+      // Rens system og service om nødvendig
+      if (Array.isArray(customer.system)) {
+        customer.system.forEach(sys => {
+          if (typeof sys.notes !== "string") sys.notes = sys.notes ?? "";
+  
+          if (Array.isArray(sys.service)) {
+            sys.service.forEach(service => {
+              if (typeof service.report !== "string") service.report = service.report ?? "";
+              if (typeof service.note !== "string") service.note = service.note ?? "";
+            });
+          }
+        });
+      }
+  
+      parsedCustomers.push(customer);
     });
   
     return parsedCustomers;
-}
+  }
+  
   
 
 

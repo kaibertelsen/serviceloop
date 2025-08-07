@@ -1,10 +1,9 @@
 const serviceTemplates = {
     "1": `
-      <h2>Servicerapport – Varmeanlegg</h2>
-  
+      <h2 style="color: #333;">Servicerapport – Varmeanlegg</h2>
       <p><strong>Dato:</strong> {{dato}}</p>
   
-      <h3>Kundeinformasjon</h3>
+      <h3 style="margin-top: 20px;">Kundeinformasjon</h3>
       <p>
         <strong>Navn:</strong> {{kundenavn}}<br>
         <strong>Adresse:</strong> {{adresse}}, {{postnummer}} {{poststed}}<br>
@@ -12,7 +11,7 @@ const serviceTemplates = {
         <strong>E-post:</strong> {{epost}}
       </p>
   
-      <h3>Systeminformasjon</h3>
+      <h3 style="margin-top: 20px;">Systeminformasjon</h3>
       <p>
         <strong>Systemnavn:</strong> {{systemnavn}}<br>
         <strong>Systemtype:</strong> {{systemTypeName}}<br>
@@ -20,32 +19,24 @@ const serviceTemplates = {
         <strong>Plassering:</strong> {{plassering}}
       </p>
   
-      <h3>Utførte oppgaver</h3>
-      <ul>
-        <li>Visuell inspeksjon av komponenter</li>
-        <li>Rens av filter og varmesentral</li>
+      <h3 style="margin-top: 20px;">Utførte oppgaver</h3>
+      <ol>
+        <li>Visuell kontroll av varmeanlegg</li>
+        <li>Rens av filter og varmeveksler</li>
         <li>Trykktest og lekkasjekontroll</li>
-        <li>Funksjonstest og justering</li>
-      </ul>
+        <li>Sjekk av sirkulasjon og ventiler</li>
+        <li>Funksjonstest og innstillinger</li>
+      </ol>
   
-      <h3>Kommentarer</h3>
-      <p>{{kommentarer}}</p>
-  
-      <h3>Utført av</h3>
-      <p>
-        <strong>Tekniker:</strong> {{teknikernavn}}<br>
-        <strong>Firma:</strong> {{firmanavn}}<br>
-        <strong>Dokumentnr:</strong> {{dokumentnr}}<br>
-        <strong>Revisjon:</strong> {{revisjon}}
-      </p>
+      <h3 style="margin-top: 20px;">Utført av</h3>
+      <p><strong>Tekniker:</strong> {{teknikernavn}}</p>
     `,
   
     "2": `
-      <h2>Servicerapport – Sanitæranlegg</h2>
-  
+      <h2 style="color: #333;">Servicerapport – Sanitæranlegg</h2>
       <p><strong>Dato:</strong> {{dato}}</p>
   
-      <h3>Kundeinformasjon</h3>
+      <h3 style="margin-top: 20px;">Kundeinformasjon</h3>
       <p>
         <strong>Navn:</strong> {{kundenavn}}<br>
         <strong>Adresse:</strong> {{adresse}}, {{postnummer}} {{poststed}}<br>
@@ -53,38 +44,30 @@ const serviceTemplates = {
         <strong>E-post:</strong> {{epost}}
       </p>
   
-      <h3>Systeminformasjon</h3>
+      <h3 style="margin-top: 20px;">Systeminformasjon</h3>
       <p>
         <strong>Systemtype:</strong> {{systemTypeName}}<br>
         <strong>Plassering:</strong> {{plassering}}
       </p>
   
-      <h3>Utførte oppgaver</h3>
-      <ul>
-        <li>Inspeksjon av rør og komponenter</li>
-        <li>Kontroll for lekkasjer</li>
-        <li>Test av ventiler og kraner</li>
-        <li>Funksjonstest og dokumentasjon</li>
-      </ul>
+      <h3 style="margin-top: 20px;">Utførte oppgaver</h3>
+      <ol>
+        <li>Inspeksjon av sanitæranlegg og rørføringer</li>
+        <li>Kontroll av lekkasjer og trykk</li>
+        <li>Funksjonstest av ventiler og kraner</li>
+        <li>Rens av sluk og avløp ved behov</li>
+        <li>Eventuelle tilpasninger eller anbefalinger</li>
+      </ol>
   
-      <h3>Kommentarer</h3>
-      <p>{{kommentarer}}</p>
-  
-      <h3>Utført av</h3>
-      <p>
-        <strong>Tekniker:</strong> {{teknikernavn}}<br>
-        <strong>Firma:</strong> {{firmanavn}}<br>
-        <strong>Dokumentnr:</strong> {{dokumentnr}}<br>
-        <strong>Revisjon:</strong> {{revisjon}}
-      </p>
+      <h3 style="margin-top: 20px;">Utført av</h3>
+      <p><strong>Tekniker:</strong> {{teknikernavn}}</p>
     `,
   
     "3": `
-      <h2>Servicerapport – Ventilasjon</h2>
-  
+      <h2 style="color: #333;">Servicerapport – Ventilasjon</h2>
       <p><strong>Dato:</strong> {{dato}}</p>
   
-      <h3>Kundeinformasjon</h3>
+      <h3 style="margin-top: 20px;">Kundeinformasjon</h3>
       <p>
         <strong>Navn:</strong> {{kundenavn}}<br>
         <strong>Adresse:</strong> {{adresse}}, {{postnummer}} {{poststed}}<br>
@@ -92,7 +75,7 @@ const serviceTemplates = {
         <strong>E-post:</strong> {{epost}}
       </p>
   
-      <h3>Systeminformasjon</h3>
+      <h3 style="margin-top: 20px;">Systeminformasjon</h3>
       <p>
         <strong>Systemnavn:</strong> {{systemnavn}}<br>
         <strong>Systemtype:</strong> {{systemTypeName}}<br>
@@ -100,26 +83,20 @@ const serviceTemplates = {
         <strong>Plassering:</strong> {{plassering}}
       </p>
   
-      <h3>Utførte oppgaver</h3>
-      <ul>
-        <li>Bytte og rens av filtre</li>
-        <li>Test av vifter og elektronikk</li>
-        <li>Luftmålinger og justering</li>
-        <li>Kontroll av aggregat og kanaler</li>
-      </ul>
+      <h3 style="margin-top: 20px;">Utførte oppgaver</h3>
+      <ol>
+        <li>Filterbytte og rens av luftinntak og avkast</li>
+        <li>Kontroll av aggregat og viftesystem</li>
+        <li>Måling og justering av luftmengder</li>
+        <li>Inspeksjon av kanalsystem og ventiler</li>
+        <li>Funksjonstest og feilretting ved behov</li>
+      </ol>
   
-      <h3>Kommentarer</h3>
-      <p>{{kommentarer}}</p>
-  
-      <h3>Utført av</h3>
-      <p>
-        <strong>Tekniker:</strong> {{teknikernavn}}<br>
-        <strong>Firma:</strong> {{firmanavn}}<br>
-        <strong>Dokumentnr:</strong> {{dokumentnr}}<br>
-        <strong>Revisjon:</strong> {{revisjon}}
-      </p>
+      <h3 style="margin-top: 20px;">Utført av</h3>
+      <p><strong>Tekniker:</strong> {{teknikernavn}}</p>
     `
-  }
+  };
+  
   
   
   

@@ -841,8 +841,8 @@ function creatCalendarEventObject(service) {
     
   
     const startDate = new Date(service.date);
-    let endDate = new Date(service.date);
-    endDate.setMinutes(endDate.getMinutes() + newDuration); // Legg til varighet i minutter
+    let endDate = new Date(startDate);
+    endDate.setMinutes(endDate.getMinutes() + Number(service.duration)); // Legg til varighet i minutter
     service.enddate = endDate.toISOString(); // Oppdater enddate i ISO-format
     const endDatem =  endDate || new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
   

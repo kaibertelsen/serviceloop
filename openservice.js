@@ -529,16 +529,33 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                                 })
                                 : "(Ukjent dato)";
 
-                            // Sett sammen data til rapport
+                           // Sett sammen data til rapport
                             const datareport = {
-                                dato,
+                                dato: service?.date
+                                ? new Date(service.date).toLocaleDateString("no-NO", { year: 'numeric', month: '2-digit', day: '2-digit' })
+                                : new Date().toLocaleDateString("no-NO", { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                                
                                 kundenavn: customer?.name || "Kunde",
-                                teknikernavn: gUser?.name || "Tekniker",
+                                adresse: customer?.address || "Ukjent adresse",
+                                postnummer: customer?.postcode || "",
+                                poststed: customer?.city || "",
+                                telefon: customer?.phone || "Ukjent telefon",
+                                epost: customer?.email || "Ukjent e-post",
+                            
                                 systemnavn: item?.name || "System",
-                                systemTypeName: item?.system_type_name || "System Type",
+                                systemTypeName: item?.system_type_name || "Systemtype",
+                                serienummer: item?.serial_number || "Ikke oppgitt",
+                                plassering: item?.location || "Ikke spesifisert",
+                            
+                                teknikernavn: gUser?.name || "Tekniker",
+                                firmanavn: gUser?.company || "Firma",
+                            
+                                dokumentnr: service?.nr || "Ukjent",
+                                revisjon: "1.0",
+                            
                                 kommentarer: service?.note || ""
                             };
-
+                            
                             // Sett HTML inn i Quill-editor
                             loadHtmlTemplateToQuill(template, datareport, quill);
 

@@ -64,36 +64,7 @@ const serviceTemplates = {
     `,
   
     "3": `
-    <p><strong>Servicerapport – Ventilasjon</strong></p>
-    <p>Dato: {{dato}}</p>
-    <p><br></p>
-
-    <p><strong>Kundeinformasjon</strong></p>
-    <p>Navn: <strong>{{kundenavn}}</strong></p>
-    <p>Adresse: {{adresse}}, {{postnummer}} {{poststed}}</p>
-    <p>Telefon: {{telefon}}</p>
-    <p>E-post: {{epost}}</p>
-    <p><br></p>
-
-    <p><strong>Systeminformasjon</strong></p>
-    <p>Systemnavn: {{systemnavn}}</p>
-    <p>Systemtype: {{systemTypeName}}</p>
-    <p>Serienummer: {{serienummer}}</p>
-    <p>Plassering: {{plassering}}</p>
-    <p><br></p>
-
-    <p><strong>Utførte oppgaver</strong></p>
-    <ol>
-        <li>Filterbytte og rens av luftinntak og avkast</li>
-        <li>Kontroll av aggregat og viftesystem</li>
-        <li>Måling og justering av luftmengder</li>
-        <li>Inspeksjon av kanalsystem og ventiler</li>
-        <li>Funksjonstest og feilretting ved behov</li>
-    </ol>
-    <p><br></p>
-
-    <p><strong>Utført av</strong></p>
-    <p>Tekniker: {{teknikernavn}}</p>
+    <p>Servicerapport – Ventilasjon</p><p>Dato: 05.08.2026</p><p><br></p><p><strong>Kundeinformasjon</strong></p><p>Navn: <strong>ABK-Qviller AS -</strong></p><p>Adresse: Postboks 64 Vollebek, 0516 OSLO</p><p>Telefon: 92233479</p><p>E-post: Ukjent e-post</p><p><br></p><p><strong>Systeminformasjon</strong></p><p>Systemnavn: Gulvvarme</p><p>Systemtype: Systemtype</p><p>Serienummer: Ikke oppgitt</p><p>Plassering: Ikke spesifisert</p><p><br></p><p><strong>Utførte oppgaver</strong></p><ol><li>Filterbytte og rens av luftinntak og avkast</li><li>Kontroll av aggregat og viftesystem</li><li>Måling og justering av luftmengder</li><li>Inspeksjon av kanalsystem og ventiler</li><li>Funksjonstest og feilretting ved behov</li></ol><p><br></p><p><strong>Utført av</strong></p><p>Tekniker: Kai</p>
     `
   };
   

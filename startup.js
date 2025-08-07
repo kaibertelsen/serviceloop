@@ -96,8 +96,14 @@ function parseCustomerJsonArray(jsonArray) {
   
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
+            // Sikre at 'notes' er en streng
             if (typeof sys.notes !== "string") {
               sys.notes = sys.notes == null ? "" : String(sys.notes);
+            }
+  
+            // Sikre at 'report' er en streng
+            if (typeof sys.report !== "string") {
+              sys.report = sys.report == null ? "" : String(sys.report);
             }
           });
         }
@@ -108,7 +114,8 @@ function parseCustomerJsonArray(jsonArray) {
         return null;
       }
     }).filter(Boolean);
-}
+  }
+  
   
 
 

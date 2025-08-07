@@ -386,8 +386,14 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
             if (!isNaN(newDuration)) {
                 // Oppdater både som number og send til server
                 service.duration = newDuration;
+                let endDate = new Date(service.date);
+                endDate.setMinutes(endDate.getMinutes() + newDuration); // Legg til varighet i minutter
+                service.enddate = endDate.toISOString(); // Oppdater enddate i ISO-format
 
-                const data = { duration: newDuration };
+                const data = { 
+                    duration: newDuration,
+                    enddate: service.enddate // Send oppdatert enddate
+                };
                 sendEditServiceToServer(service, data);
             }
         });

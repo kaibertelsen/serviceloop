@@ -86,24 +86,34 @@ function parseItemJson(jsonArray) {
 }
 
 
+
+
 function parseCustomerJsonArray(jsonArray) {
-    return jsonArray.map((jsonString, index) => {
+    return jsonArray.map((item, index) => {
       try {
-        // Fjern evt. Byte Order Mark (BOM) og usynlige tegn
-        jsonString = jsonString.replace(/\uFEFF/g, "");
+        // Hvis item er en streng, rens og parse
+        let customer;
+        if (typeof item === "string") {
+          item = item.replace(/\uFEFF/g, "");
+          customer = JSON.parse(item);
+        } else if (typeof item === "object" && item !== null) {
+          customer = item; // Allerede et objekt
+        } else {
+          throw new Error("Element er verken streng eller objekt");
+        }
   
-        const customer = JSON.parse(jsonString);
-  
+        // Hvis customer har system-array
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
-            // Sikre at 'notes' er en streng
-            if (typeof sys.notes !== "string") {
-              sys.notes = sys.notes == null ? "" : String(sys.notes);
-            }
+            // Sikre at 'notes' og 'report' i system og service er strenger
+            if (typeof sys.notes !== "string") sys.notes = sys.notes ?? "";
   
-            // Sikre at 'report' er en streng
-            if (typeof sys.report !== "string") {
-              sys.report = sys.report == null ? "" : String(sys.report);
+            if (Array.isArray(sys.service)) {
+              sys.service.forEach(service => {
+                if (typeof service.report !== "string") {
+                  service.report = service.report ?? "";
+                }
+              });
             }
           });
         }
@@ -114,11 +124,9 @@ function parseCustomerJsonArray(jsonArray) {
         return null;
       }
     }).filter(Boolean);
-  }
+}
   
   
-
-
 function convertJSONArrayToObject(array) {
     let result = [];
     array.forEach(item => {

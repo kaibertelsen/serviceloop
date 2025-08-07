@@ -86,27 +86,44 @@ function parseItemJson(jsonArray) {
 }
 
 
-
-
+function isValidJsonString(str) {
+    if (typeof str !== "string") return false;
+  
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  
 function parseCustomerJsonArray(jsonArray) {
-    return jsonArray.map((item, index) => {
+    const parsedCustomers = [];
+  
+    jsonArray.forEach((item, index) => {
+      console.log(`➡️ Behandler element ${index}, type: ${typeof item}`);
+  
+      if (typeof item !== "string") {
+        console.warn(`⚠️ Element ${index} er ikke en streng, hopper over.`);
+        return;
+      }
+  
+      const cleanItem = item.replace(/\uFEFF/g, "");
+  
+      if (!isValidJsonString(cleanItem)) {
+        console.error(`❌ Element ${index} er ikke gyldig JSON.`);
+        console.log("🔍 Ugyldig item:", cleanItem);
+        return;
+      }
+  
       try {
-        let customer;
+        const customer = JSON.parse(cleanItem);
   
-        if (typeof item !== "string") {
-          throw new Error("Forventet streng");
-        }
-  
-        // Fjern BOM
-        item = item.replace(/\uFEFF/g, "");
-  
-        // Dobbelt JSON.parse
-        customer = JSON.parse(JSON.parse(item));
-  
-        // Sikre at note/report er strenger
+        // Rens system og service om nødvendig
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
             if (typeof sys.notes !== "string") sys.notes = sys.notes ?? "";
+  
             if (Array.isArray(sys.service)) {
               sys.service.forEach(service => {
                 if (typeof service.report !== "string") service.report = service.report ?? "";
@@ -116,17 +133,19 @@ function parseCustomerJsonArray(jsonArray) {
           });
         }
   
-        return customer;
+        parsedCustomers.push(customer);
+        console.log(`✅ Element ${index} parsed OK:`, customer.name);
       } catch (err) {
-        console.warn(`❌ Parsing-feil på index ${index}:`, err.message);
-        return null;
+        console.error(`❌ Parsing-feil etter validering på index ${index}: ${err.message}`);
+        console.log("🔍 Item:", cleanItem);
       }
-    }).filter(Boolean);
-  }
+    });
   
+    return parsedCustomers;
+}
   
-  
-  
+
+
   
 function convertJSONArrayToObject(array) {
     let result = [];

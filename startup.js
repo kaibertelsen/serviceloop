@@ -96,6 +96,13 @@ function isValidJsonString(str) {
       return false;
     }
   }
+
+  function tryFixJsonString(str) {
+    // Escape " inne i HTML-attributter
+    return str.replace(/"([^":,{\\[\]}]+?)":/g, (match) => match) // hopp over nøkler
+              .replace(/<a href="(.*?)"/g, '<a href=\\"$1\\"')
+              .replace(/ target="_blank"/g, ' target=\\"_blank\\"');
+  }
   
 function parseCustomerJsonArray(jsonArray) {
     const parsedCustomers = [];
@@ -117,7 +124,8 @@ function parseCustomerJsonArray(jsonArray) {
       }
   
       try {
-        const customer = JSON.parse(cleanItem);
+        const fixed = tryFixJsonString(item);
+        const customer = JSON.parse(fixed);
   
         // Rens system og service om nødvendig
         if (Array.isArray(customer.system)) {

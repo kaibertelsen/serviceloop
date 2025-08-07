@@ -812,7 +812,7 @@ function sendEditServiceToServer(service, data) {
 
 
     //hvis det er date eller status som er endret, så må vi oppdatere kalenderhendelsen
-    if (data.date || data.status || data.user || data.type) {
+    if (data.date || data.status || data.user || data.type || data.duration) {
        //denne må også oppdateres i kalenderen etter respons fra airtable
        updateServiceInCalendar = true; // Sett en global variabel for å indikere at vi må oppdatere kalenderen
     }

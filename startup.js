@@ -91,21 +91,30 @@ function parseItemJson(jsonArray) {
 function parseCustomerJsonArray(jsonArray) {
     return jsonArray.map((item, index) => {
       try {
-        // Parse bare hvis item er streng
         let customer;
+  
+        // Fjern BOM
         if (typeof item === "string") {
           item = item.replace(/\uFEFF/g, "");
-          customer = JSON.parse(item);  // Feiler kun hvis JSON er ugyldig
+  
+          // Prøv først å parse én gang
+          customer = JSON.parse(item);
+  
+          // Hvis fortsatt streng, parse en gang til (dobbelt stringifiert)
+          if (typeof customer === "string") {
+            customer = JSON.parse(customer);
+          }
         } else if (typeof item === "object" && item !== null) {
-          customer = item; // Allerede parset
+          customer = item;
         } else {
-          throw new Error("Ugyldig input: forventet streng eller objekt");
+          throw new Error("Ugyldig input – verken streng eller objekt");
         }
   
-        // Rens system/notes/report
+        // Sikre at tekstfelter er strenger
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
             if (typeof sys.notes !== "string") sys.notes = sys.notes ?? "";
+  
             if (Array.isArray(sys.service)) {
               sys.service.forEach(service => {
                 if (typeof service.report !== "string") {
@@ -121,11 +130,12 @@ function parseCustomerJsonArray(jsonArray) {
   
         return customer;
       } catch (err) {
-        console.warn(`❌ Parsing-feil på index ${index}:`, err);
+        console.warn(`❌ Parsing-feil på index ${index}:`, err.message);
         return null;
       }
     }).filter(Boolean);
   }
+  
   
   
   

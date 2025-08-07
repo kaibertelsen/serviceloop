@@ -1,158 +1,126 @@
 const serviceTemplates = {
     "1": `
-      <h1 style="background-color: #4a4a4a; color: white; padding: 12px; text-align: center; font-size: 24px;">
-        Servicerapport – Varmeanlegg
-      </h1>
+      <h2>Servicerapport – Varmeanlegg</h2>
   
-      <h2>1. Introduksjon</h2>
+      <p><strong>Dato:</strong> {{dato}}</p>
+  
+      <h3>Kundeinformasjon</h3>
       <p>
-        Rapporten dokumenterer service på varmeanlegg utført den <strong>{{dato}}</strong>. Målet med servicen er å sikre effektiv drift og optimal ytelse gjennom hele fyringssesongen.
+        <strong>Navn:</strong> {{kundenavn}}<br>
+        <strong>Adresse:</strong> {{adresse}}, {{postnummer}} {{poststed}}<br>
+        <strong>Telefon:</strong> {{telefon}}<br>
+        <strong>E-post:</strong> {{epost}}
       </p>
   
-      <h2>2. Kundeinformasjon</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Navn:</strong></td><td>{{kundenavn}}</td></tr>
-        <tr><td><strong>Adresse:</strong></td><td>{{adresse}}</td></tr>
-        <tr><td><strong>Postnummer/Sted:</strong></td><td>{{postnummer}} {{poststed}}</td></tr>
-        <tr><td><strong>Telefon:</strong></td><td>{{telefon}}</td></tr>
-        <tr><td><strong>E-post:</strong></td><td>{{epost}}</td></tr>
-      </table>
+      <h3>Systeminformasjon</h3>
+      <p>
+        <strong>Systemnavn:</strong> {{systemnavn}}<br>
+        <strong>Systemtype:</strong> {{systemTypeName}}<br>
+        <strong>Serienummer:</strong> {{serienummer}}<br>
+        <strong>Plassering:</strong> {{plassering}}
+      </p>
   
-      <h2>3. Systeminformasjon</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Systemnavn:</strong></td><td>{{systemnavn}}</td></tr>
-        <tr><td><strong>Systemtype:</strong></td><td>{{systemTypeName}}</td></tr>
-        <tr><td><strong>Serienummer:</strong></td><td>{{serienummer}}</td></tr>
-        <tr><td><strong>Plassering:</strong></td><td>{{plassering}}</td></tr>
-      </table>
-  
-      <h2>4. Utførte Oppgaver</h2>
+      <h3>Utførte oppgaver</h3>
       <ul>
-        <li>Visuell inspeksjon av alle komponenter</li>
+        <li>Visuell inspeksjon av komponenter</li>
         <li>Rens av filter og varmesentral</li>
-        <li>Trykktest av anlegget</li>
-        <li>Sjekk av sirkulasjonspumpe og ventiler</li>
-        <li>Funksjonstest og verifisering av innstillinger</li>
+        <li>Trykktest og lekkasjekontroll</li>
+        <li>Funksjonstest og justering</li>
       </ul>
   
-      <h2>5. Kommentarer</h2>
-      <p><br></p>
+      <h3>Kommentarer</h3>
+      <p>{{kommentarer}}</p>
   
-      <h2>6. Utført av</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Tekniker:</strong></td><td>{{teknikernavn}}</td></tr>
-        <tr><td><strong>Firma:</strong></td><td>{{firmanavn}}</td></tr>
-      </table>
-  
-      <hr style="margin-top: 40px;">
-      <p style="font-size: 12px; text-align: center; color: #666;">
-        Dokumentnr: {{dokumentnr}} &nbsp;|&nbsp; Revisjon: {{revisjon}} &nbsp;|&nbsp;
-        Side: 1 av 1 &nbsp;|&nbsp; Dato: {{dato}}
+      <h3>Utført av</h3>
+      <p>
+        <strong>Tekniker:</strong> {{teknikernavn}}<br>
+        <strong>Firma:</strong> {{firmanavn}}<br>
+        <strong>Dokumentnr:</strong> {{dokumentnr}}<br>
+        <strong>Revisjon:</strong> {{revisjon}}
       </p>
     `,
   
     "2": `
-      <h1 style="background-color: #4a4a4a; color: white; padding: 12px; text-align: center; font-size: 24px;">
-        Servicerapport – Sanitæranlegg
-      </h1>
+      <h2>Servicerapport – Sanitæranlegg</h2>
   
-      <h2>1. Introduksjon</h2>
+      <p><strong>Dato:</strong> {{dato}}</p>
+  
+      <h3>Kundeinformasjon</h3>
       <p>
-        Rapporten dokumenterer service på sanitæranlegg den <strong>{{dato}}</strong>. Rapporten inneholder utførte kontroller og vurdering av behov for tiltak.
+        <strong>Navn:</strong> {{kundenavn}}<br>
+        <strong>Adresse:</strong> {{adresse}}, {{postnummer}} {{poststed}}<br>
+        <strong>Telefon:</strong> {{telefon}}<br>
+        <strong>E-post:</strong> {{epost}}
       </p>
   
-      <h2>2. Kundeinformasjon</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Navn:</strong></td><td>{{kundenavn}}</td></tr>
-        <tr><td><strong>Adresse:</strong></td><td>{{adresse}}</td></tr>
-        <tr><td><strong>Postnummer/Sted:</strong></td><td>{{postnummer}} {{poststed}}</td></tr>
-        <tr><td><strong>Telefon:</strong></td><td>{{telefon}}</td></tr>
-        <tr><td><strong>E-post:</strong></td><td>{{epost}}</td></tr>
-      </table>
+      <h3>Systeminformasjon</h3>
+      <p>
+        <strong>Systemtype:</strong> {{systemTypeName}}<br>
+        <strong>Plassering:</strong> {{plassering}}
+      </p>
   
-      <h2>3. Systeminformasjon</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Systemtype:</strong></td><td>{{systemTypeName}}</td></tr>
-        <tr><td><strong>Plassering:</strong></td><td>{{plassering}}</td></tr>
-      </table>
-  
-      <h2>4. Utførte Oppgaver</h2>
+      <h3>Utførte oppgaver</h3>
       <ul>
-        <li>Inspeksjon av sanitæranlegg og synlige rør</li>
-        <li>Kontroll av lekkasjer og avløp</li>
-        <li>Funksjonstest av ventiler og kraner</li>
-        <li>Trykktest ved behov</li>
-        <li>Vurdering av videre tiltak eller vedlikehold</li>
+        <li>Inspeksjon av rør og komponenter</li>
+        <li>Kontroll for lekkasjer</li>
+        <li>Test av ventiler og kraner</li>
+        <li>Funksjonstest og dokumentasjon</li>
       </ul>
   
-      <h2>5. Kommentarer</h2>
-      <p><br></p>
+      <h3>Kommentarer</h3>
+      <p>{{kommentarer}}</p>
   
-      <h2>6. Utført av</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Tekniker:</strong></td><td>{{teknikernavn}}</td></tr>
-        <tr><td><strong>Firma:</strong></td><td>{{firmanavn}}</td></tr>
-      </table>
-  
-      <hr style="margin-top: 40px;">
-      <p style="font-size: 12px; text-align: center; color: #666;">
-        Dokumentnr: {{dokumentnr}} &nbsp;|&nbsp; Revisjon: {{revisjon}} &nbsp;|&nbsp;
-        Side: 1 av 1 &nbsp;|&nbsp; Dato: {{dato}}
+      <h3>Utført av</h3>
+      <p>
+        <strong>Tekniker:</strong> {{teknikernavn}}<br>
+        <strong>Firma:</strong> {{firmanavn}}<br>
+        <strong>Dokumentnr:</strong> {{dokumentnr}}<br>
+        <strong>Revisjon:</strong> {{revisjon}}
       </p>
     `,
   
     "3": `
-      <h1 style="background-color: #4a4a4a; color: white; padding: 12px; text-align: center; font-size: 24px;">
-        Servicerapport – Ventilasjon
-      </h1>
+      <h2>Servicerapport – Ventilasjon</h2>
   
-      <h2>1. Introduksjon</h2>
+      <p><strong>Dato:</strong> {{dato}}</p>
+  
+      <h3>Kundeinformasjon</h3>
       <p>
-        Rapporten beskriver utført service på ventilasjonssystemet den <strong>{{dato}}</strong>. Målet er å sikre god luftkvalitet, energieffektivitet og driftssikkerhet.
+        <strong>Navn:</strong> {{kundenavn}}<br>
+        <strong>Adresse:</strong> {{adresse}}, {{postnummer}} {{poststed}}<br>
+        <strong>Telefon:</strong> {{telefon}}<br>
+        <strong>E-post:</strong> {{epost}}
       </p>
   
-      <h2>2. Kundeinformasjon</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Navn:</strong></td><td>{{kundenavn}}</td></tr>
-        <tr><td><strong>Adresse:</strong></td><td>{{adresse}}</td></tr>
-        <tr><td><strong>Postnummer/Sted:</strong></td><td>{{postnummer}} {{poststed}}</td></tr>
-        <tr><td><strong>Telefon:</strong></td><td>{{telefon}}</td></tr>
-        <tr><td><strong>E-post:</strong></td><td>{{epost}}</td></tr>
-      </table>
+      <h3>Systeminformasjon</h3>
+      <p>
+        <strong>Systemnavn:</strong> {{systemnavn}}<br>
+        <strong>Systemtype:</strong> {{systemTypeName}}<br>
+        <strong>Serienummer:</strong> {{serienummer}}<br>
+        <strong>Plassering:</strong> {{plassering}}
+      </p>
   
-      <h2>3. Systeminformasjon</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Systemnavn:</strong></td><td>{{systemnavn}}</td></tr>
-        <tr><td><strong>Systemtype:</strong></td><td>{{systemTypeName}}</td></tr>
-        <tr><td><strong>Serienummer:</strong></td><td>{{serienummer}}</td></tr>
-        <tr><td><strong>Plassering:</strong></td><td>{{plassering}}</td></tr>
-      </table>
-  
-      <h2>4. Utførte Oppgaver</h2>
+      <h3>Utførte oppgaver</h3>
       <ul>
-        <li>Filterbytte og rens av inntak/avkast</li>
+        <li>Bytte og rens av filtre</li>
         <li>Test av vifter og elektronikk</li>
-        <li>Måling av luftmengder og tilpasning</li>
-        <li>Kontroll av aggregat og kanalsystem</li>
-        <li>Feilretting og vedlikeholdstiltak ved behov</li>
+        <li>Luftmålinger og justering</li>
+        <li>Kontroll av aggregat og kanaler</li>
       </ul>
   
-      <h2>5. Kommentarer</h2>
-      <p><br></p>
+      <h3>Kommentarer</h3>
+      <p>{{kommentarer}}</p>
   
-      <h2>6. Utført av</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr><td><strong>Tekniker:</strong></td><td>{{teknikernavn}}</td></tr>
-        <tr><td><strong>Firma:</strong></td><td>{{firmanavn}}</td></tr>
-      </table>
-  
-      <hr style="margin-top: 40px;">
-      <p style="font-size: 12px; text-align: center; color: #666;">
-        Dokumentnr: {{dokumentnr}} &nbsp;|&nbsp; Revisjon: {{revisjon}} &nbsp;|&nbsp;
-        Side: 1 av 1 &nbsp;|&nbsp; Dato: {{dato}}
+      <h3>Utført av</h3>
+      <p>
+        <strong>Tekniker:</strong> {{teknikernavn}}<br>
+        <strong>Firma:</strong> {{firmanavn}}<br>
+        <strong>Dokumentnr:</strong> {{dokumentnr}}<br>
+        <strong>Revisjon:</strong> {{revisjon}}
       </p>
     `
   }
+  
   
   
   

@@ -841,7 +841,10 @@ function creatCalendarEventObject(service) {
     
   
     const startDate = new Date(service.date);
-    const endDate = service.enddate || new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+    let endDate = new Date(service.date);
+    endDate.setMinutes(endDate.getMinutes() + newDuration); // Legg til varighet i minutter
+    service.enddate = endDate.toISOString(); // Oppdater enddate i ISO-format
+    const endDatem =  endDate || new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
   
     const reminderMinutesBefore = 2880; // 2 dager før
   
@@ -859,7 +862,7 @@ function creatCalendarEventObject(service) {
     let returnObject = {
         title: `${serviceNumber} - ${customerName} anlegg: ${systemName}`,
         start: startDate.toISOString(),
-        end: endDate.toISOString(),
+        end: endDatem,
         description: description,
         color: eventColor,
         colorId: colorId,

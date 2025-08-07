@@ -1,8 +1,62 @@
 const serviceTemplates = {
-    "1": `<h2>Servicerapport – Varmepumpe</h2><p><strong>Dato:</strong> {{dato}}</p><p><strong>Kunde:</strong> {{kundenavn}}</p><p>{{kommentarer}}</p><p>Tekniker: {{teknikernavn}}</p>`,
-    "2": `<h2>Servicerapport – Sanitæranlegg</h2><p><strong>Dato:</strong> {{dato}}</p><p>Kunde: {{kundenavn}}</p><p>{{kommentarer}}</p>`,
-    "3": `<h2>Servicerapport – Ventilasjon</h2><p><strong>Dato:</strong> {{dato}}</p><p>Kunde: {{kundenavn}}</p><p>{{kommentarer}}</p>`
+    "1": `
+      <h2>Servicerapport – Varmepumpe</h2>
+      <p><strong>Dato:</strong> {{dato}}</p>
+  
+      <h3>Kunde</h3>
+      <p><strong>Navn:</strong> {{kundenavn}}</p>
+  
+      <h3>System</h3>
+      <p>
+        <strong>Systemnavn:</strong> {{systemnavn}}<br>
+        <strong>Systemtype:</strong> {{systemTypeName}}
+      </p>
+  
+      <h3>Kommentarer</h3>
+      <p>{{kommentarer}}</p>
+  
+      <h3>Tekniker</h3>
+      <p>{{teknikernavn}}</p>
+    `,
+  
+    "2": `
+      <h2>Servicerapport – Sanitæranlegg</h2>
+      <p><strong>Dato:</strong> {{dato}}</p>
+  
+      <h3>Kunde</h3>
+      <p><strong>Navn:</strong> {{kundenavn}}</p>
+  
+      <h3>Systemtype</h3>
+      <p>{{systemTypeName}}</p>
+  
+      <h3>Kommentarer</h3>
+      <p>{{kommentarer}}</p>
+  
+      <h3>Tekniker</h3>
+      <p>{{teknikernavn}}</p>
+    `,
+  
+    "3": `
+      <h2>Servicerapport – Ventilasjon</h2>
+      <p><strong>Dato:</strong> {{dato}}</p>
+  
+      <h3>Kunde</h3>
+      <p><strong>Navn:</strong> {{kundenavn}}</p>
+  
+      <h3>System</h3>
+      <p>
+        <strong>Systemnavn:</strong> {{systemnavn}}<br>
+        <strong>Systemtype:</strong> {{systemTypeName}}
+      </p>
+  
+      <h3>Kommentarer</h3>
+      <p>{{kommentarer}}</p>
+  
+      <h3>Tekniker</h3>
+      <p>{{teknikernavn}}</p>
+    `
   };
+  
   
 
 function loadHtmlTemplateToQuill(htmlTemplate, data, quillInstance) {

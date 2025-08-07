@@ -506,26 +506,49 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                     });
 
-                    // sette malvelger
+                   // Sett opp malvelger for ett serviceElement
                     const malselector = serviceElement.querySelector(".servicemal");
+
                     if (malselector) {
                         malselector.addEventListener("change", () => {
                             const selectedValue = malselector.value;
                             const template = serviceTemplates[selectedValue];
 
-                            if (template) {
-
-                                loadHtmlTemplateToQuill(template, customer, quill);
-
-                                // Oppdater også service.report direkte (valgfritt)
-                                service.report = quill.root.innerHTML;
-                                let data = { report: service.report };
-                                sendEditServiceToServer(service, data);
-                            } else {
+                            if (!template) {
                                 console.warn("❌ Ingen mal funnet for valgt verdi:", selectedValue);
+                                return;
                             }
+
+                            // Hent dato fra service
+                            const rawDate = service.date;
+                            const dato = rawDate
+                                ? new Date(rawDate).toLocaleDateString("no-NO", {
+                                    year: 'numeric',
+                                    month: '2-digit',
+                                    day: '2-digit'
+                                })
+                                : "(Ukjent dato)";
+
+                            // Sett sammen data til rapport
+                            const datareport = {
+                                dato,
+                                kundenavn: customer?.name || "Kunde",
+                                teknikernavn: gUser?.name || "Tekniker",
+                                systemnavn: item?.name || "System",
+                                systemTypeName: item?.system_type_name || "System Type",
+                                kommentarer: service?.note || ""
+                            };
+
+                            // Sett HTML inn i Quill-editor
+                            loadHtmlTemplateToQuill(template, datareport, quill);
+
+                            // Oppdater og lagre rapport
+                            service.report = quill.root.innerHTML;
+                            const data = { report: service.report };
+                            sendEditServiceToServer(service, data);
                         });
                     }
+
 
 
 

@@ -97,11 +97,16 @@ function isValidJsonString(str) {
   }
   
   function tryFixJsonString(str) {
-    // Escape " inne i HTML <a href="..."> og target="..."
-    return str
-      .replace(/<a href="(.*?)"/g, '<a href=\\"$1\\"')
-      .replace(/ target="_blank"/g, ' target=\\"_blank\\"');
+    // Fjern BOM
+    str = str.replace(/\uFEFF/g, "");
+  
+    // Escape anførselstegn inne i HTML
+    return str.replace(/"(.*?)":\s*"(.*?)(?<!\\)"/g, (match, key, value) => {
+      const fixedValue = value.replace(/"/g, '\\"');
+      return `"${key}": "${fixedValue}"`;
+    });
   }
+  
   
   function parseCustomerJsonArray(jsonArray) {
     const parsedCustomers = [];

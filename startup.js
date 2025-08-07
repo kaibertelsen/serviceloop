@@ -93,36 +93,24 @@ function parseCustomerJsonArray(jsonArray) {
       try {
         let customer;
   
-        // Fjern BOM
-        if (typeof item === "string") {
-          item = item.replace(/\uFEFF/g, "");
-  
-          // Prøv først å parse én gang
-          customer = JSON.parse(item);
-  
-          // Hvis fortsatt streng, parse en gang til (dobbelt stringifiert)
-          if (typeof customer === "string") {
-            customer = JSON.parse(customer);
-          }
-        } else if (typeof item === "object" && item !== null) {
-          customer = item;
-        } else {
-          throw new Error("Ugyldig input – verken streng eller objekt");
+        if (typeof item !== "string") {
+          throw new Error("Forventet streng");
         }
   
-        // Sikre at tekstfelter er strenger
+        // Fjern BOM
+        item = item.replace(/\uFEFF/g, "");
+  
+        // Dobbelt JSON.parse
+        customer = JSON.parse(JSON.parse(item));
+  
+        // Sikre at note/report er strenger
         if (Array.isArray(customer.system)) {
           customer.system.forEach(sys => {
             if (typeof sys.notes !== "string") sys.notes = sys.notes ?? "";
-  
             if (Array.isArray(sys.service)) {
               sys.service.forEach(service => {
-                if (typeof service.report !== "string") {
-                  service.report = service.report ?? "";
-                }
-                if (typeof service.note !== "string") {
-                  service.note = service.note ?? "";
-                }
+                if (typeof service.report !== "string") service.report = service.report ?? "";
+                if (typeof service.note !== "string") service.note = service.note ?? "";
               });
             }
           });
@@ -135,6 +123,7 @@ function parseCustomerJsonArray(jsonArray) {
       }
     }).filter(Boolean);
   }
+  
   
   
   

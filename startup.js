@@ -88,18 +88,15 @@ if(templettextId && templettext){
   //last inn i templettextArray
   templettextArray = [];
 
-  for (let i = 0; i < templettextId.length; i++) {
-    const item = {
-      id: templettextId[i],
-      name: templettext[i]
-    };
-    templettextArray.push(item);
-
-    //sorter templettextArray alfabetisk
-    templettextArray.sort((a, b) => a.name.localeCompare(b.name));
-
-  }
-
+    for (let i = 0; i < templettextId.length; i++) {
+      const item = {
+        id: templettextId[i],
+        name: templettext[i]
+      };
+      templettextArray.push(item);
+    }
+  //sorter templettextArray alfabetisk
+  templettextArray.sort((a, b) => a.name.localeCompare(b.name));
   }
 }
 

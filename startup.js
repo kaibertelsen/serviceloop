@@ -6,6 +6,7 @@ var gService = []; // Global variable to store service data
 var gSystem_type = []; // Global variable to store system data
 var gServicetype = []; // Global variable to store service type data
 var isInCustomarpage = false; // Global variable to track if in service page
+var templettextArray = []; // Global variable to store template text data'
 
 const statusService = [
     { value: "", text: "Ingen status", color: "white", colorId: "8" },         // #E1E1E1 (lys grå)
@@ -73,7 +74,33 @@ function responsClient(data) {
     loadeUserInSelector(); // Laster inn bruker i selector
 
     loadServiceForwardSelector(); //Last inn perioder i service forward selector
+
+    loadTemplettext(data.fields); // Laster inn templettext
  
+}
+
+function loadTemplettext(data){
+
+let templettextId = data.text_template;
+let templettext = data.text_template_name;
+
+if(templettextId && templettext){
+  //last inn i templettextArray
+  templettextArray = [];
+
+  for (let i = 0; i < templettextId.length; i++) {
+    const item = {
+      id: templettextId[i],
+      name: templettext[i]
+    };
+    templettextArray.push(item);
+
+    //sorter templettextArray alfabetisk
+    templettextArray.sort((a, b) => a.name.localeCompare(b.name));
+
+  }
+
+  }
 }
 
 function parseItemJson(jsonArray) {

@@ -507,14 +507,15 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     });
                     //legge klicktagg på knappen Mal-rapport
                     const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
+                    const rapportmalvelger = serviceElement.querySelector(".servicemal");
                     const malselector = serviceElement.querySelector(".servicemal");
                     if (malrapportbutton) {
                         malrapportbutton.addEventListener("click", () => {
                             // synligjør malvelger og velg første mal
                             
-                            if (malselector) {
-                                malselector.style.display = "inline-block"; // Vis malvelger
-                                malselector.selectedIndex = 0; // Velg første mal
+                            if (rapportmalvelger) {
+                                rapportmalvelger.style.display = "inline-block"; // Vis malvelger
+                                rapportmalvelger.selectedIndex = 0; // Velg første mal
                                 const event = new Event('change');
                                 malselector.dispatchEvent(event); // Trigger change-event for å laste malen
                             }

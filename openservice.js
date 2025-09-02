@@ -507,10 +507,11 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     });
                     //legge klicktagg på knappen Mal-rapport
                     const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
+                    const malselector = serviceElement.querySelector(".servicemal");
                     if (malrapportbutton) {
                         malrapportbutton.addEventListener("click", () => {
                             // synligjør malvelger og velg første mal
-                            const malselector = serviceElement.querySelector(".rapportmalvelger");
+                            
                             if (malselector) {
                                 malselector.style.display = "inline-block"; // Vis malvelger
                                 malselector.selectedIndex = 0; // Velg første mal
@@ -523,7 +524,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
 
                    // Sett opp malvelger for ett serviceElement
-                    const malselector = serviceElement.querySelector(".servicemal");
+                  
 
                     if (malselector) {
                         malselector.addEventListener("change", () => {

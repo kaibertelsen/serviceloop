@@ -507,7 +507,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     });
                     //legge klicktagg på knappen Mal-rapport
                     const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
-                    const rapportmalvelger = serviceElement.querySelector(".servicemal");
+                    const rapportmalvelger = serviceElement.querySelector(".rapportmalvelger");
                     const malselector = serviceElement.querySelector(".servicemal");
                     if (malrapportbutton) {
                         malrapportbutton.addEventListener("click", () => {

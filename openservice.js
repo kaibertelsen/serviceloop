@@ -505,6 +505,22 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         }
 
                     });
+                    //legge klicktagg på knappen Mal-rapport
+                    const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
+                    if (malrapportbutton) {
+                        malrapportbutton.addEventListener("click", () => {
+                            // synligjør malvelger og velg første mal
+                            const malselector = serviceElement.querySelector(".rapportmalvelger");
+                            if (malselector) {
+                                malselector.style.display = "inline-block"; // Vis malvelger
+                                malselector.selectedIndex = 0; // Velg første mal
+                                const event = new Event('change');
+                                malselector.dispatchEvent(event); // Trigger change-event for å laste malen
+                            }
+                           
+                        });
+                    }
+
 
                    // Sett opp malvelger for ett serviceElement
                     const malselector = serviceElement.querySelector(".servicemal");

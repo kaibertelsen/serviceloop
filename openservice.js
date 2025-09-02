@@ -515,9 +515,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                             
                             if (rapportmalvelger) {
                                 rapportmalvelger.style.display = "inline-block"; // Vis malvelger
-                                rapportmalvelger.selectedIndex = 0; // Velg første mal
+                                rapportmalvelger.selectedIndex = 1; // Velg første mal
                                 const event = new Event('change');
-                                malselector.value = 0; // Sett til første mal
                                 malselector.dispatchEvent(event); // Trigger change-event for å laste malen
                             }
                            

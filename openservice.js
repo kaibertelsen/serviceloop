@@ -647,7 +647,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 function loadTempletFromServer(template, data, quill) {
 
     //hent html mal fra server
-    GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",template.airtable,"responsHtml",false );
+    GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",template.id,"responsHtml",false );
 }
 
 function responsHtml(data) {

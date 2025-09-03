@@ -525,7 +525,21 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                            
                         });
                     }
-
+                    //sett knapp for å lagre innhold i quill som ny mal
+                    const makenewreportbutton = serviceElement.querySelector(".makenewreportbutton");
+                    if (makenewreportbutton) {
+                        makenewreportbutton.addEventListener("click", () => {
+                            // lagre innhold i quill som ny mal i Airtable
+                            if (confirm("Er du sikker på at du vil lagre denne rapporten som en ny mal?")) {
+                                let newTemplate = {
+                                    name: `Mal fra ${customer.name} - ${item.name} - ${new Date().toLocaleDateString("no-NO")}`,
+                                    content: quill.root.innerHTML
+                                };
+                                //send til server
+                                POSTairtable("appuUESr4s93SWaS7","tblM3nX1b0jYJ8v1F","responseCreateNewTemplate", JSON.stringify(newTemplate));
+                            }
+                        });
+                    }
 
                    // Sett opp malvelger for ett serviceElement
                   
@@ -579,6 +593,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                             
                             // Sett HTML inn i Quill-editor
                             loadTempletFromServer(template, datareport, quill);
+
+                            //sette navn på reporttitlelabel
+                            const reporttitlelabel = serviceElement.querySelector(".reporttitlelabel");
+                            if (reporttitlelabel) {
+                                reporttitlelabel.textContent = `Rapportmal: ${template.name || "Uten navn"}`;
+                            }
                         });
                     }
 
@@ -644,6 +664,29 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     // Returner det ferdige service-elementet
     return serviceElement;
 
+}
+function responseCreateNewTemplate(data) {
+    console.log("Ny mal opprettet:", data);
+    let item = data.fields;
+
+    //legg denne til i selectoren for male
+    templettextArray.push({id:item.airtable, name:item.name});    
+
+    //sorter templettextArray alfabetisk
+    templettextArray.sort((a, b) => a.name.localeCompare(b.name));
+
+    //sett velger til den nye malen
+    const malselector = currentServiceElement.querySelector(".servicemal");
+    if (malselector) {
+        malselector.innerHTML = ''; // Tøm select-elementet
+        templettextArray.forEach((template, index) => {
+            const option = document.createElement("option");
+            option.value = index; // Bruk indeksen som value
+            option.textContent = template.name;
+            malselector.appendChild(option);
+        });
+        malselector.value = templettextArray.length - 1; // Velg den nyeste malen
+    }
 }
 
 function loadTempletFromServer(template, data, quill) {

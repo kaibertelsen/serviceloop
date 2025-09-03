@@ -244,5 +244,7 @@ function ruteresponse(data,id){
         responseNewCustomer(data);   
     }else if(id == "responsHtml"){
       responsHtml(data);
+    }else if(id == "responseCreateNewTemplate"){
+      responseCreateNewTemplate(data);
     }
 }

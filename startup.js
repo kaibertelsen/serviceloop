@@ -82,7 +82,7 @@ function responsClient(data) {
 
 function loadTemplettext(data){
 
-let templettextId = data.text_template;
+let templettextId = data.text_template_airtable;
 let templettext = data.text_template_name;
 
 if(templettextId && templettext){
@@ -242,5 +242,7 @@ function ruteresponse(data,id){
         responseGetServiceForDelete(data);
     }else if(id == "responseNewCustomer"){
         responseNewCustomer(data);   
+    }else if(id == "responsHtml"){
+      responsHtml(data);
     }
 }

@@ -576,7 +576,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                             };
                             
                             // Sett HTML inn i Quill-editor
-                            loadHtmlTemplateToQuill(template, datareport, quill);
+                            loadTempletFromServer(template, datareport, quill);
                         });
                     }
 
@@ -644,7 +644,15 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
 }
 
+function loadTempletFromServer(template, data, quill) {
 
+    //hent html mal fra server
+    GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",template.airtable,"responsHtml",false );
+}
+
+function responsHtml(data) {
+    console.log(data);
+}
 
 function listFollowupOnService(serviceElement, service) {
 

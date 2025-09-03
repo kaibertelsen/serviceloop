@@ -2,6 +2,8 @@
 var currentItemElement = null; // Global variabel for å holde styr på gjeldende service-liste
 var currentServiceElement = null; // Global variabel for å holde styr på gjeldende service-element
 var updateServiceInCalendar = false; // Global variabel for å indikere om vi må oppdatere kalenderen
+var gCustomerData = null; // Global variabel for å holde data til rapportmal
+var quillEditor = null; // Global variabel for å holde Quill-editoren
 
 
 document.getElementById("fromServicetoCustomer").addEventListener("click", function () {
@@ -646,12 +648,27 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
 function loadTempletFromServer(template, data, quill) {
 
+    gCustomerData = data; // lagre data globalt for bruk i responsHtml
+    quillEditor = quill; // lagre quill globalt for bruk i responsHtml
+
     //hent html mal fra server
     GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",template.id,"responsHtml",false );
 }
 
 function responsHtml(data) {
     console.log(data);
+
+    let htmlTemplate = data.fields.content || "";
+    if (!htmlTemplate) {
+        console.warn("❌ Ingen HTML-mal funnet i data:", data);
+        return;
+    }
+
+    // fyll inn malen med data
+    loadHtmlTemplateToQuill(htmlTemplate, gCustomerData, quillEditor);
+
+
+
 }
 
 function listFollowupOnService(serviceElement, service) {

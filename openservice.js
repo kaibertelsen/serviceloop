@@ -3,6 +3,7 @@ var currentItemElement = null; // Global variabel for å holde styr på gjeldend
 var currentServiceElement = null; // Global variabel for å holde styr på gjeldende service-element
 var updateServiceInCalendar = false; // Global variabel for å indikere om vi må oppdatere kalenderen
 
+
 document.getElementById("fromServicetoCustomer").addEventListener("click", function () {
    
       // Trykk på faneknappen
@@ -530,7 +531,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     if (malselector) {
                         malselector.addEventListener("change", () => {
                             const selectedValue = malselector.value;
-                            const template = serviceTemplates[selectedValue];
+                            const template = templettextArray[selectedValue];
 
                             if (!template) {
                                 console.warn("❌ Ingen mal funnet for valgt verdi:", selectedValue);
@@ -642,6 +643,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     return serviceElement;
 
 }
+
+
 
 function listFollowupOnService(serviceElement, service) {
 

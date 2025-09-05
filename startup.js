@@ -248,3 +248,5 @@ function ruteresponse(data,id){
       responseCreateNewTemplate(data);
     }
 }
+
+

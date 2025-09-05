@@ -536,7 +536,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                                     content: quill.root.innerHTML
                                 };
                                 //send til server
-                                POSTairtable("appuUESr4s93SWaS7","tblM3nX1b0jYJ8v1F","responseCreateNewTemplate", JSON.stringify(newTemplate));
+                                POSTairtable("appuUESr4s93SWaS7","tblM3nX1b0jYJ8v1F", JSON.stringify(newTemplate),"responseCreateNewTemplate");
                             }
                         });
                     }

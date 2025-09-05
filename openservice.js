@@ -4,6 +4,7 @@ var currentServiceElement = null; // Global variabel for å holde styr på gjeld
 var updateServiceInCalendar = false; // Global variabel for å indikere om vi må oppdatere kalenderen
 var gCustomerData = null; // Global variabel for å holde data til rapportmal
 var quillEditor = null; // Global variabel for å holde Quill-editoren
+var gServiceElement = null; // Global variabel for å holde gjeldende service-element
 
 
 document.getElementById("fromServicetoCustomer").addEventListener("click", function () {
@@ -525,22 +526,27 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                            
                         });
                     }
-                    //sett knapp for å lagre innhold i quill som ny mal
+                    // sett knapp for å lagre innhold i quill som ny mal
                     const makenewreportbutton = serviceElement.querySelector(".makenewreportbutton");
                     if (makenewreportbutton) {
                         makenewreportbutton.addEventListener("click", () => {
-                            // lagre innhold i quill som ny mal i Airtable
-                            if (confirm("Er du sikker på at du vil lagre denne rapporten som en ny mal?")) {
+                            // be bruker om navn på ny mal
+                            let templateName = prompt("Skriv inn navn på den nye malen:", `Mal fra ${customer.name} - ${item.name} - ${new Date().toLocaleDateString("no-NO")}`);
+                            
+                            if (templateName && templateName.trim() !== "") {
                                 let newTemplate = {
-                                    name: `Mal fra ${customer.name} - ${item.name} - ${new Date().toLocaleDateString("no-NO")}`,
+                                    name: templateName.trim(),
                                     content: quill.root.innerHTML,
-                                    client:[gClient.rawid]
+                                    client: [gClient.rawid]
                                 };
-                                //send til server
+
+                                gServiceElement = serviceElement; // lagre serviceelementet globalt for bruk i responseCreateNewTemplate
+                                // send til server
                                 POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM", JSON.stringify(newTemplate),"responseCreateNewTemplate");
                             }
                         });
                     }
+
 
                    // Sett opp malvelger for ett serviceElement
                   
@@ -673,7 +679,7 @@ function responseCreateNewTemplate(data) {
     templettextArray.sort((a, b) => a.name.localeCompare(b.name));
 
     //sett velger til den nye malen
-    const malselector = currentServiceElement.querySelector(".servicemal");
+    const malselector = gServiceElement.querySelector(".servicemal");
     if (malselector) {
         malselector.innerHTML = ''; // Tøm select-elementet
         templettextArray.forEach((template, index) => {

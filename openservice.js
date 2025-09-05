@@ -534,7 +534,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                                 let newTemplate = {
                                     name: `Mal fra ${customer.name} - ${item.name} - ${new Date().toLocaleDateString("no-NO")}`,
                                     content: quill.root.innerHTML,
-                                    klient:[klientId]
+                                    klient:[gClient.airtable]
                                 };
                                 //send til server
                                 POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM", JSON.stringify(newTemplate),"responseCreateNewTemplate");

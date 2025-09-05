@@ -533,10 +533,11 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                             if (confirm("Er du sikker på at du vil lagre denne rapporten som en ny mal?")) {
                                 let newTemplate = {
                                     name: `Mal fra ${customer.name} - ${item.name} - ${new Date().toLocaleDateString("no-NO")}`,
-                                    content: quill.root.innerHTML
+                                    content: quill.root.innerHTML,
+                                    klient:[klientId]
                                 };
                                 //send til server
-                                POSTairtable("appuUESr4s93SWaS7","tblM3nX1b0jYJ8v1F", JSON.stringify(newTemplate),"responseCreateNewTemplate");
+                                POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM", JSON.stringify(newTemplate),"responseCreateNewTemplate");
                             }
                         });
                     }

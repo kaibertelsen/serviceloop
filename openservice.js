@@ -655,10 +655,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
         });
     }
 
-    
-
-    
-
     listFollowupOnService(serviceElement, service);
 
     // Returner det ferdige service-elementet

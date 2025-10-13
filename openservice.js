@@ -481,175 +481,77 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 
                 //Report element
                 const reportservicequill = serviceElement.querySelector(".reportservicequill");
-                if (reportservicequill) {
-                    // Initialize Quill editor for report
-                    const quill = new Quill(reportservicequill, {
-                        theme: 'snow',
-                        modules: {
-                            toolbar: true // Viktig for at den skal bli generert
-                        }
-                    });
-                    quillisGanarated = true; // Sett variabelen til true når Quill er generert
+                
+                // Initialize Quill editor for report
+                const quill = new Quill(reportservicequill, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: true // Viktig for at den skal bli generert
+                    }
+                });
+                quillisGanarated = true; // Sett variabelen til true når Quill er generert
+                
+                // 3. Lim inn eksisterende HTML-basert rapport (kan inneholde <br> osv.)
+                setTimeout(() => {
+                    quill.clipboard.dangerouslyPasteHTML(service.report || "");
+                    }, 0);
+                
+                let lastReportContent = quill.root.innerHTML;
+        
+                quill.root.addEventListener("blur", function () {
+                    let reportContent = quill.root.innerHTML;
                     
-                    // 3. Lim inn eksisterende HTML-basert rapport (kan inneholde <br> osv.)
-                    setTimeout(() => {
-                        quill.clipboard.dangerouslyPasteHTML(service.report || "");
-                        }, 0);
-                    
-                    let lastReportContent = quill.root.innerHTML;
-            
-                    quill.root.addEventListener("blur", function () {
-                        let reportContent = quill.root.innerHTML;
-                        
-                        if (reportContent !== lastReportContent) {
-                            lastReportContent = reportContent;
-                            service.report = reportContent;
-                            let data = { report: reportContent };
-                            sendEditServiceToServer(service, data);
-                        }
+                    if (reportContent !== lastReportContent) {
+                        lastReportContent = reportContent;
+                        service.report = reportContent;
+                        let data = { report: reportContent };
+                        sendEditServiceToServer(service, data);
+                    }
 
-                    });
+                });
 
 
-                    //Lage systemet rundt rapport og maler osv.
-                    const servicerapportbutton = serviceElement.querySelector(".servicerapportbutton");
+                //Lage systemet rundt rapport og maler osv.
+                const servicerapportbutton = serviceElement.querySelector(".servicerapportbutton");
+                servicerapportbutton.classList.add("active");
+
+                const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
+                malrapportbutton.classList.remove("active");
+
+                //når en trykker på malrapportbutton skal elementet med klassen mal-tools vises om første mal lastes inn i quill
+                malrapportbutton.addEventListener("click", () => {
+                    malrapportbutton.classList.add("active");
+                    servicerapportbutton.classList.remove("active");
+
+                    const maltools = serviceElement.querySelector(".mal-tools");
+                    if (maltools) {
+                        maltools.style.display = "block"; // Vis mal-verktøy
+                    }
+                });
+
+                //når en trykker på servicerapportbutton skal elementet med klassen mal-tools skjules
+                servicerapportbutton.addEventListener("click", () => {
+                    malrapportbutton.classList.remove("active");
                     servicerapportbutton.classList.add("active");
 
-                    const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
-                    malrapportbutton.classList.remove("active");
-
-                    //når en trykker på malrapportbutton skal elementet med klassen mal-tools vises
-                    malrapportbutton.addEventListener("click", () => {
-                        malrapportbutton.classList.add("active");
-                        servicerapportbutton.classList.remove("active");
-
-                        const maltools = serviceElement.querySelector(".mal-tools");
-                        if (maltools) {
-                            maltools.style.display = "block"; // Vis mal-verktøy
-                        }
-
-                    });
-
-                    //når en trykker på servicerapportbutton skal elementet med klassen mal-tools skjules
-                    servicerapportbutton.addEventListener("click", () => {
-                        malrapportbutton.classList.remove("active");
-                        servicerapportbutton.classList.add("active");
-
-                        const maltools = serviceElement.querySelector(".mal-tools");
-                        if (maltools) {
-                            maltools.style.display = "none"; // Skjul mal-verktøy
-                        }
-
-                    });
-
-
-
-
-                    const rapportmalvelger = serviceElement.querySelector(".rapportmalvelger");
-                    const malselector = serviceElement.querySelector(".servicemal");
-                    if (malrapportbutton) {
-                        malrapportbutton.addEventListener("click", () => {
-                            // synligjør malvelger og velg første mal
-                            
-                            if (rapportmalvelger) {
-                                rapportmalvelger.style.display = "inline-block"; // Vis malvelger
-                                malselector.selectedIndex = 1; // Velg første mal
-                                const event = new Event('change');
-                                malselector.dispatchEvent(event); // Trigger change-event for å laste malen
-                            }
-                           
-                        });
-                    }
-                    // sett knapp for å lagre innhold i quill som ny mal
-                    const makenewreportbutton = serviceElement.querySelector(".makenewreportbutton");
-                    if (makenewreportbutton) {
-                        makenewreportbutton.addEventListener("click", () => {
-                            // be bruker om navn på ny mal
-                            let templateName = prompt("Skriv inn navn på den nye malen:", `Mal fra ${customer.name} - ${item.name} - ${new Date().toLocaleDateString("no-NO")}`);
-                            
-                            if (templateName && templateName.trim() !== "") {
-                                let newTemplate = {
-                                    name: templateName.trim(),
-                                    content: quill.root.innerHTML,
-                                    client: [gClient.rawid]
-                                };
-
-                                gServiceElement = serviceElement; // lagre serviceelementet globalt for bruk i responseCreateNewTemplate
-                                // send til server
-                                POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM", JSON.stringify(newTemplate),"responseCreateNewTemplate");
-                            }
-                        });
+                    const maltools = serviceElement.querySelector(".mal-tools");
+                    if (maltools) {
+                        maltools.style.display = "none"; // Skjul mal-verktøy
                     }
 
-
-                   // Sett opp malvelger for ett serviceElement
-                  
-
-                    if (malselector) {
-                        malselector.addEventListener("change", () => {
-                            const selectedValue = malselector.value;
-                            const template = templettextArray[selectedValue];
-
-                            if (!template) {
-                                console.warn("❌ Ingen mal funnet for valgt verdi:", selectedValue);
-                                return;
-                            }
-
-                            // Hent dato fra service
-                            const rawDate = service.date;
-                            const dato = rawDate
-                                ? new Date(rawDate).toLocaleDateString("no-NO", {
-                                    year: 'numeric',
-                                    month: '2-digit',
-                                    day: '2-digit'
-                                })
-                                : "(Ukjent dato)";
-
-                           // Sett sammen data til rapport
-                            const datareport = {
-                                dato: service?.date
-                                ? new Date(service.date).toLocaleDateString("no-NO", { year: 'numeric', month: '2-digit', day: '2-digit' })
-                                : new Date().toLocaleDateString("no-NO", { year: 'numeric', month: '2-digit', day: '2-digit' }),
-                                
-                                kundenavn: customer?.name || "Kunde",
-                                adresse: customer?.address || "Ukjent adresse",
-                                postnummer: customer?.postcode || "",
-                                poststed: customer?.city || "",
-                                telefon: customer?.phone || "Ukjent telefon",
-                                epost: customer?.email || "Ukjent e-post",
-                            
-                                systemnavn: item?.name || "System",
-                                systemTypeName: item?.system_type_name || "Systemtype",
-                                serienummer: item?.serial_number || "Ikke oppgitt",
-                                plassering: item?.location || "Ikke spesifisert",
-                            
-                                teknikernavn: gUser?.name || "Tekniker",
-                                firmanavn: gUser?.company || "Firma",
-                            
-                                dokumentnr: service?.nr || "Ukjent",
-                                revisjon: "1.0",
-                            
-                                kommentarer: service?.note || ""
-                            };
-                            
-                            // Sett HTML inn i Quill-editor
-                            loadTempletFromServer(template, datareport, quill);
-
-                            //sette navn på reporttitlelabel
-                            const reporttitlelabel = serviceElement.querySelector(".reporttitlelabel");
-                            if (reporttitlelabel) {
-                                reporttitlelabel.textContent = `Rapportmal: ${template.name || "Uten navn"}`;
-                            }
-                        });
-                    }
+                });
 
 
+                //last inn maler
+                const malselector = serviceElement.querySelector(".servicemal");
+                loadMalInSelector(malselector,templettextArray);
 
+                // når mal selector endres skal malen lastes inn i quill
+                malselector.addEventListener("change", () => {
 
-                    
-                }
+                    loadContentInQuill(quill,malselector);
 
-
+                });
 
             }
 
@@ -702,6 +604,22 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     return serviceElement;
 
 }
+
+function loadContentInQuill(quill,selector) {
+
+    // sett knapp for å lagre innhold i quill som ny mal
+    let value = selector.value;
+    if (value === "") {
+        return;
+    }
+    quillEditor = quill; // lagre quill globalt for bruk i responsHtml
+
+    //hent html mal fra server
+    GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",value,"responsMaler",false );
+    
+
+
+}
 function responseCreateNewTemplate(data) {
     console.log("Ny mal opprettet:", data);
     let item = data.fields;
@@ -735,6 +653,21 @@ function loadTempletFromServer(template, data, quill) {
     GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",template.id,"responsHtml",false );
 }
 
+
+function responsMaler(data){
+
+    let htmlTemplate = data.fields.content || "";
+    if (!htmlTemplate) {
+        console.warn("❌ Ingen HTML-mal funnet i data:", data);
+        return;
+    }
+
+    //last inn i quill
+
+
+
+}
+
 function responsHtml(data) {
     console.log(data);
 
@@ -745,11 +678,36 @@ function responsHtml(data) {
     }
 
     // fyll inn malen med data
-    loadHtmlTemplateToQuill(htmlTemplate, gCustomerData, quillEditor);
-
-
-
+    quillEditor.root.innerHTML = ""; // Tøm eksisterende innhold
+    quillEditor.root.innerHTML = htmlTemplate;
 }
+
+
+function loadMalInSelector(malselector,array) {
+    //last inn mal i rapportvelger fra arrayen templettextArray
+   
+    
+        malselector.innerHTML = ''; // Tøm select-elementet
+
+        //lag Velg mal option
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Velg mal";
+        malselector.appendChild(defaultOption);
+        
+
+        //last inn resterende maler
+        array.forEach((template, index) => {
+            const option = document.createElement("option");
+            option.value = index; // Bruk indeksen som value
+            option.textContent = template.name;
+            malselector.appendChild(option);
+        });
+
+    
+}
+
+
 
 function listFollowupOnService(serviceElement, service) {
 

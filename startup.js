@@ -248,6 +248,8 @@ function ruteresponse(data,id){
       responseCreateNewTemplate(data);
     }else if (id == "responsMaler"){
       responsMaler(data);
+    }else if (id == "responsUpdateExistingTemplate") {
+      responsUpdateExistingTemplate(data);
     }
 }
 

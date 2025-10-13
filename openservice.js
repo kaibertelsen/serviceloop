@@ -550,9 +550,37 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                 // når mal selector endres skal malen lastes inn i quill
                 malselector.addEventListener("change", () => {
-
                     loadContentInQuill(quill,malselector);
+                });
 
+                //knapp for å lagre innhold i quill som ny mal
+                const savenewtempletbutton = serviceElement.querySelector(".savenewtempletbutton");
+                savenewtempletbutton.addEventListener("click", () => {
+                    let templetname = prompt("Skriv inn navn på ny mal:");
+                    if (templetname) {
+                        //lagre ny mal i airtable
+                        let newTemplate = {
+                            name: templetname,
+                            content: quill.root.innerHTML
+                        };
+                        POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",newTemplate,"responseCreateNewTemplate");
+                    }
+                });
+
+
+                //Knapp som oppdaterer eksisterende mal
+                const updateexistingmalbutton = serviceElement.querySelector(".updateexistingmal");
+                updateexistingmalbutton.addEventListener("click", () => {
+                    let selectedTemplateId = malselector.value;
+                    if (selectedTemplateId) {
+                        if (confirm("Er du sikker på at du vil oppdatere den eksisterende malen? Dette vil overskrive den nåværende malen.")) {
+                            let updatedTemplate = {
+                                airtable: selectedTemplateId,
+                                content: quill.root.innerHTML
+                            };
+                            PATCHairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",selectedTemplateId,JSON.stringify(updatedTemplate) ,"responsUpdateExistingTemplate");
+                        }
+                    } 
                 });
 
             }
@@ -621,6 +649,12 @@ function loadContentInQuill(quill,selector) {
     
 
 
+}
+
+function responsUpdateExistingTemplate(data) {
+
+    console.log("Mal oppdatert:", data);
+    
 }
 function responseCreateNewTemplate(data) {
     console.log("Ny mal opprettet:", data);

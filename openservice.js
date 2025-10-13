@@ -527,6 +527,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     if (maltools) {
                         maltools.style.display = "block"; // Vis mal-verktøy
                     }
+                    quill.root.innerHTML = ""; // Tøm quill editor
                 });
 
                 //når en trykker på servicerapportbutton skal elementet med klassen mal-tools skjules
@@ -538,6 +539,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     if (maltools) {
                         maltools.style.display = "none"; // Skjul mal-verktøy
                     }
+                    quill.root.innerHTML = service.report || ""; // Last inn rapport i quill
 
                 });
 
@@ -662,8 +664,9 @@ function responsMaler(data){
         return;
     }
 
-    //last inn i quill
-
+    // fyll inn malen med data
+    quillEditor.root.innerHTML = ""; // Tøm eksisterende innhold
+    quillEditor.root.innerHTML = htmlTemplate;
 
 
 }

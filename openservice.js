@@ -699,7 +699,7 @@ function loadMalInSelector(malselector,array) {
         //last inn resterende maler
         array.forEach((template, index) => {
             const option = document.createElement("option");
-            option.value = template.airtable; // Bruk indeksen som value
+            option.value = template.id; // Bruk indeksen som value
             option.textContent = template.name;
             malselector.appendChild(option);
         });

@@ -618,7 +618,7 @@ function loadContentInQuill(quill,selector) {
     if (value === "") {
         return;
     }
-    quillEditor = quillMal; // lagre quill globalt for bruk i responsHtml
+    quillEditor = quill; // lagre quill globalt for bruk i responsHtml
 
     //hent html mal fra server
     GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",value,"responsMaler",false );

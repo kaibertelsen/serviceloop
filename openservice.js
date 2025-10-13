@@ -521,9 +521,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     }
                 });
 
-                const servicerapportbutton = serviceElement.querySelector(".servicerapportbutton");
-                const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
-
                 //last inn maler
                 const malselector = serviceElement.querySelector(".servicemal");
                 loadMalInSelector(malselector,templettextArray);

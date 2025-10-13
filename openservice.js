@@ -509,8 +509,42 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         }
 
                     });
-                    //legge klicktagg på knappen Mal-rapport
+
+
+                    //Lage systemet rundt rapport og maler osv.
+                    const servicerapportbutton = serviceElement.querySelector(".servicerapportbutton");
+                    servicerapportbutton.addclass("active");
+
                     const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
+                    malrapportbutton.classList.remove("active");
+
+                    //når en trykker på malrapportbutton skal elementet med klassen mal-tools vises
+                    malrapportbutton.addEventListener("click", () => {
+                        malrapportbutton.classList.add("active");
+                        servicerapportbutton.classList.remove("active");
+
+                        const maltools = serviceElement.querySelector(".mal-tools");
+                        if (maltools) {
+                            maltools.style.display = "block"; // Vis mal-verktøy
+                        }
+
+                    });
+
+                    //når en trykker på servicerapportbutton skal elementet med klassen mal-tools skjules
+                    servicerapportbutton.addEventListener("click", () => {
+                        malrapportbutton.classList.remove("active");
+                        servicerapportbutton.classList.add("active");
+
+                        const maltools = serviceElement.querySelector(".mal-tools");
+                        if (maltools) {
+                            maltools.style.display = "none"; // Skjul mal-verktøy
+                        }
+
+                    });
+
+
+
+
                     const rapportmalvelger = serviceElement.querySelector(".rapportmalvelger");
                     const malselector = serviceElement.querySelector(".servicemal");
                     if (malrapportbutton) {

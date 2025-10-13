@@ -575,7 +575,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     if (selectedTemplateId) {
                         if (confirm("Er du sikker på at du vil oppdatere den eksisterende malen? Dette vil overskrive den nåværende malen.")) {
                             let updatedTemplate = {
-                                airtable: selectedTemplateId,
                                 content: quill.root.innerHTML
                             };
                             PATCHairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",selectedTemplateId,JSON.stringify(updatedTemplate) ,"responsUpdateExistingTemplate");

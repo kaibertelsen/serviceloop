@@ -512,37 +512,17 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
 
                 //Lage systemet rundt rapport og maler osv.
+                const reportmalquill = serviceElement.querySelector(".reportmalquill");
+                // Initialize Quill editor for report
+                const quillMal = new Quill(reportmalquill, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: true // Viktig for at den skal bli generert
+                    }
+                });
+
                 const servicerapportbutton = serviceElement.querySelector(".servicerapportbutton");
-                servicerapportbutton.classList.add("active");
-
                 const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
-                malrapportbutton.classList.remove("active");
-
-                //når en trykker på malrapportbutton skal elementet med klassen mal-tools vises om første mal lastes inn i quill
-                malrapportbutton.addEventListener("click", () => {
-                    malrapportbutton.classList.add("active");
-                    servicerapportbutton.classList.remove("active");
-
-                    const maltools = serviceElement.querySelector(".mal-tools");
-                    if (maltools) {
-                        maltools.style.display = "block"; // Vis mal-verktøy
-                    }
-                    quill.root.innerHTML = ""; // Tøm quill editor
-                });
-
-                //når en trykker på servicerapportbutton skal elementet med klassen mal-tools skjules
-                servicerapportbutton.addEventListener("click", () => {
-                    malrapportbutton.classList.remove("active");
-                    servicerapportbutton.classList.add("active");
-
-                    const maltools = serviceElement.querySelector(".mal-tools");
-                    if (maltools) {
-                        maltools.style.display = "none"; // Skjul mal-verktøy
-                    }
-                    quill.root.innerHTML = service.report || ""; // Last inn rapport i quill
-
-                });
-
 
                 //last inn maler
                 const malselector = serviceElement.querySelector(".servicemal");
@@ -550,7 +530,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                 // når mal selector endres skal malen lastes inn i quill
                 malselector.addEventListener("change", () => {
-                    loadContentInQuill(quill,malselector);
+                    loadContentInQuill(quillMal,malselector);
                 });
 
                 //knapp for å lagre innhold i quill som ny mal
@@ -561,9 +541,9 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         //lagre ny mal i airtable
                         let newTemplate = {
                             name: templetname,
-                            content: quill.root.innerHTML
+                            content: quillMal.root.innerHTML
                         };
-                        POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",newTemplate,"responseCreateNewTemplate");
+                        POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",JSON.stringify(newTemplate),"responseCreateNewTemplate");
                     }
                 });
 
@@ -641,7 +621,7 @@ function loadContentInQuill(quill,selector) {
     if (value === "") {
         return;
     }
-    quillEditor = quill; // lagre quill globalt for bruk i responsHtml
+    quillEditor = quillMal; // lagre quill globalt for bruk i responsHtml
 
     //hent html mal fra server
     GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",value,"responsMaler",false );
@@ -699,8 +679,7 @@ function responsMaler(data){
 
     // fyll inn malen med data
     quillEditor.root.innerHTML = ""; // Tøm eksisterende innhold
-    quillEditor.root.innerHTML = htmlTemplate;
-
+    quillEditor.clipboard.dangerouslyPasteHTML(htmlTemplate || "");
 
 }
 

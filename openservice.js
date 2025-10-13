@@ -513,7 +513,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                     //Lage systemet rundt rapport og maler osv.
                     const servicerapportbutton = serviceElement.querySelector(".servicerapportbutton");
-                    servicerapportbutton.classList("active");
+                    servicerapportbutton.classList.add("active");
 
                     const malrapportbutton = serviceElement.querySelector(".malrapportbutton");
                     malrapportbutton.classList.remove("active");

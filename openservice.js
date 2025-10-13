@@ -554,7 +554,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 });
 
                 //knapp for å lagre innhold i quill som ny mal
-                const savenewtempletbutton = serviceElement.querySelector(".savenewtempletbutton");
+                const savenewtempletbutton = serviceElement.querySelector(".makenewreportbutton");
                 savenewtempletbutton.addEventListener("click", () => {
                     let templetname = prompt("Skriv inn navn på ny mal:");
                     if (templetname) {

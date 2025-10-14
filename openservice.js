@@ -581,12 +581,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                       signOffCompany: "Varme VVS AS"
                     });
                     console.log("Uploadcare URL:", url);
-
-
-
-
-
-
+                    //vis link til pdf
+                    statusprocess.innerHTML = `PDF generert: <a href="${url}" target="_blank" rel="noopener">Åpne PDF</a>`;
                     
                   });
 

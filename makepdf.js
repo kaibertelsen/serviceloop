@@ -129,7 +129,7 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
     },
 
     content: [
-      { canvas: [ { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5 } ], margin: [0, 6, 0, 10] },
+      //{ canvas: [ { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5 } ], margin: [0, 6, 0, 10] },
 
       ...htmlContent,
 

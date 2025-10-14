@@ -584,19 +584,19 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     console.log("Uploadcare URL:", url);
                     //vis link til pdf
                     statusprocess.innerHTML = `PDF generert: <a href="${url}" target="_blank" rel="noopener">Åpne PDF</a>`;
+                    service.pdfurl = url;
                     
                   });
 
-
-
-
-
-
-
-
-
-
-
+                  const sendrapporttocustomer = serviceElement.querySelector(".sendrapporttocustomer");
+                  sendrapporttocustomer.style.display = "inline-block"; // Vis knappen for å sende rapporten
+                  sendrapporttocustomer.addEventListener("click", function () {
+                      // Bekreft sending av rapport
+                      if (confirm("Er du sikker på at du vil sende denne rapporten til kunden?")) {
+                          // Send rapport til kunde
+                          sendReportToCustomer(service);
+                      }
+                    });
 
             };
 
@@ -724,6 +724,11 @@ function responsUpdateExistingTemplate(data) {
 
     console.log("Mal oppdatert:", data);
     
+}
+
+function sendReportToCustomer(service){
+
+    console.log("Sender rapport til kunde for service:", service);
 }
 
 function responseCreateNewTemplate(data) {

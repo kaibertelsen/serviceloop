@@ -553,6 +553,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 //knapp som lager pdf
 
                 const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");
+                const sendrapporttocustomer = serviceElement.querySelector(".sendrapporttocustomer");
                 generatepdfbutton.addEventListener("click", async (e) => {
                 
                     const statusEl = serviceElement.querySelector(".statusprocess");
@@ -584,11 +585,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     //vis link til pdf
                     statusEl.innerHTML = `PDF generert: <a href="${url}" target="_blank" rel="noopener">Åpne PDF</a>`;
                     service.pdfurl = url;
+                    sendrapporttocustomer.style.display = "inline-block"; // Vis knappen for å sende rapporten
                     
                   });
 
-                  const sendrapporttocustomer = serviceElement.querySelector(".sendrapporttocustomer");
-                  sendrapporttocustomer.style.display = "inline-block"; // Vis knappen for å sende rapporten
+                  
+                  
                   sendrapporttocustomer.addEventListener("click", function () {
                       // Bekreft sending av rapport
                       if (confirm("Er du sikker på at du vil sende denne rapporten til kunden?")) {

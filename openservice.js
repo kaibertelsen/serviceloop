@@ -525,9 +525,9 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 const malselector = serviceElement.querySelector(".servicemal");
                 loadMalInSelector(malselector,templettextArray);
 
-                // når mal selector endres skal malen lastes inn i quill
+                // når mal selector endres 
                 malselector.addEventListener("change", () => {
-                    loadContentInQuill(quillMal,malselector);
+                    malselectorHasCanged(quillMal,malselector,serviceElement);
                 });
 
                 //Knapp som oppdaterer eksisterende mal
@@ -543,50 +543,18 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     updateMalContentToServer(quillMal,selectedTemplateId);
                 });
 
-                //knapp for å lagre innhold i quill som ny mal
-                const savenewtempletbutton = serviceElement.querySelector(".makenewreportbutton");
-                savenewtempletbutton.addEventListener("click", () => {
-                    let templetname = prompt("Skriv inn navn på ny mal:");
-                    if (templetname) {
-                        //lagre ny mal i airtable
-                        let newTemplate = {
-                            name: templetname,
-                            content: quillMal.root.innerHTML,
-                            client: [gClient.rawid]
-                        };
-
-                        gServiceElement = serviceElement; // lagre serviceelement globalt for bruk i responsHtml
-                        POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",JSON.stringify(newTemplate),"responseCreateNewTemplate");
-                    }
-                });
-
-                //Knapp som sletter mal
-                const deletemal = serviceElement.querySelector(".deletemal");
-                deletemal.addEventListener("click", () => {
-                    let selectedTemplateId = malselector.value;
-                    if (selectedTemplateId) {
-                        if (confirm("Er du sikker på at du vil slette denne malen? Dette kan ikke angres.")) {
-
-                            DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",selectedTemplateId,"responseDeleteTemplate");
-                            //fjern malen fra selectoren
-                            templettextArray = templettextArray.filter(t => t.id !== selectedTemplateId);
-                            loadMalInSelector(malselector,templettextArray);
-                            quillMal.root.innerHTML = ""; // Tøm quill editor
-                        }
-                    } 
-                });
-
+       
                 //knapp som kopierer innhold til rapport
                 const copytoReportbutton = serviceElement.querySelector(".copytexttoreport");
                 copytoReportbutton.addEventListener("click", () => {
-                    //alert om at innholdet i rapporten vil bli overskrevet
-                    if (confirm("Innholdet i rapporten vil bli overskrevet. Er du sikker?")) {
-                    let copycontent = quillMal.root.innerHTML;
-                    quill.root.innerHTML = copycontent;
+                //alert om at innholdet i rapporten vil bli overskrevet
+                if (confirm("Innholdet i rapporten vil bli overskrevet. Er du sikker?")) {
+                let copycontent = quillMal.root.innerHTML;
+                quill.root.innerHTML = copycontent;
 
-                    const servicetabbutton = serviceElement.querySelector(".servicetabbutton");
-                    if (servicetabbutton) servicetabbutton.click(); // Bytt til service-fanen
-                    }
+                const servicetabbutton = serviceElement.querySelector(".servicetabbutton");
+                if (servicetabbutton) servicetabbutton.click(); // Bytt til service-fanen
+                }
 
 
                 });
@@ -666,6 +634,51 @@ function updateMalContentToServer(quill,malid) {
     };
 
     PATCHairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",malid,JSON.stringify(updatedcontent) ,"responsUpdateExistingTemplate");
+}
+
+function malselectorHasCanged(quill,selector,serviceElement) {
+
+    if (selector.value === "new") {
+        creatNewMaltoServer(quill,serviceElement);
+    }else if (selector.value === "delete") {
+        deleteMalFromServer(selector,quill);
+    }else{
+        loadContentInQuill(quillMal,selector);
+    }
+
+}
+
+function deleteMalFromServer(malselector,quillMal) {
+    let selectedTemplateId = malselector.value;
+    if (selectedTemplateId) {
+        if (confirm("Er du sikker på at du vil slette denne malen? Dette kan ikke angres.")) {
+
+            DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",selectedTemplateId,"responseDeleteTemplate");
+            //fjern malen fra selectoren
+            templettextArray = templettextArray.filter(t => t.id !== selectedTemplateId);
+            loadMalInSelector(malselector,templettextArray);
+            quillMal.root.innerHTML = ""; // Tøm quill editor
+        }
+    } 
+
+
+
+
+}
+
+function creatNewMaltoServer(quill,serviceElement) {
+    let templetname = prompt("Skriv inn navn på ny mal:");
+    if (templetname) {
+        //lagre ny mal i airtable
+        let newTemplate = {
+            name: templetname,
+            content: quill.root.innerHTML,
+            client: [quill.rawid]
+        };
+
+        gServiceElement = serviceElement; // lagre serviceelement globalt for bruk i responsHtml
+        POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",JSON.stringify(newTemplate),"responseCreateNewTemplate");
+    }
 }
 
 function responsUpdateExistingTemplate(data) {
@@ -754,7 +767,18 @@ function loadMalInSelector(malselector,array) {
             malselector.appendChild(option);
         });
 
-    
+        //lag en option for å lage ny mal
+        const newOption = document.createElement("option");
+        newOption.value = "new";
+        newOption.textContent = "Lag ny mal";
+        malselector.appendChild(newOption);
+
+        //lag en option for å slette mal
+        const deleteOption = document.createElement("option");
+        deleteOption.value = "delete";
+        deleteOption.textContent = "Slett mal";
+        malselector.appendChild(deleteOption);
+
 }
 
 

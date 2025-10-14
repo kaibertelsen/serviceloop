@@ -17,7 +17,8 @@ const cdnScripts = [
     "https://kaibertelsen.github.io/serviceloop/openservice.js",
     "https://kaibertelsen.github.io/serviceloop/opensystem.js",
     "https://kaibertelsen.github.io/serviceloop/report.js",
-    "https://kaibertelsen.github.io/serviceloop/apicom.js"
+    "https://kaibertelsen.github.io/serviceloop/apicom.js",
+    "https://kaibertelsen.github.io/serviceloop/makepdf.js"
 
 ];
 

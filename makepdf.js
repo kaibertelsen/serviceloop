@@ -47,11 +47,10 @@ async function makePdffromHTML(quillOrHtml, statusEl = null, opts = {}) {
         throw new Error("HTML-innholdet er tomt.");
       }
   
-     // -- Lag containeren (erstatter din gamle variant) --
-        const container = document.createElement("div");
-        Object.assign(container.style, {
+      const container = document.createElement("div");
+      Object.assign(container.style, {
         position: "fixed",
-        left: "-10000px",  // offscreen
+        left: "-10000px",   // offscreen er nok
         top: "0",
         width: (opts?.widthPx ?? 794) + "px",
         minHeight: "1px",
@@ -59,12 +58,11 @@ async function makePdffromHTML(quillOrHtml, statusEl = null, opts = {}) {
         color: "#000000",
         padding: "0",
         margin: "0",
-        // Viktig: behold layout/visibility, men gjør den usynlig visuelt
-        opacity: "0",
+        // Viktig: IKKE visibility:hidden og IKKE opacity:0
+        // behold layout og synlighet, men utenfor skjermen
         pointerEvents: "none",
-        // IKKE visibility:hidden og IKKE display:none
-        });
-        container.innerHTML = html;
+      });
+      container.innerHTML = html;
   
         // Print/base CSS – legg til !important for å vinne over dark theme
         const style = document.createElement("style");

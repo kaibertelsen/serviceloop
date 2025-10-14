@@ -558,6 +558,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 
                     const statusEl = document.querySelector("#status");
 
+                    console.log("Genererer PDF…",gUser);
+
                     const { url } = await makeBrandedPdf(quill /* eller HTML-string */, statusEl, {
                       filename: "service-rapport.pdf",
                       logoUrl: "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/686284db3bc15b56e5ce3331_256px-logo.png",

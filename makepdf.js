@@ -22,7 +22,7 @@ function escapeHtml(s="") {
     .replaceAll("'","&#39;");
 }
 function buildFacilityInfoHtml({name="", model="", location=""}={}) {
-  return `<p>Service utf&amp;oslash;rt p&amp;aring; anlegg: ${escapeHtml(name)} - ${escapeHtml(model)} - ${escapeHtml(location)}<br /><br /><br /><br /><br /></p>`;
+  return `<p>Anlegg: ${escapeHtml(name)} - ${escapeHtml(model)} - ${escapeHtml(location)}<br /><br /><br /><br /><br /></p>`;
 }
 
 /**

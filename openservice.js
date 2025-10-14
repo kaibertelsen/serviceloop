@@ -572,9 +572,9 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                       
                         // Variant A: send inn variabler (bygges til HTML automatisk)
                         facilityInfo: {
-                          name: item.name || "-",
-                          model: gSystem_type.find(st => st.rawid === item.system_type_id)?.name || "-",
-                          location: item.location || "-",
+                          name: item.name || " ",
+                          model: gSystem_type.find(st => st.rawid === item.system_type_id)?.name || " ",
+                          location: item.location || " ",
                         },
                       
                         // // Variant B: eller gi ferdig HTML selv (overstyrer facilityInfo hvis begge settes)

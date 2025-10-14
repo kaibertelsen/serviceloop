@@ -521,12 +521,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     }
                 });
 
-                //oppdaterer automatisk når en endrer på malen
-                quillMal.root.addEventListener("blur", function () {
-                    let selectedTemplateId = malselector.value;
-                    updateMalContentToServer(quillMal,selectedTemplateId);
-                });
-
                 //last inn maler
                 const malselector = serviceElement.querySelector(".servicemal");
                 loadMalInSelector(malselector,templettextArray);
@@ -539,6 +533,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 //Knapp som oppdaterer eksisterende mal
                 const updateexistingmalbutton = serviceElement.querySelector(".updateexistingmal");
                 updateexistingmalbutton.addEventListener("click", () => {
+                    let selectedTemplateId = malselector.value;
+                    updateMalContentToServer(quillMal,selectedTemplateId);
+                });
+
+                //oppdaterer automatisk når en endrer på malen
+                quillMal.root.addEventListener("blur", function () {
                     let selectedTemplateId = malselector.value;
                     updateMalContentToServer(quillMal,selectedTemplateId);
                 });
@@ -574,6 +574,18 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                             quillMal.root.innerHTML = ""; // Tøm quill editor
                         }
                     } 
+                });
+
+                //knapp somkopierer innhold til rapport
+                const copytoReportbutton = serviceElement.querySelector(".copytexttoreport");
+                copytoReportbutton.addEventListener("click", () => {
+                    //alert om at innholdet i rapporten vil bli overskrevet
+                    if (confirm("Innholdet i rapporten vil bli overskrevet. Er du sikker?")) {
+                    let copycontent = quillMal.root.innerHTML;
+                    quill.root.innerHTML = copycontent;
+                    }
+                    
+
                 });
 
 

@@ -2,46 +2,34 @@
 window.UPLOADCARE_PUB_KEY = "ce308699a99257e7687a";
 const UPLOADCARE_UPLOAD_ENDPOINT = "https://upload.uploadcare.com/base/";
 
-// Hjelper: last bilde-URL til dataURL (for pdfmake)
 async function toDataURL(url) {
   if (!url) return null;
   const res = await fetch(url, { cache: "no-store" });
   const blob = await res.blob();
   return await new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(blob);
+    const r = new FileReader();
+    r.onloadend = () => resolve(r.result);
+    r.readAsDataURL(blob);
   });
 }
 
 /**
  * makeBrandedPdf
- * Lager PDF med svart header (logo + "Servicerapport — dato" + firmanavn),
- * html-innhold, "mvh. Kai Bertelsen" + signatur, og footer med kontaktinfo.
- *
- * @param {Quill|string} quillOrHtml  - Quill-instans ELLER ren HTML-string
- * @param {HTMLElement|null} statusEl - valgfri status-node
- * @param {Object} opts
- *   - filename, pageSize, pageMargins
- *   - logoUrl, signatureUrl
- *   - companyName, contact: { phone, email, web, address }
- *   - reportTitle (default "Servicerapport"), reportDate (default dagens dato nb-NO)
- *   - uploadcarePubKey, store
- * @returns {Promise<{uuid, url, filename, size}>}
+ * Svart header (logo + “Servicerapport — dato” + firmanavn), HTML-innhold,
+ * signatur-blokk som kan styres fra opts, og footer med kontaktinfo. Laster opp til Uploadcare.
  */
 async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
   const setStatus = (t) => { if (statusEl) statusEl.textContent = t; };
-
-  const todayNb = new Date().toLocaleDateString('nb-NO');
-  const HEADER_HEIGHT = 64; // reserver plass i top-margin for headeren
+  const todayNb = new Date().toLocaleDateString("nb-NO");
+  const HEADER_HEIGHT = 64;
 
   const {
     filename = "service-rapport.pdf",
     pageSize = "A4",
-    // ekstra toppmargin for å ikke havne under header
     pageMargins = [28, HEADER_HEIGHT + 28, 28, 36],
+
+    // Branding
     logoUrl,
-    signatureUrl,
     companyName = "Attentio",
     contact = {
       phone: "+47 00 00 00 00",
@@ -49,13 +37,23 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
       web:   "attentio.no",
       address: "Eksempelveien 1, 0001 Oslo"
     },
+
+    // Headertekst
     reportTitle = "Servicerapport",
     reportDate = todayNb,
+
+    // Signatur-blokk (NYE FELT)
+    signatureUrl,                      // bilde av signaturen (valgfritt)
+    signOffPrefix = "Med vennlig hilsen,",
+    signOffName = "Kai Bertelsen",
+    signOffCompany = companyName,
+
+    // Upload
     uploadcarePubKey = window.UPLOADCARE_PUB_KEY,
-    store = "1"
+    store = "1",
   } = opts;
 
-  // 1) Hent HTML
+  // 1) HTML
   let html = "";
   if (quillOrHtml && typeof quillOrHtml.getModule === "function") {
     html = (quillOrHtml.root?.innerHTML || "").trim();
@@ -69,15 +67,15 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
   setStatus?.("Laster logo/signatur…");
   const [logoDataUrl, sigDataUrl] = await Promise.all([
     toDataURL(logoUrl),
-    toDataURL(signatureUrl)
+    toDataURL(signatureUrl),
   ]);
 
   setStatus?.("Genererer PDF…");
 
-  // 2) Konverter HTML → pdfmake content
+  // 2) HTML → pdfmake
   const htmlContent = htmlToPdfmake(html, { window });
 
-  // 3) DocDefinition med SVART HEADER og hvit tekst
+  // 3) DocDefinition
   const docDefinition = {
     pageSize,
     pageMargins,
@@ -87,34 +85,29 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
       table: {
         widths: [140, '*', 'auto'],
         body: [[
-          // Venstre: logo
           {
             border: [false, false, false, false],
-            fillColor: '#000000',
-            margin: [28, 10, 10, 10], // L T R B
-            stack: [
-              logoDataUrl ? { image: logoDataUrl, fit: [120, 40] } : { text: " ", color: '#000000' }
-            ]
+            fillColor: '#000',
+            margin: [28, 10, 10, 10],
+            stack: [ logoDataUrl ? { image: logoDataUrl, fit: [120, 40] } : { text: " " } ]
           },
-          // Midten: tittel + dato
           {
             border: [false, false, false, false],
-            fillColor: '#000000',
+            fillColor: '#000',
             margin: [0, 12, 0, 10],
             alignment: 'center',
             stack: [
-              { text: reportTitle, color: '#FFFFFF', bold: true, fontSize: 12, margin: [0, 0, 0, 2] },
-              { text: reportDate,  color: '#FFFFFF', fontSize: 10 }
+              { text: reportTitle, color: '#FFF', bold: true, fontSize: 12, margin: [0, 0, 0, 2] },
+              { text: reportDate,  color: '#FFF', fontSize: 10 }
             ]
           },
-          // Høyre: firmanavn
           {
             border: [false, false, false, false],
-            fillColor: '#000000',
+            fillColor: '#000',
             margin: [10, 18, 28, 10],
             alignment: 'right',
             text: companyName,
-            color: '#FFFFFF',
+            color: '#FFF',
             bold: true,
             fontSize: 12
           }
@@ -136,23 +129,20 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
     },
 
     content: [
-      // Tynn linje under header (valgfritt)
       { canvas: [ { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5 } ], margin: [0, 6, 0, 10] },
 
-      // HTML-innholdet
       ...htmlContent,
 
-      // Spasering før hilsen/signatur
       { text: ' ', margin: [0, 12, 0, 0] },
 
-      // Hilsen + signatur
+      // Signatur-blokk (styrt via opts)
       {
         margin: [0, 8, 0, 0],
         stack: [
-          { text: 'Med vennlig hilsen,', style: 'p' },
+          { text: signOffPrefix, style: 'p' },
           sigDataUrl ? { image: sigDataUrl, width: 150, margin: [0, 4, 0, 2] } : { text: '' },
-          { text: 'Kai Bertelsen', bold: true, margin: [0, 2, 0, 0] },
-          { text: companyName, color: '#555', margin: [0, 0, 0, 0] }
+          { text: signOffName, bold: true, margin: [0, 2, 0, 0] },
+          { text: signOffCompany, color: '#555', margin: [0, 0, 0, 0] }
         ]
       }
     ],
@@ -167,15 +157,13 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
     defaultStyle: { fontSize: 11 }
   };
 
-  // 4) Lag Blob fra pdfmake
+  // 4) Blob
   const pdfBlob = await new Promise((resolve, reject) => {
-    try {
-      pdfMake.createPdf(docDefinition).getBlob((blob) => resolve(blob));
-    } catch (e) { reject(e); }
+    try { pdfMake.createPdf(docDefinition).getBlob(resolve); }
+    catch (e) { reject(e); }
   });
-  console.log("pdfmake blob size:", pdfBlob.size);
 
-  // 5) Last opp til Uploadcare
+  // 5) Uploadcare
   setStatus?.("Laster opp til Uploadcare…");
   if (!uploadcarePubKey) throw new Error("Mangler Uploadcare public key.");
 
@@ -185,11 +173,8 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
   form.append("file", pdfBlob, filename);
 
   const res = await fetch(UPLOADCARE_UPLOAD_ENDPOINT, { method: "POST", body: form });
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Upload feilet: ${res.status} ${txt}`);
-  }
-  const data = await res.json(); // { file: "<uuid>" }
+  if (!res.ok) throw new Error(`Upload feilet: ${res.status} ${await res.text()}`);
+  const data = await res.json();
   const url = `https://ucarecdn.com/${data.file}/`;
 
   setStatus?.("Ferdig ✅");

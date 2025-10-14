@@ -555,6 +555,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");
                 const statusprocess = serviceElement.querySelector(".statusprocess");
                 generatepdfbutton.addEventListener("click", async (e) => {
+                
                     const statusEl = document.querySelector("#status");
 
                     const { url } = await makeBrandedPdf(quill /* eller HTML-string */, statusEl, {
@@ -568,11 +569,24 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         web:   "attentio.no",
                         address: "Eksempelveien 1, 0001 Oslo"
                       },
-                      // valgfritt: overstyr tittel/dato
-                      reportTitle: "Servicerapport",
+                      // Header (valgfritt overstyr)
+                      // reportTitle: "Servicerapport",
                       // reportDate: "14.10.2025",
+                    
+                      // Signatur-tekst styrt her:
+                      signOffPrefix: "Med vennlig hilsen,",
+                      signOffName: "Kai Bertelsen",
+                      signOffCompany: "Varme VVS AS"
                     });
                     console.log("Uploadcare URL:", url);
+
+
+
+
+
+
+                    
+                  });
 
 
 

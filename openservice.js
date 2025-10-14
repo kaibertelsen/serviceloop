@@ -530,22 +530,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     loadContentInQuill(quillMal,malselector);
                 });
 
-                //knapp for å lagre innhold i quill som ny mal
-                const savenewtempletbutton = serviceElement.querySelector(".makenewreportbutton");
-                savenewtempletbutton.addEventListener("click", () => {
-                    let templetname = prompt("Skriv inn navn på ny mal:");
-                    if (templetname) {
-                        //lagre ny mal i airtable
-                        let newTemplate = {
-                            name: templetname,
-                            content: quillMal.root.innerHTML,
-                            client: [gClient.rawid]
-                        };
-                        POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",JSON.stringify(newTemplate),"responseCreateNewTemplate");
-                    }
-                });
-
-
                 //Knapp som oppdaterer eksisterende mal
                 const updateexistingmalbutton = serviceElement.querySelector(".updateexistingmal");
                 updateexistingmalbutton.addEventListener("click", () => {
@@ -559,6 +543,24 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         }
                     } 
                 });
+
+                //knapp for å lagre innhold i quill som ny mal
+                const savenewtempletbutton = serviceElement.querySelector(".makenewreportbutton");
+                savenewtempletbutton.addEventListener("click", () => {
+                    let templetname = prompt("Skriv inn navn på ny mal:");
+                    if (templetname) {
+                        //lagre ny mal i airtable
+                        let newTemplate = {
+                            name: templetname,
+                            content: quillMal.root.innerHTML,
+                            client: [gClient.rawid]
+                        };
+
+                        gServiceElement = serviceElement; // lagre serviceelement globalt for bruk i responsHtml
+                        POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",JSON.stringify(newTemplate),"responseCreateNewTemplate");
+                    }
+                });
+
 
             }
 

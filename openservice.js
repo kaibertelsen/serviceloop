@@ -555,20 +555,11 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");
                 const statusprocess = serviceElement.querySelector(".statusprocess");
                 generatepdfbutton.addEventListener("click", async (e) => {
-                    e.preventDefault();
-                    try {
-                      const { url } = await makePdffromHTML(quill, statusprocess, {
-                        filename: "min-rapport.pdf",
-                        orientation: "portrait",
-                        format: "a4",
-                        marginMm: [12, 12, 16, 12],
-                        scale: 2.5
-                      });
-                      // Vis lenken til brukeren eller lagre i DB
-                      console.log("Uploadcare URL:", url);
-                    } catch (e2) {
-                      alert("Noe gikk galt: " + e2.message);
-                    }
+                    const statusEl = document.querySelector("#status");
+                    const { url } = await makePdfWithPdfmake(quill /* eller HTML-stringen */, statusEl, {
+                      filename: "service-rapport.pdf"
+                    });
+                    console.log("Uploadcare URL:", url);
                   });
 
 

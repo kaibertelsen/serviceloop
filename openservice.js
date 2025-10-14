@@ -552,7 +552,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                 //knapp som lager pdf
 
-                const generatepdfbutton = serviceElement.querySelector(".generatepdfreport");
+                const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");
                 const statusprocess = serviceElement.querySelector(".statusprocess");
                 generatepdfbutton.addEventListener("click", async (e) => {
                     e.preventDefault();

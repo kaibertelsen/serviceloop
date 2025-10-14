@@ -538,7 +538,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         //lagre ny mal i airtable
                         let newTemplate = {
                             name: templetname,
-                            content: quillMal.root.innerHTML
+                            content: quillMal.root.innerHTML,
+                            client: [gClient.rawid]
                         };
                         POSTairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",JSON.stringify(newTemplate),"responseCreateNewTemplate");
                     }

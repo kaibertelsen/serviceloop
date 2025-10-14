@@ -566,7 +566,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                       });
                       // Vis lenken til brukeren eller lagre i DB
                       console.log("Uploadcare URL:", url);
-                      alert("Lastet opp!\n" + url);
                     } catch (e2) {
                       alert("Noe gikk galt: " + e2.message);
                     }

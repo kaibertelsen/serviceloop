@@ -1,4 +1,4 @@
-<script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+
 
 // Sett din Uploadcare public key her (IKKE secret key i browser)
 const UPLOADCARE_PUB_KEY = "ce308699a99257e7687a"; // f.eks. "demopublickey"

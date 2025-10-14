@@ -47,35 +47,38 @@ async function makePdffromHTML(quillOrHtml, statusEl = null, opts = {}) {
         throw new Error("HTML-innholdet er tomt.");
       }
   
-      // 2) Offscreen render-container (må ha layout, ikke display:none)
-      const container = document.createElement("div");
-      Object.assign(container.style, {
+     // -- Lag containeren (erstatter din gamle variant) --
+        const container = document.createElement("div");
+        Object.assign(container.style, {
         position: "fixed",
-        left: "-10000px",
+        left: "-10000px",  // offscreen
         top: "0",
-        width: widthPx + "px",
+        width: (opts?.widthPx ?? 794) + "px",
         minHeight: "1px",
         background: "#ffffff",
         color: "#000000",
         padding: "0",
         margin: "0",
-        visibility: "hidden" // skjult men fortsatt layout
-      });
-      container.innerHTML = html;
+        // Viktig: behold layout/visibility, men gjør den usynlig visuelt
+        opacity: "0",
+        pointerEvents: "none",
+        // IKKE visibility:hidden og IKKE display:none
+        });
+        container.innerHTML = html;
   
-      // Basis print-CSS (kan utvides)
-      const style = document.createElement("style");
-      style.textContent = `
+        // Print/base CSS – legg til !important for å vinne over dark theme
+        const style = document.createElement("style");
+        style.textContent = `
         @page { size: A4; margin: 0 }
         * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        html, body, div, span, p, h1, h2, h3, h4, h5, h6 { color: #000 !important; }
         img, svg { max-width: 100%; }
         table { border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #ddd; padding: 6px; }
         .page-break { page-break-after: always; }
-        body, p, span, div { color: inherit; }
-      `;
-      container.prepend(style);
-      document.body.appendChild(container);
+        `;
+        container.prepend(style);
+        document.body.appendChild(container);
   
       // 3) Vent på fonter og bilder
       setStatus?.("Laster ressurser…");
@@ -99,16 +102,24 @@ async function makePdffromHTML(quillOrHtml, statusEl = null, opts = {}) {
   
       // 5) HTML → PDF (Blob)
       setStatus?.("Genererer PDF…");
-      const pdfBlob = await html2pdf()
+      // … senere i html2pdf-kallet: tving bakgrunn
+        const pdfBlob = await html2pdf()
         .from(container)
         .set({
-          margin: marginMm,
-          filename,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale, useCORS: true, backgroundColor: "#ffffff", logging: false },
-          jsPDF: { unit: "mm", format, orientation }
+        margin: marginMm,
+        filename,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+            scale,
+            useCORS: true,
+            backgroundColor: "#ffffff", // <- viktig
+            logging: false
+        },
+        jsPDF: { unit: "mm", format, orientation }
         })
         .outputPdf("blob");
+
+        console.log("pdfBlob size (bytes):", pdfBlob.size);
   
       // 6) Rydd opp
       container.remove();

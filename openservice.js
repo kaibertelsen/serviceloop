@@ -572,11 +572,11 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                       
                         // NYTT: KUNDEINFO
                         customerInfo: {
-                          name: "Ola Nordmann",
-                          address: "Eksempelveien 3",
-                          postal: "0001 Oslo"
+                          name: customer.name || "Kundenavn",
+                          address: customer.address || "Kundeadresse",
+                          postal: (customer.postalcode && customer.city) ? `${customer.postalcode} ${customer.city}` : "Postnr Sted"
                         },
-                        customerInfoGap: 8,     // pt luft under kundeblokk
+                        customerInfoGap: 4,     // pt luft under kundeblokk
                       
                         // Anleggsinfo (som før)
                         facilityInfo: {

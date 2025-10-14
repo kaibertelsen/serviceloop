@@ -2,6 +2,7 @@
 window.UPLOADCARE_PUB_KEY = "ce308699a99257e7687a";
 const UPLOADCARE_UPLOAD_ENDPOINT = "https://upload.uploadcare.com/base/";
 
+// Hjelpere
 async function toDataURL(url) {
   if (!url) return null;
   const res = await fetch(url, { cache: "no-store" });
@@ -12,11 +13,22 @@ async function toDataURL(url) {
     r.readAsDataURL(blob);
   });
 }
+function escapeHtml(s="") {
+  return s
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+function buildFacilityInfoHtml({name="", model="", location=""}={}) {
+  return `<p>Service utf&amp;oslash;rt p&amp;aring; anlegg: ${escapeHtml(name)} - ${escapeHtml(model)} - ${escapeHtml(location)}<br /><br /><br /><br /><br /></p>`;
+}
 
 /**
  * makeBrandedPdf
- * Svart header (logo + “Servicerapport — dato” + firmanavn), HTML-innhold,
- * signatur-blokk som kan styres fra opts, og footer med kontaktinfo. Laster opp til Uploadcare.
+ * Svart header (logo + “Servicerapport — dato” + firmanavn), valgfri anleggsinfo-HTML rett etter header,
+ * HTML-innhold (fra Quill), signatur-blokk styrt via opts, og footer med kontaktinfo. Laster opp til Uploadcare.
  */
 async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
   const setStatus = (t) => { if (statusEl) statusEl.textContent = t; };
@@ -42,8 +54,14 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
     reportTitle = "Servicerapport",
     reportDate = todayNb,
 
-    // Signatur-blokk (NYE FELT)
-    signatureUrl,                      // bilde av signaturen (valgfritt)
+    // --- NYTT: Anleggsinfo ---
+    // Enten ferdig HTML:
+    facilityInfoHtml,
+    // eller variabler som bygges til HTML:
+    facilityInfo, // { name, model, location }
+
+    // Signatur-blokk
+    signatureUrl,
     signOffPrefix = "Med vennlig hilsen,",
     signOffName = "Kai Bertelsen",
     signOffCompany = companyName,
@@ -51,9 +69,11 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
     // Upload
     uploadcarePubKey = window.UPLOADCARE_PUB_KEY,
     store = "1",
+    // Valgfri: vise tynn linje under header
+    showHeaderDivider = false,
   } = opts;
 
-  // 1) HTML
+  // 1) HTML fra Quill eller string
   let html = "";
   if (quillOrHtml && typeof quillOrHtml.getModule === "function") {
     html = (quillOrHtml.root?.innerHTML || "").trim();
@@ -74,6 +94,13 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
 
   // 2) HTML → pdfmake
   const htmlContent = htmlToPdfmake(html, { window });
+
+  // 2b) Bygg/konverter anleggsinfo-HTML (om satt)
+  let infoContent = [];
+  if (facilityInfoHtml || facilityInfo) {
+    const infoHtml = facilityInfoHtml || buildFacilityInfoHtml(facilityInfo);
+    infoContent = htmlToPdfmake(infoHtml, { window });
+  }
 
   // 3) DocDefinition
   const docDefinition = {
@@ -129,13 +156,24 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
     },
 
     content: [
-      //{ canvas: [ { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5 } ], margin: [0, 6, 0, 10] },
+      // (valgfritt) tynn linje under header
+      ...(showHeaderDivider ? [
+        { canvas: [ { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5 } ], margin: [0, 6, 0, 8] }
+      ] : []),
 
+      // --- Anleggsinfo kommer her, rett etter header ---
+      ...(infoContent.length ? [
+        ...infoContent,
+        { text: ' ', margin: [0, 4, 0, 4] }
+      ] : []),
+
+      // Hovedinnholdet fra Quill/HTML
       ...htmlContent,
 
+      // Spasering før hilsen/signatur
       { text: ' ', margin: [0, 12, 0, 0] },
 
-      // Signatur-blokk (styrt via opts)
+      // Signatur-blokk
       {
         margin: [0, 8, 0, 0],
         stack: [

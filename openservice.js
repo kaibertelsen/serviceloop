@@ -558,30 +558,34 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 
                     const statusEl = serviceElement.querySelector(".statusprocess");
                     statusEl.style.display = "block";
-
-                    console.log("Genererer PDF…",gUser);
-
-                    const { url } = await makeBrandedPdf(quill /* eller HTML-string */, statusEl, {
-                      filename: "service-rapport.pdf",
-                      logoUrl: "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/686284db3bc15b56e5ce3331_256px-logo.png",
-                      signatureUrl: "https://ucarecdn.com/a62f3af2-5d3f-4885-bc94-71dd642d1209/Skjermbilde20251014kl105243.png",
-                      companyName: "Varme VVS AS",
-                      contact: {
-                        phone: "+47 22 22 22 22",
-                        email: "kai@attentio.no",
-                        web:   "attentio.no",
-                        address: "Eksempelveien 1, 0001 Oslo"
-                      },
-                      // Header (valgfritt overstyr)
-                      // reportTitle: "Servicerapport",
-                      // reportDate: "14.10.2025",
-                    
-                      // Signatur-tekst styrt her:
-                      signOffPrefix: "Med vennlig hilsen,",
-                      signOffName: "Kai Bertelsen",
-                      signOffCompany: "Varme VVS AS"
-                    });
-                    console.log("Uploadcare URL:", url);
+                    const { url } = await makeBrandedPdf(quill, statusEl, {
+                        filename: "service-rapport.pdf",
+                        logoUrl: "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/686284db3bc15b56e5ce3331_256px-logo.png",
+                        signatureUrl: "https://ucarecdn.com/a62f3af2-5d3f-4885-bc94-71dd642d1209/Skjermbilde20251014kl105243.png",
+                        companyName: "Varme VVS AS",
+                        contact: {
+                          phone: "+47 22 22 22 22",
+                          email: "kai@attentio.no",
+                          web:   "attentio.no",
+                          address: "Eksempelveien 1, 0001 Oslo"
+                        },
+                      
+                        // Variant A: send inn variabler (bygges til HTML automatisk)
+                        facilityInfo: {
+                          name: "Anleggsnavn",
+                          model: "Modellnavn",
+                          location: "Lokasjon"
+                        },
+                      
+                        // // Variant B: eller gi ferdig HTML selv (overstyrer facilityInfo hvis begge settes)
+                        // facilityInfoHtml: `<p>Service utf&oslash;rt p&aring; anlegg: AC-12 - X100 - Oslo<br /><br /><br /><br /><br /></p>`,
+                      
+                        // Signaturtekst
+                        signOffPrefix: "Med vennlig hilsen,",
+                        signOffName: "Kai Bertelsen",
+                        signOffCompany: "Varme VVS AS",
+                      });
+                      console.log("Uploadcare URL:", url);
                     //vis link til pdf
                     statusEl.innerHTML = `PDF generert: <a href="${url}" target="_blank" rel="noopener">Åpne PDF</a>`;
                     service.pdfurl = url;

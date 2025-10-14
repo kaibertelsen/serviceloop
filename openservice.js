@@ -570,22 +570,29 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                           address: "Eksempelveien 1, 0001 Oslo"
                         },
                       
-                        // Variant A: send inn variabler (bygges til HTML automatisk)
-                        facilityInfo: {
-                          name: item.name || " ",
-                          model: gSystem_type.find(st => st.rawid === item.system_type_id)?.name || " ",
-                          location: item.location || " ",
+                        // NYTT: KUNDEINFO
+                        customerInfo: {
+                          name: "Ola Nordmann",
+                          address: "Eksempelveien 3",
+                          postal: "0001 Oslo"
                         },
+                        customerInfoGap: 8,     // pt luft under kundeblokk
                       
-                        // // Variant B: eller gi ferdig HTML selv (overstyrer facilityInfo hvis begge settes)
-                        // facilityInfoHtml: `<p>Service utf&oslash;rt p&aring; anlegg: AC-12 - X100 - Oslo<br /><br /><br /><br /><br /></p>`,
+                        // Anleggsinfo (som før)
+                        facilityInfo: {
+                          name: "Anleggsnavn",
+                          model: "Modellnavn",
+                          location: "Lokasjon"
+                        },
+                        facilityInfoGap: 6,     // pt luft under anleggsinfo
                       
-                        // Signaturtekst
+                        // Signatur-tekst
                         signOffPrefix: "Med vennlig hilsen,",
                         signOffName: "Kai Bertelsen",
                         signOffCompany: "Varme VVS AS",
                       });
                       console.log("Uploadcare URL:", url);
+                      
                     //vis link til pdf
                     statusEl.innerHTML = `PDF generert: <a href="${url}" target="_blank" rel="noopener">Åpne PDF</a>`;
                     service.pdfurl = url;

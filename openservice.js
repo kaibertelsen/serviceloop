@@ -561,6 +561,21 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     }
                 });
 
+                //Knapp som sletter mal
+                const deletemal = serviceElement.querySelector(".deletemal");
+                deletemal.addEventListener("click", () => {
+                    let selectedTemplateId = malselector.value;
+                    if (selectedTemplateId) {
+                        if (confirm("Er du sikker på at du vil slette denne malen? Dette kan ikke angres.")) {
+                            DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",selectedTemplateId,"responseDeleteTemplate");
+                            //fjern malen fra selectoren
+                            templettextArray = templettextArray.filter(t => t.id !== selectedTemplateId);
+                            loadMalInSelector(malselector,templettextArray);
+                            quillMal.root.innerHTML = ""; // Tøm quill editor
+                        }
+                    } 
+                });
+
 
             }
 
@@ -649,6 +664,23 @@ function responseCreateNewTemplate(data) {
     const malselector = gServiceElement.querySelector(".servicemal");
     loadMalInSelector(malselector,templettextArray);
     malselector.value = item.airtable; // Velg den nyeste malen 
+}
+
+function responseDeleteTemplate(data) {
+    console.log("Mal slettet:", data);
+
+    //Fjerne den fra arrayen templettextArray
+    let deletedId = data.id;
+    templettextArray = templettextArray.filter(t => t.id !== deletedId);
+    //oppdatere selectoren
+    const malselector = gServiceElement.querySelector(".servicemal");
+    loadMalInSelector(malselector,templettextArray);
+    //hvelge neste på i listen
+    if (templettextArray.length > 0) {
+        malselector.value = templettextArray[0].id; // Velg den første malen i listen
+        //kjør change event for å laste inn malen
+        malselector.dispatchEvent(new Event('change'));
+    }
 }
 
 function loadTempletFromServer(template, data, quill) {

@@ -559,18 +559,20 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                     const { url } = await makeBrandedPdf(quill /* eller HTML-string */, statusEl, {
                       filename: "service-rapport.pdf",
-                      logoUrl: "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/686284db3bc15b56e5ce3331_256px-logo.png",          // ← sett riktig sti/URL
-                      signatureUrl: "https://ucarecdn.com/a62f3af2-5d3f-4885-bc94-71dd642d1209/Skjermbilde20251014kl105243.png",      // ← sett riktig sti/URL
+                      logoUrl: "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/686284db3bc15b56e5ce3331_256px-logo.png",
+                      signatureUrl: "https://ucarecdn.com/a62f3af2-5d3f-4885-bc94-71dd642d1209/Skjermbilde20251014kl105243.png",
                       companyName: "Varme VVS AS",
                       contact: {
                         phone: "+47 22 22 22 22",
                         email: "kai@attentio.no",
                         web:   "attentio.no",
                         address: "Eksempelveien 1, 0001 Oslo"
-                      }
+                      },
+                      // valgfritt: overstyr tittel/dato
+                      reportTitle: "Servicerapport",
+                      // reportDate: "14.10.2025",
                     });
                     console.log("Uploadcare URL:", url);
-                  });
 
 
 

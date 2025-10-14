@@ -1,4 +1,3 @@
-
 // Public key i browser (IKKE secret)
 window.UPLOADCARE_PUB_KEY = "ce308699a99257e7687a";
 const UPLOADCARE_UPLOAD_ENDPOINT = "https://upload.uploadcare.com/base/";
@@ -17,8 +16,8 @@ async function toDataURL(url) {
 
 /**
  * makeBrandedPdf
- * Lager PDF med logo (header), html-innhold, "mvh. Kai Bertelsen" + signatur,
- * og kontaktinfo i footer. Laster så opp til Uploadcare.
+ * Lager PDF med svart header (logo + "Servicerapport — dato" + firmanavn),
+ * html-innhold, "mvh. Kai Bertelsen" + signatur, og footer med kontaktinfo.
  *
  * @param {Quill|string} quillOrHtml  - Quill-instans ELLER ren HTML-string
  * @param {HTMLElement|null} statusEl - valgfri status-node
@@ -26,18 +25,23 @@ async function toDataURL(url) {
  *   - filename, pageSize, pageMargins
  *   - logoUrl, signatureUrl
  *   - companyName, contact: { phone, email, web, address }
+ *   - reportTitle (default "Servicerapport"), reportDate (default dagens dato nb-NO)
  *   - uploadcarePubKey, store
  * @returns {Promise<{uuid, url, filename, size}>}
  */
 async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
   const setStatus = (t) => { if (statusEl) statusEl.textContent = t; };
 
+  const todayNb = new Date().toLocaleDateString('nb-NO');
+  const HEADER_HEIGHT = 64; // reserver plass i top-margin for headeren
+
   const {
     filename = "service-rapport.pdf",
     pageSize = "A4",
-    pageMargins = [28, 28, 28, 36], // pt
-    logoUrl,                        // f.eks. '/assets/logo.png'
-    signatureUrl,                   // f.eks. '/assets/signatur.png'
+    // ekstra toppmargin for å ikke havne under header
+    pageMargins = [28, HEADER_HEIGHT + 28, 28, 36],
+    logoUrl,
+    signatureUrl,
     companyName = "Attentio",
     contact = {
       phone: "+47 00 00 00 00",
@@ -45,6 +49,8 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
       web:   "attentio.no",
       address: "Eksempelveien 1, 0001 Oslo"
     },
+    reportTitle = "Servicerapport",
+    reportDate = todayNb,
     uploadcarePubKey = window.UPLOADCARE_PUB_KEY,
     store = "1"
   } = opts;
@@ -71,23 +77,57 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
   // 2) Konverter HTML → pdfmake content
   const htmlContent = htmlToPdfmake(html, { window });
 
-  // 3) Bygg docDefinition
+  // 3) DocDefinition med SVART HEADER og hvit tekst
   const docDefinition = {
     pageSize,
     pageMargins,
-    header: logoDataUrl ? {
-      margin: [pageMargins[0], pageMargins[1] - 10, pageMargins[2], 0],
-      columns: [
-        { image: logoDataUrl, width: 140 },
-        { text: companyName, alignment: 'right', margin: [0, 8, 0, 0], bold: true }
-      ]
-    } : undefined,
+
+    header: {
+      margin: [0, 0, 0, 0],
+      table: {
+        widths: [140, '*', 'auto'],
+        body: [[
+          // Venstre: logo
+          {
+            border: [false, false, false, false],
+            fillColor: '#000000',
+            margin: [28, 10, 10, 10], // L T R B
+            stack: [
+              logoDataUrl ? { image: logoDataUrl, fit: [120, 40] } : { text: " ", color: '#000000' }
+            ]
+          },
+          // Midten: tittel + dato
+          {
+            border: [false, false, false, false],
+            fillColor: '#000000',
+            margin: [0, 12, 0, 10],
+            alignment: 'center',
+            stack: [
+              { text: reportTitle, color: '#FFFFFF', bold: true, fontSize: 12, margin: [0, 0, 0, 2] },
+              { text: reportDate,  color: '#FFFFFF', fontSize: 10 }
+            ]
+          },
+          // Høyre: firmanavn
+          {
+            border: [false, false, false, false],
+            fillColor: '#000000',
+            margin: [10, 18, 28, 10],
+            alignment: 'right',
+            text: companyName,
+            color: '#FFFFFF',
+            bold: true,
+            fontSize: 12
+          }
+        ]]
+      },
+      layout: 'noBorders'
+    },
 
     footer: (currentPage, pageCount) => {
       const left = `${contact.address}  |  ${contact.phone}  |  ${contact.email}  |  ${contact.web}`;
       const right = `${currentPage} / ${pageCount}`;
       return {
-        margin: [pageMargins[0], 6, pageMargins[2], 10],
+        margin: [28, 6, 28, 10],
         columns: [
           { text: left, fontSize: 9, color: '#666' },
           { text: right, alignment: 'right', fontSize: 9, color: '#666' }
@@ -96,10 +136,10 @@ async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {
     },
 
     content: [
-      // Horisontal linje etter header
+      // Tynn linje under header (valgfritt)
       { canvas: [ { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5 } ], margin: [0, 6, 0, 10] },
 
-      // Selve HTML-innholdet
+      // HTML-innholdet
       ...htmlContent,
 
       // Spasering før hilsen/signatur

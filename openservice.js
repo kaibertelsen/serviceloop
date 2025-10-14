@@ -540,9 +540,10 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 const copytoReportbutton = serviceElement.querySelector(".copytexttoreport");
                 copytoReportbutton.addEventListener("click", () => {
                 //alert om at innholdet i rapporten vil bli overskrevet
-                if (confirm("Innholdet i rapporten vil bli overskrevet. Er du sikker?")) {
+                if (confirm("Kopier mal til rapport? Er du sikker?")) {
                 let copycontent = quillMal.root.innerHTML;
                 quill.root.innerHTML = copycontent;
+                service.report = copycontent;
 
                 const servicetabbutton = serviceElement.querySelector(".servicetabbutton");
                 if (servicetabbutton) servicetabbutton.click(); // Bytt til service-fanen

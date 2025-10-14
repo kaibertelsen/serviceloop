@@ -520,7 +520,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         toolbar: true // Viktig for at den skal bli generert
                     }
                 });
-                
+
                 //oppdaterer automatisk når en endrer på malen
                 quillMal.root.addEventListener("blur", function () {
                     let selectedTemplateId = malselector.value;
@@ -566,6 +566,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     let selectedTemplateId = malselector.value;
                     if (selectedTemplateId) {
                         if (confirm("Er du sikker på at du vil slette denne malen? Dette kan ikke angres.")) {
+
                             DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",selectedTemplateId,"responseDeleteTemplate");
                             //fjern malen fra selectoren
                             templettextArray = templettextArray.filter(t => t.id !== selectedTemplateId);
@@ -676,19 +677,6 @@ function responseCreateNewTemplate(data) {
 
 function responseDeleteTemplate(data) {
     console.log("Mal slettet:", data);
-
-    //Fjerne den fra arrayen templettextArray
-    let deletedId = data.id;
-    templettextArray = templettextArray.filter(t => t.id !== deletedId);
-    //oppdatere selectoren
-    const malselector = gServiceElement.querySelector(".servicemal");
-    loadMalInSelector(malselector,templettextArray);
-    //hvelge neste på i listen
-    if (templettextArray.length > 0) {
-        malselector.value = templettextArray[0].id; // Velg den første malen i listen
-        //kjør change event for å laste inn malen
-        malselector.dispatchEvent(new Event('change'));
-    }
 }
 
 function loadTempletFromServer(template, data, quill) {

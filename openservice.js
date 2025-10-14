@@ -553,10 +553,9 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 //knapp som lager pdf
 
                 const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");
-                const statusprocess = serviceElement.querySelector(".statusprocess");
                 generatepdfbutton.addEventListener("click", async (e) => {
                 
-                    const statusEl = document.querySelector("#status");
+                    const statusEl = serviceElement.querySelector(".statusprocess");
                     statusEl.style.display = "block";
 
                     console.log("Genererer PDF…",gUser);
@@ -583,7 +582,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     });
                     console.log("Uploadcare URL:", url);
                     //vis link til pdf
-                    statusprocess.innerHTML = `PDF generert: <a href="${url}" target="_blank" rel="noopener">Åpne PDF</a>`;
+                    statusEl.innerHTML = `PDF generert: <a href="${url}" target="_blank" rel="noopener">Åpne PDF</a>`;
                     service.pdfurl = url;
                     
                   });

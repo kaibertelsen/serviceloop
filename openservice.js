@@ -559,7 +559,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                     const { url } = await makeBrandedPdf(quill /* eller HTML-string */, statusEl, {
                       filename: "service-rapport.pdf",
-                      logoUrl: "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/68495ac7e72d8c41ea1e06a3_Corsoft-web-textAsset%202.svg",          // ← sett riktig sti/URL
+                      logoUrl: "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/686284db3bc15b56e5ce3331_256px-logo.png",          // ← sett riktig sti/URL
                       signatureUrl: "https://ucarecdn.com/a62f3af2-5d3f-4885-bc94-71dd642d1209/Skjermbilde20251014kl105243.png",      // ← sett riktig sti/URL
                       companyName: "Varme VVS AS",
                       contact: {

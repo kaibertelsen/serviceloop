@@ -647,16 +647,8 @@ function responseCreateNewTemplate(data) {
 
     //sett velger til den nye malen
     const malselector = gServiceElement.querySelector(".servicemal");
-    if (malselector) {
-        malselector.innerHTML = ''; // Tøm select-elementet
-        templettextArray.forEach((template, index) => {
-            const option = document.createElement("option");
-            option.value = index; // Bruk indeksen som value
-            option.textContent = template.name;
-            malselector.appendChild(option);
-        });
-        malselector.value = templettextArray.length - 1; // Velg den nyeste malen
-    }
+    loadMalInSelector(malselector,templettextArray);
+    malselector.value = item.airtable; // Velg den nyeste malen 
 }
 
 function loadTempletFromServer(template, data, quill) {

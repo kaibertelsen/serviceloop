@@ -530,20 +530,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     malselectorHasCanged(quillMal,malselector,serviceElement);
                 });
 
-                //Knapp som oppdaterer eksisterende mal
-                const updateexistingmalbutton = serviceElement.querySelector(".updateexistingmal");
-                updateexistingmalbutton.addEventListener("click", () => {
-                    let selectedTemplateId = malselector.value;
-                    updateMalContentToServer(quillMal,selectedTemplateId);
-                });
-
                 //oppdaterer automatisk når en endrer på malen
                 quillMal.root.addEventListener("blur", function () {
                     let selectedTemplateId = malselector.value;
                     updateMalContentToServer(quillMal,selectedTemplateId);
                 });
 
-       
                 //knapp som kopierer innhold til rapport
                 const copytoReportbutton = serviceElement.querySelector(".copytexttoreport");
                 copytoReportbutton.addEventListener("click", () => {
@@ -643,7 +635,7 @@ function malselectorHasCanged(quill,selector,serviceElement) {
     }else if (selector.value === "delete") {
         deleteMalFromServer(selector,quill);
     }else{
-        loadContentInQuill(quillMal,selector);
+        loadContentInQuill(quill,selector);
     }
 
 }
@@ -686,6 +678,7 @@ function responsUpdateExistingTemplate(data) {
     console.log("Mal oppdatert:", data);
     
 }
+
 function responseCreateNewTemplate(data) {
     console.log("Ny mal opprettet:", data);
     let item = data.fields;
@@ -702,7 +695,6 @@ function responseCreateNewTemplate(data) {
     malselector.value = item.airtable; // Velg den nyeste malen 
 }
 
-
 function responseDeleteTemplate(data) {
     console.log("Mal slettet:", data);
 }
@@ -715,7 +707,6 @@ function loadTempletFromServer(template, data, quill) {
     //hent html mal fra server
     GETairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",template.id,"responsHtml",false );
 }
-
 
 function responsMaler(data){
 
@@ -744,7 +735,6 @@ function responsHtml(data) {
     quillEditor.root.innerHTML = ""; // Tøm eksisterende innhold
     quillEditor.root.innerHTML = htmlTemplate;
 }
-
 
 function loadMalInSelector(malselector,array) {
     //last inn mal i rapportvelger fra arrayen templettextArray
@@ -780,8 +770,6 @@ function loadMalInSelector(malselector,array) {
         malselector.appendChild(deleteOption);
 
 }
-
-
 
 function listFollowupOnService(serviceElement, service) {
 

@@ -557,6 +557,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 generatepdfbutton.addEventListener("click", async (e) => {
                 
                     const statusEl = document.querySelector("#status");
+                    statusEl.style.display = "block";
 
                     console.log("Genererer PDF…",gUser);
 

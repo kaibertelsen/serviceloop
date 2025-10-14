@@ -1,7 +1,7 @@
 
 
 // Sett din Uploadcare public key her (IKKE secret key i browser)
-const UPLOADCARE_PUB_KEY = "ce308699a99257e7687a"; // f.eks. "demopublickey"
+window.UPLOADCARE_PUB_KEY = "ce308699a99257e7687a";
 const UPLOADCARE_UPLOAD_ENDPOINT = "https://upload.uploadcare.com/base/";
 
 /**

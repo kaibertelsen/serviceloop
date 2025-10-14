@@ -520,6 +520,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         toolbar: true // Viktig for at den skal bli generert
                     }
                 });
+                
+                //oppdaterer automatisk når en endrer på malen
+                quillMal.root.addEventListener("blur", function () {
+                    let selectedTemplateId = malselector.value;
+                    updateMalContentToServer(quillMal,selectedTemplateId);
+                });
 
                 //last inn maler
                 const malselector = serviceElement.querySelector(".servicemal");
@@ -534,14 +540,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 const updateexistingmalbutton = serviceElement.querySelector(".updateexistingmal");
                 updateexistingmalbutton.addEventListener("click", () => {
                     let selectedTemplateId = malselector.value;
-                    if (selectedTemplateId) {
-                        if (confirm("Er du sikker på at du vil oppdatere den eksisterende malen? Dette vil overskrive den nåværende malen.")) {
-                            let updatedTemplate = {
-                                content: quill.root.innerHTML
-                            };
-                            PATCHairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",selectedTemplateId,JSON.stringify(updatedTemplate) ,"responsUpdateExistingTemplate");
-                        }
-                    } 
+                    updateMalContentToServer(quillMal,selectedTemplateId);
                 });
 
                 //knapp for å lagre innhold i quill som ny mal
@@ -645,6 +644,14 @@ function loadContentInQuill(quill,selector) {
 
 }
 
+function updateMalContentToServer(quill,malid) {
+    let updatedcontent = {
+        content: quill.root.innerHTML
+    };
+
+    PATCHairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",malid,JSON.stringify(updatedcontent) ,"responsUpdateExistingTemplate");
+}
+
 function responsUpdateExistingTemplate(data) {
 
     console.log("Mal oppdatert:", data);
@@ -665,6 +672,7 @@ function responseCreateNewTemplate(data) {
     loadMalInSelector(malselector,templettextArray);
     malselector.value = item.airtable; // Velg den nyeste malen 
 }
+
 
 function responseDeleteTemplate(data) {
     console.log("Mal slettet:", data);

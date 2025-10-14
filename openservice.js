@@ -541,19 +541,49 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 copytoReportbutton.addEventListener("click", () => {
                 //alert om at innholdet i rapporten vil bli overskrevet
                 if (confirm("Kopier mal til rapport? Er du sikker?")) {
-                let copycontent = quillMal.root.innerHTML;
-                quill.root.innerHTML = copycontent;
-                service.report = copycontent;
+                    let copycontent = quillMal.root.innerHTML;
+                    quill.root.innerHTML = copycontent;
+                    service.report = copycontent;
 
-                const servicetabbutton = serviceElement.querySelector(".servicetabbutton");
-                if (servicetabbutton) servicetabbutton.click(); // Bytt til service-fanen
+                    const servicetabbutton = serviceElement.querySelector(".servicetabbutton");
+                    if (servicetabbutton) servicetabbutton.click(); // Bytt til service-fanen
                 }
-
-
                 });
 
+                //knapp som lager pdf
 
-            }
+                const generatepdfbutton = serviceElement.querySelector(".generatepdfreport");
+                const statusprocess = serviceElement.querySelector(".statusprocess");
+                generatepdfbutton.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    try {
+                      const { url } = await makePdffromHTML(quill, statusprocess, {
+                        filename: "min-rapport.pdf",
+                        orientation: "portrait",
+                        format: "a4",
+                        marginMm: [12, 12, 16, 12],
+                        scale: 2.5
+                      });
+                      // Vis lenken til brukeren eller lagre i DB
+                      console.log("Uploadcare URL:", url);
+                      alert("Lastet opp!\n" + url);
+                    } catch (e2) {
+                      alert("Noe gikk galt: " + e2.message);
+                    }
+                  });
+
+
+
+
+
+
+
+
+
+
+
+
+            };
 
 
         });
@@ -658,6 +688,7 @@ function deleteMalFromServer(malselector,quillMal) {
 
 
 }
+
 
 function creatNewMaltoServer(quill,serviceElement) {
     let templetname = prompt("Skriv inn navn på ny mal:");

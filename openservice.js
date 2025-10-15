@@ -600,15 +600,29 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     
                   });
 
+                    //vis tekstelementet mailsendttocustomerelement
+                    const mailsendttocustomerelement = currentServiceElement.querySelector(".mailsendttocustomerelement");
+                    mailsendttocustomerelement.textContent = item.mailsendttocustomerelement || "";
+                    mailsendttocustomerelement.style.display = item.mailsendttocustomerelement ? "block" : "none";
+                    
                   
+                    sendrapporttocustomer.addEventListener("click", function () {
+                        // Bekreft sending av rapport
+                        if (confirm("Er du sikker på at du vil sende denne rapporten til kunden?")) {
+                            // Send rapport til kunde
+                            sendReportToCustomer(item,service);
+
+                            const formattedDateTime = formatDateAndTimeReadable(new Date().toISOString());
+                            mailsendttocustomerelement.textContent = `Rapport sendt: ${formattedDateTime}`;
+                            mailsendttocustomerelement.style.display = "block";
+
+                            
+                        }
+                        });
+
+
                   
-                  sendrapporttocustomer.addEventListener("click", function () {
-                      // Bekreft sending av rapport
-                      if (confirm("Er du sikker på at du vil sende denne rapporten til kunden?")) {
-                          // Send rapport til kunde
-                          sendReportToCustomer(item,service);
-                      }
-                    });
+                       
 
             };
 
@@ -760,6 +774,13 @@ function sendReportToCustomer(system,service){
     let url = "https://hooks.zapier.com/hooks/catch/24993663/ubd0mdj/"
     
     sendDataToZapierWebhook(payload, url);
+
+    //oppdater feltet i service med dato og tidspunkt "mailsendtcustomer"
+    let data = { mailsendtocustomer: new Date().toISOString() };
+    sendEditServiceToServer(service, data);
+
+  
+
 }
 
 function responseCreateNewTemplate(data) {

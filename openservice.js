@@ -744,6 +744,8 @@ function sendReportToCustomer(system,service){
     console.log("Sender rapport til kunde for service:",currentCustomer, system,service);
 
     const payload = htmlsendReportToCustomer(system, service);
+    payload.attachments = service.pdfurl || "";
+
  
     //sende til zapier
     let url = "https://hooks.zapier.com/hooks/catch/24993663/ubd0mdj/"

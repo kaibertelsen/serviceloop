@@ -552,8 +552,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                 //vis tekstelementet mailsendttocustomerelement
                 const mailsendttocustomerelement = serviceElement.querySelector(".mailsendttocustomerelement");
-                mailsendttocustomerelement.textContent = service.mailsendttocustomerelement || "";
-                mailsendttocustomerelement.style.display = service.mailsendttocustomerelement ? "block" : "none";
+                mailsendttocustomerelement.textContent = service.mailsendtcustomer || "";
+                mailsendttocustomerelement.style.display = service.mailsendtcustomer ? "block" : "none";
 
                 //knapp som lager pdf
                 const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");
@@ -614,6 +614,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                         const formattedDateTime = formatDateAndTimeReadable(new Date().toISOString());
                         mailsendttocustomerelement.textContent = `Rapport sendt: ${formattedDateTime}`;
                         mailsendttocustomerelement.style.display = "block";
+                        service.mailsendtcustomer = formattedDateTime;
 
                         
                     }

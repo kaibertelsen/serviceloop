@@ -583,7 +583,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     const { url } = await makeBrandedPdf(quill, statusEl, {
                         filename: "service-rapport.pdf",
                         logoUrl: "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/686284db3bc15b56e5ce3331_256px-logo.png",
-                        signatureUrl: "https://ucarecdn.com/a62f3af2-5d3f-4885-bc94-71dd642d1209/Skjermbilde20251014kl105243.png",
+                        signatureUrl: gUser.signature || null, // Brukerens signatur hvis tilgjengelig
                         companyName: "Varme VVS AS",
                         contact: {
                           phone: "+47 22 22 22 22",

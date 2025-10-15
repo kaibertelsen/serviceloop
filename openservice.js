@@ -552,7 +552,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                 //vis tekstelementet mailsendttocustomerelement
                 const mailsendttocustomerelement = serviceElement.querySelector(".mailsendttocustomerelement");
-                mailsendttocustomerelement.textContent = service.mailsendtcustomer || "";
+                //omgjør dato i feltet service.mailsendtcustomer til lesbar form og legg til "Mail sendt:" 
+                let textmailsendttocustomer = "";
+                if (service.mailsendtcustomer) {
+                    const formattedDateTime = formatDateAndTimeReadable(service.mailsendtcustomer);
+                    textmailsendttocustomer = `Rapport sendt: ${formattedDateTime}`;
+                }
                 mailsendttocustomerelement.style.display = service.mailsendtcustomer ? "block" : "none";
 
                 //knapp som lager pdf

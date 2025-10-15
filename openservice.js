@@ -737,7 +737,6 @@ function malselectorHasCanged(quill,selector,serviceElement) {
 
 function deleteMalFromServer(malselector,quillMal) {
     
-   
     if (confirm("Er du sikker på at du vil slette denne malen? Dette kan ikke angres.")) {
 
         DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",malselector.value,"responseDeleteTemplate");
@@ -747,10 +746,6 @@ function deleteMalFromServer(malselector,quillMal) {
         quillMal.root.innerHTML = ""; // Tøm quill editor
     }
     
-
-
-
-
 }
 
 

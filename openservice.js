@@ -558,6 +558,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     const formattedDateTime = formatDateAndTimeReadable(service.mailsendtcustomer);
                     textmailsendttocustomer = `Rapport sendt: ${formattedDateTime}`;
                 }
+                mailsendttocustomerelement.textContent = textmailsendttocustomer;
                 mailsendttocustomerelement.style.display = service.mailsendtcustomer ? "block" : "none";
 
                 //knapp som lager pdf

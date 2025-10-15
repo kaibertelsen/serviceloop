@@ -1,4 +1,4 @@
-function htmlsendReportToCustomer(system = {}, service = {}) {
+function htmlsendReportToCustomer(systemcustomer = {}, system = {}, service = {},user = {}) {
     // ── Branding / konstanter ───────────────────────────────────────────────────
     const LOGO_URL = "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/68495ac7e72d8c41ea1e06a3_Corsoft-web-textAsset%202.svg";
     const COMPANY_NAME = "Varme VVS AS";
@@ -29,7 +29,7 @@ function htmlsendReportToCustomer(system = {}, service = {}) {
        .slice(0, 80);
   
     // ── Hent data trygt ─────────────────────────────────────────────────────────
-    const customer     = service.customer || system.customer || {};
+    const customer     = systemcustomer || {};
     const to           = customer.email || service.email || ""; // ← mottaker
     const customername = customer.name  || service.customername || "Kunde";
   
@@ -41,7 +41,7 @@ function htmlsendReportToCustomer(system = {}, service = {}) {
     const serviceNr    = service.nr || service.serviceNr || "–";
     const reportUrl    = service.pdfurl || service.reportlink || ""; // ← offentlig URL til PDF
   
-    const username     = (service.user && service.user.name) || service.technicianName || "Tekniker";
+    const username     = user.name || "Tekniker";
   
     // ── Emnelinje ───────────────────────────────────────────────────────────────
     const Subject =

@@ -63,8 +63,6 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
     let serviceElement;
     let isdummy = false; // Variabel for å sjekke om det er en dummy service
 
-
-
     if(!customer){
         //finne customer på bakgrunn av serviceen
         customer = gCustomer.find(c => c.rawid === service.customerId);
@@ -868,40 +866,41 @@ function responsHtml(data) {
     quillEditor.root.innerHTML = htmlTemplate;
 }
 
-function loadMalInSelector(malselector,array) {
-    //last inn mal i rapportvelger fra arrayen templettextArray
-   
-    
-        malselector.innerHTML = ''; // Tøm select-elementet
+function loadMalInSelector(malselector, array) {
+    // Tøm select-elementet
+    malselector.innerHTML = '';
 
-        //lag Velg mal option
-        const defaultOption = document.createElement("option");
-        defaultOption.value = "";
-        defaultOption.textContent = "Velg mal";
-        malselector.appendChild(defaultOption);
-        
+    // Standardvalg
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Velg mal";
+    malselector.appendChild(defaultOption);
 
-        //last inn resterende maler
-        array.forEach((template, index) => {
-            const option = document.createElement("option");
-            option.value = template.id; // Bruk indeksen som value
-            option.textContent = template.name;
-            malselector.appendChild(option);
-        });
+    // Last inn maler fra array
+    array.forEach((template) => {
+        const option = document.createElement("option");
+        option.value = template.id;
+        option.textContent = template.name;
+        malselector.appendChild(option);
+    });
 
-        //lag en option for å lage ny mal
-        const newOption = document.createElement("option");
-        newOption.value = "new";
-        newOption.textContent = "Lag ny mal";
-        malselector.appendChild(newOption);
+    // Lag ny mal (markert)
+    const newOption = document.createElement("option");
+    newOption.value = "new";
+    newOption.textContent = "➕ Lag ny mal"; // ikon + tekst
+    newOption.style.fontWeight = "bold";
+    newOption.style.color = "green";
+    malselector.appendChild(newOption);
 
-        //lag en option for å slette mal
-        const deleteOption = document.createElement("option");
-        deleteOption.value = "delete";
-        deleteOption.textContent = "Slett mal";
-        malselector.appendChild(deleteOption);
-
+    // Slett mal (markert)
+    const deleteOption = document.createElement("option");
+    deleteOption.value = "delete";
+    deleteOption.textContent = "🗑️ Slett mal"; // ikon + tekst
+    deleteOption.style.fontWeight = "bold";
+    deleteOption.style.color = "red";
+    malselector.appendChild(deleteOption);
 }
+
 
 function listFollowupOnService(serviceElement, service) {
 

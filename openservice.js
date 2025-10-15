@@ -601,7 +601,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                   });
 
                     //vis tekstelementet mailsendttocustomerelement
-                    const mailsendttocustomerelement = currentServiceElement.querySelector(".mailsendttocustomerelement");
+                    const mailsendttocustomerelement = serviceElement.querySelector(".mailsendttocustomerelement");
                     mailsendttocustomerelement.textContent = item.mailsendttocustomerelement || "";
                     mailsendttocustomerelement.style.display = item.mailsendttocustomerelement ? "block" : "none";
                     

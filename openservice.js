@@ -740,7 +740,7 @@ function responsUpdateExistingTemplate(data) {
 
 function sendReportToCustomer(system,service){
 
-    console.log("Sender rapport til kunde for service:", system,service);
+    console.log("Sender rapport til kunde for service:",gCustomer, system,service);
 }
 
 function responseCreateNewTemplate(data) {

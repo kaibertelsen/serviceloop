@@ -703,6 +703,9 @@ function loadContentInQuill(quill,selector) {
 
     // sett knapp for å lagre innhold i quill som ny mal
     let value = selector.value;
+    // sett et parameter på selectoren som inneholder id på malen
+    selector.setAttribute("data-malid", value);
+
     if (value === "") {
         return;
     }
@@ -736,12 +739,19 @@ function malselectorHasCanged(quill,selector,serviceElement) {
 }
 
 function deleteMalFromServer(malselector,quillMal) {
+
     
     if (confirm("Er du sikker på at du vil slette denne malen? Dette kan ikke angres.")) {
-
-        DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",malselector.value,"responseDeleteTemplate");
+        // hente id på malen som skal slettes den er lagret i data-malid på selectoren
+        let malid = malselector.getAttribute("data-malid");
+        if (!malid) {
+            console.error("Ingen mal id funnet på selectoren");
+            return;
+        }
+        //må skaffe id på gjeldende mal
+        DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",malid,"responseDeleteTemplate");
         //fjern malen fra selectoren
-        templettextArray = templettextArray.filter(t => t.id !== malselector.value);
+        templettextArray = templettextArray.filter(t => t.id !== malid);
         loadMalInSelector(malselector,templettextArray);
         quillMal.root.innerHTML = ""; // Tøm quill editor
     }

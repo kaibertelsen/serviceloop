@@ -31,7 +31,7 @@ function htmlsendReportToCustomer(systemcustomer = {}, system = {}, service = {}
     // ── Hent data trygt ─────────────────────────────────────────────────────────
     const customer     = systemcustomer || {};
     const to           = customer.email || service.email || ""; // ← mottaker
-    const customername = customer.name  || service.customername || "Kunde";
+    const customername = customer.primarycontact  || "";
   
     const systemname   = system.name || "–";
     const model        = system.system_type_name || system.model || "–";

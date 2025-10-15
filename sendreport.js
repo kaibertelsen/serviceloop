@@ -1,4 +1,4 @@
-function sendReportToCustomer(system = {}, service = {}) {
+function htmlsendReportToCustomer(system = {}, service = {}) {
     // ── Branding / konstanter ───────────────────────────────────────────────────
     const LOGO_URL = "https://cdn.prod.website-files.com/6847e4300d2206b0ffac86d1/68495ac7e72d8c41ea1e06a3_Corsoft-web-textAsset%202.svg";
     const COMPANY_NAME = "Varme VVS AS";

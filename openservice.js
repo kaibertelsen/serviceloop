@@ -736,17 +736,17 @@ function malselectorHasCanged(quill,selector,serviceElement) {
 }
 
 function deleteMalFromServer(malselector,quillMal) {
-    let selectedTemplateId = malselector.value;
-    if (selectedTemplateId) {
-        if (confirm("Er du sikker på at du vil slette denne malen? Dette kan ikke angres.")) {
+    
+   
+    if (confirm("Er du sikker på at du vil slette denne malen? Dette kan ikke angres.")) {
 
-            DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",selectedTemplateId,"responseDeleteTemplate");
-            //fjern malen fra selectoren
-            templettextArray = templettextArray.filter(t => t.id !== selectedTemplateId);
-            loadMalInSelector(malselector,templettextArray);
-            quillMal.root.innerHTML = ""; // Tøm quill editor
-        }
-    } 
+        DELETEairtable("appuUESr4s93SWaS7","tblwzCGsApDcnBYCM",malselector.value,"responseDeleteTemplate");
+        //fjern malen fra selectoren
+        templettextArray = templettextArray.filter(t => t.id !== malselector.value);
+        loadMalInSelector(malselector,templettextArray);
+        quillMal.root.innerHTML = ""; // Tøm quill editor
+    }
+    
 
 
 

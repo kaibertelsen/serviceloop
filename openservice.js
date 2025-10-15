@@ -569,6 +569,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 } else {
                     statusText = "Ingen PDF generert";
                 }
+                statusEl.innerHTML = statusText;
+                statusEl.style.display = service.pdfurl ? "block" : "none";
 
 
                 //knapp som lager pdf

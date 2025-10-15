@@ -550,8 +550,12 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 }
                 });
 
-                //knapp som lager pdf
+                //vis tekstelementet mailsendttocustomerelement
+                const mailsendttocustomerelement = serviceElement.querySelector(".mailsendttocustomerelement");
+                mailsendttocustomerelement.textContent = item.mailsendttocustomerelement || "";
+                mailsendttocustomerelement.style.display = item.mailsendttocustomerelement ? "block" : "none";
 
+                //knapp som lager pdf
                 const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");
                 const sendrapporttocustomer = serviceElement.querySelector(".sendrapporttocustomer");
                 generatepdfbutton.addEventListener("click", async (e) => {
@@ -598,27 +602,22 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     service.pdfurl = url;
                     sendrapporttocustomer.style.display = "inline-block"; // Vis knappen for å sende rapporten
                     
-                  });
+                });
 
-                    //vis tekstelementet mailsendttocustomerelement
-                    const mailsendttocustomerelement = serviceElement.querySelector(".mailsendttocustomerelement");
-                    mailsendttocustomerelement.textContent = item.mailsendttocustomerelement || "";
-                    mailsendttocustomerelement.style.display = item.mailsendttocustomerelement ? "block" : "none";
                     
-                  
-                    sendrapporttocustomer.addEventListener("click", function () {
-                        // Bekreft sending av rapport
-                        if (confirm("Er du sikker på at du vil sende denne rapporten til kunden?")) {
-                            // Send rapport til kunde
-                            sendReportToCustomer(item,service);
+                sendrapporttocustomer.addEventListener("click", function () {
+                    // Bekreft sending av rapport
+                    if (confirm("Er du sikker på at du vil sende denne rapporten til kunden?")) {
+                        // Send rapport til kunde
+                        sendReportToCustomer(item,service);
 
-                            const formattedDateTime = formatDateAndTimeReadable(new Date().toISOString());
-                            mailsendttocustomerelement.textContent = `Rapport sendt: ${formattedDateTime}`;
-                            mailsendttocustomerelement.style.display = "block";
+                        const formattedDateTime = formatDateAndTimeReadable(new Date().toISOString());
+                        mailsendttocustomerelement.textContent = `Rapport sendt: ${formattedDateTime}`;
+                        mailsendttocustomerelement.style.display = "block";
 
-                            
-                        }
-                        });
+                        
+                    }
+                });
 
 
                   

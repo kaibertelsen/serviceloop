@@ -743,6 +743,15 @@ function sendReportToCustomer(system,service){
 
     console.log("Sender rapport til kunde for service:",currentCustomer, system,service);
 
+
+
+
+
+    
+    let systemtype = gSystem_type.find(s => s.rawid === system.system_type_id);
+    let systemtypename = systemtype ? systemtype.name : "";
+    system.system_type_name = systemtypename;
+
     const payload = htmlsendReportToCustomer(system, service);
     payload.attachments = service.pdfurl || "";
 

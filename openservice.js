@@ -552,8 +552,8 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
 
                 //vis tekstelementet mailsendttocustomerelement
                 const mailsendttocustomerelement = serviceElement.querySelector(".mailsendttocustomerelement");
-                mailsendttocustomerelement.textContent = item.mailsendttocustomerelement || "";
-                mailsendttocustomerelement.style.display = item.mailsendttocustomerelement ? "block" : "none";
+                mailsendttocustomerelement.textContent = service.mailsendttocustomerelement || "";
+                mailsendttocustomerelement.style.display = service.mailsendttocustomerelement ? "block" : "none";
 
                 //knapp som lager pdf
                 const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");

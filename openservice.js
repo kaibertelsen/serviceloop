@@ -735,12 +735,19 @@ function creatNewMaltoServer(quill,serviceElement) {
 function responsUpdateExistingTemplate(data) {
 
     console.log("Mal oppdatert:", data);
-    
+   
+
 }
 
 function sendReportToCustomer(system,service){
 
     console.log("Sender rapport til kunde for service:",currentCustomer, system,service);
+
+    const payload = sendReportToCustomer(system, service);
+ 
+    //sende til zapier
+    let url = "https://hooks.zapier.com/hooks/catch/24993663/ubd0mdj/"
+    sendDataToZapierWebhook(payload, url);
 }
 
 function responseCreateNewTemplate(data) {

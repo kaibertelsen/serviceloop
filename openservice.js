@@ -561,12 +561,22 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 mailsendttocustomerelement.textContent = textmailsendttocustomer;
                 mailsendttocustomerelement.style.display = service.mailsendtcustomer ? "block" : "none";
 
+                //om det foreligger en pdf link så vises den
+                const statusEl = serviceElement.querySelector(".statusprocess");
+                let statusText = "";
+                if (service.pdfurl) {
+                    statusText = `PDF generert: <a href="${service.pdfurl}" target="_blank" rel="noopener">Åpne PDF</a>`;
+                } else {
+                    statusText = "Ingen PDF generert";
+                }
+
+
                 //knapp som lager pdf
                 const generatepdfbutton = serviceElement.querySelector(".generatepdfbutton");
                 const sendrapporttocustomer = serviceElement.querySelector(".sendrapporttocustomer");
                 generatepdfbutton.addEventListener("click", async (e) => {
                 
-                    const statusEl = serviceElement.querySelector(".statusprocess");
+                    
                     statusEl.style.display = "block";
                     const { url } = await makeBrandedPdf(quill, statusEl, {
                         filename: "service-rapport.pdf",
@@ -607,6 +617,11 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                     statusEl.innerHTML = `PDF generert: <a href="${url}" target="_blank" rel="noopener">Åpne PDF</a>`;
                     service.pdfurl = url;
                     sendrapporttocustomer.style.display = "inline-block"; // Vis knappen for å sende rapporten
+
+                    //lagre pdf url til service på server
+                    let data = { pdfurl: url };
+                    sendEditServiceToServer(service, data);
+                    service.pdfurl = url; // Oppdater lokalt
                     
                 });
 

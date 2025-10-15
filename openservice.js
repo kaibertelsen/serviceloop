@@ -556,7 +556,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                 let textmailsendttocustomer = "";
                 if (service.mailsendtcustomer) {
                     const formattedDateTime = formatDateAndTimeReadable(service.mailsendtcustomer);
-                    textmailsendttocustomer = `Rapport sendt: ${formattedDateTime}`;
+                    textmailsendttocustomer = `Rapport sendt til kunde: ${formattedDateTime}`;
                 }
                 mailsendttocustomerelement.textContent = textmailsendttocustomer;
                 mailsendttocustomerelement.style.display = service.mailsendtcustomer ? "block" : "none";

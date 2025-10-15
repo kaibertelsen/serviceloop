@@ -32,14 +32,14 @@ function buildFacilityInfoHtml({name="", model="", location=""}={}) {
  */
 // (valgfritt) små hjelpere – ta med hvis du ikke allerede har dem:
 function escapeHtml(s=""){return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
-function buildCustomerInfoHtml({name="", address="", postal=""}={}) {
-  return `
-  <table style="width:100%; border-collapse:collapse;">
-    <tr><td><b>Navn</b></td><td>${escapeHtml(name)}</td></tr>
-    <tr><td><b>Adresse</b></td><td>${escapeHtml(address)}</td></tr>
-    <tr><td><b>Postadresse</b></td><td>${escapeHtml(postal)}</td></tr>
-  </table>`;
-}
+function buildCustomerInfoHtml({ name = "", address = "", postal = "" } = {}) {
+    return `
+    <p style="margin:0; line-height:1.35">
+      <b>Navn:</b> ${escapeHtml(name)}<br>
+      <b>Adresse:</b> ${escapeHtml(address)}<br>
+      <b>Postadresse:</b> ${escapeHtml(postal)}
+    </p>`;
+  }
 
 // ------------- KOMPLETT FUNKSJON -------------
 async function makeBrandedPdf(quillOrHtml, statusEl = null, opts = {}) {

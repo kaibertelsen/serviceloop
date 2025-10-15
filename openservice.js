@@ -761,7 +761,7 @@ function creatNewMaltoServer(quill,serviceElement) {
         let newTemplate = {
             name: templetname,
             content: quill.root.innerHTML,
-            client: [quill.rawid]
+            client: [gClient.rawid]
         };
 
         gServiceElement = serviceElement; // lagre serviceelement globalt for bruk i responsHtml

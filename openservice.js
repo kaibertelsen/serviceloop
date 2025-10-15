@@ -802,7 +802,7 @@ function sendReportToCustomer(system,service){
     sendDataToZapierWebhook(payload, url);
 
     //oppdater feltet i service med dato og tidspunkt "mailsendtcustomer"
-    let data = { mailsendtocustomer: new Date().toISOString() };
+    let data = { mailsendtcustomer: new Date().toISOString() };
     sendEditServiceToServer(service, data);
 
   

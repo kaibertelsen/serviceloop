@@ -606,7 +606,7 @@ function makeServiceElement(service, itemElement, item, customer, serviceElement
                       // Bekreft sending av rapport
                       if (confirm("Er du sikker på at du vil sende denne rapporten til kunden?")) {
                           // Send rapport til kunde
-                          sendReportToCustomer(service);
+                          sendReportToCustomer(item,service);
                       }
                     });
 
@@ -738,9 +738,9 @@ function responsUpdateExistingTemplate(data) {
     
 }
 
-function sendReportToCustomer(service){
+function sendReportToCustomer(system,service){
 
-    console.log("Sender rapport til kunde for service:", service);
+    console.log("Sender rapport til kunde for service:", system,service);
 }
 
 function responseCreateNewTemplate(data) {

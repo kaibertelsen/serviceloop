@@ -16,7 +16,7 @@ const statusService = [
     { value: "planlagt", text: "Planlagt", color: "#ffc107", colorId: "5" },     // #FBD75B (gul)
     { value: "utført", text: "Utført", color: "#28a745", colorId: "10" },        // #51B749 (grønn)
     { value: "fakturert", text: "Fakturert", color: "#000000", colorId: "8" }   //sort #000000
-  ];
+];
   
 
 
@@ -25,23 +25,18 @@ function startup(member) {
     console.log("Startup function called with member:", member);
     // Her kan du legge til kode som skal kjøres når medlemmet er logget inn
     // For eksempel, initialisere brukergrensesnittet eller laste inn data
-
     //hent bruker
     GETairtable("appuUESr4s93SWaS7","tblKSc39qbkvOIsDT",member.airtable,"responsUser",false );
-
-
-
 }
 
 function responsUser(data) {
     //hente klientid
     gUser = data.fields;
 
-    if(gUser?.clientid){
-        //hent klient
-        GETairtable("appuUESr4s93SWaS7","tblW85C7T7L6otGTp",gUser.clientid,"responsClient",false );
-    }
-    
+  if(gUser?.clientid){
+      //hent klient
+      GETairtable("appuUESr4s93SWaS7","tblW85C7T7L6otGTp",gUser.clientid,"responsClient",false );
+  }
 }
 
 
@@ -102,12 +97,17 @@ if(templettextId && templettext){
 }
 
 function parseItemJson(jsonArray) {
-    try {
-      return jsonArray.map(item => JSON.parse(item));
-    } catch (error) {
-      console.error("Feil ved parsing av customerjson:", error);
-      return [];
-    }
+
+  jsonArray.map(item =>
+    JSON.parse(item.replace(/\r?\n/g, " "))
+  );
+  try {
+    return jsonArray.map(item => JSON.parse(item));
+  } catch (error) {
+    console.error("Feil ved parsing av customerjson:", error);
+    return [];
+  }
+  
 }
 
 

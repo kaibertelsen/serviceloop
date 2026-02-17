@@ -260,7 +260,7 @@ function sendUpdateToServer(customer, data) {
 
     let body = JSON.stringify(data);
     let rawid = customer.rawid;
-    console.log("Sender oppdatering til server for kunde", customer.name, "Felt:", data, "Body:", body);
+    console.log("Sender oppdatering til server for kunde", rawid, "med data:", data);
     PATCHairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",rawid,body,"responseEditCustomer");
 
 }

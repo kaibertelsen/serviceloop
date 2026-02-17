@@ -183,7 +183,10 @@ function deleteCustomer() {
 
   // Fjern kunden fra gCustomer-arrayet
   gCustomer = gCustomer.filter(c => c.rawid !== currentCustomer.rawid);
-  
+
+  // Oppdater kundelisten
+  listCustomers(gCustomer);
+
 
   // Lukk kundesiden og gå tilbake til listen
   const listTabButton = document.getElementById("listpagetabbutton");

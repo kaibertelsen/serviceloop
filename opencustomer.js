@@ -1,4 +1,5 @@
 let currentCustomer = {};
+let isCustomerHandlersBound = false;
 
 
 document.getElementById("createNewSystemButton").addEventListener("click", function () {

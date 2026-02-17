@@ -237,6 +237,7 @@ document.querySelector('.customerinfoconteiner').addEventListener('click', funct
 function editCustomerFiels(customer, field, newValue) {
 
   //oppdater customer objektet
+  console.log(`Oppdaterer felt "${field}" for kunde "${customer.name}" til:`, newValue);
   customer[field] = newValue;
 
   let body = {

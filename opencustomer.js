@@ -15,11 +15,14 @@ document.getElementById("fromCustomerToListButton").addEventListener("click", fu
 });
 
   
+// Globale variabler (du har sikkert disse allerede)
+let currentCustomer = null;
+let isCustomerHandlersBound = false;
+
 function openCustomer(customer) {
-
   isInCustomarpage = true;
-
   currentCustomer = customer;
+
   console.log("Åpner kunde:", customer);
 
   // Trykk på faneknappen for kunden
@@ -27,110 +30,146 @@ function openCustomer(customer) {
   if (customerTabButton) customerTabButton.click();
 
   const customerinfoconteiner = document.querySelector('.customerinfoconteiner');
+  if (!customerinfoconteiner) {
+    console.warn("Fant ikke .customerinfoconteiner");
+    return;
+  }
 
+  // Hent elementer
   const customernameelement = customerinfoconteiner.querySelector('.customernameelement');
-  customernameelement.value = customer.name || "";
-  
-  customernameelement.onblur = function () {
-    const newName = customernameelement.value.trim();
-    if (newName !== (customer.name || "")) {
-      editCustomerFiels(customer, 'name', newName);
-    }
-  };
-  
-
   const primarycontactelement = customerinfoconteiner.querySelector('.primarycontact');
-  primarycontactelement.value = customer.primary_contact || "";
-  primarycontactelement.addEventListener('blur', function () {
-    const newContact = primarycontactelement.value.trim();
-    if (newContact !== customer.primarycontact) {
-      editCustomerFiels(customer, 'primarycontact', newContact);
-    }
-  });
-
   const customeremailelement = customerinfoconteiner.querySelector('.customeremail');
-  customeremailelement.value = customer.email || "";
-  customeremailelement.addEventListener('blur', function () {
-    const newEmail = customeremailelement.value.trim();
-    if (newEmail !== customer.email) {
-      editCustomerFiels(customer, 'email', newEmail);
+  const customernumberelement = customerinfoconteiner.querySelector('.customernumber');
+  const editselectcustomertypeSelector = customerinfoconteiner.querySelector('.editselectcustomertype');
+  const customercategoryelement = customerinfoconteiner.querySelector('.customercategory');
+  const customeraddressElement = customerinfoconteiner.querySelector('.customeraddress');
+  const customerpostcodeElement = customerinfoconteiner.querySelector('.customerpostcode');
+  const customercityElement = customerinfoconteiner.querySelector('.customercity');
+  const phonenumberElement = customerinfoconteiner.querySelector('.phonenumber');
+
+  // Sett verdier for aktiv kunde (ingen listeners her)
+  if (customernameelement) customernameelement.value = customer.name || "";
+  if (primarycontactelement) primarycontactelement.value = customer.primary_contact || "";
+  if (customeremailelement) customeremailelement.value = customer.email || "";
+  if (customernumberelement) customernumberelement.value = customer.customernr || "";
+  if (editselectcustomertypeSelector) editselectcustomertypeSelector.value = customer.type || "privat";
+  if (customercategoryelement) customercategoryelement.value = customer.category || "";
+  if (customeraddressElement) customeraddressElement.value = customer.address || "";
+  if (customerpostcodeElement) customerpostcodeElement.value = customer.postcode || "";
+  if (customercityElement) customercityElement.value = customer.city || "";
+  if (phonenumberElement) phonenumberElement.value = customer.phonenumber || "";
+
+  // Bind event handlers kun én gang
+  if (!isCustomerHandlersBound) {
+    isCustomerHandlersBound = true;
+
+    if (customernameelement) {
+      customernameelement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newName = customernameelement.value.trim();
+        if (newName !== (currentCustomer.name || "")) {
+          editCustomerFiels(currentCustomer, 'name', newName);
+        }
+      });
+    }
+
+    if (primarycontactelement) {
+      primarycontactelement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newContact = primarycontactelement.value.trim();
+        if (newContact !== (currentCustomer.primary_contact || "")) {
+          // Bruk samme feltnavn som i objektet ditt (primary_contact)
+          editCustomerFiels(currentCustomer, 'primary_contact', newContact);
+        }
+      });
+    }
+
+    if (customeremailelement) {
+      customeremailelement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newEmail = customeremailelement.value.trim();
+        if (newEmail !== (currentCustomer.email || "")) {
+          editCustomerFiels(currentCustomer, 'email', newEmail);
+        }
+      });
+    }
+
+    if (customernumberelement) {
+      customernumberelement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newNumber = customernumberelement.value.trim();
+        if (newNumber !== (currentCustomer.customernr || "")) {
+          editCustomerFiels(currentCustomer, 'customernr', newNumber);
+        }
+      });
+    }
+
+    if (editselectcustomertypeSelector) {
+      editselectcustomertypeSelector.addEventListener('change', () => {
+        if (!currentCustomer) return;
+        const newType = editselectcustomertypeSelector.value;
+        if (newType !== (currentCustomer.type || "privat")) {
+          editCustomerFiels(currentCustomer, 'type', newType);
+        }
+      });
+    }
+
+    if (customercategoryelement) {
+      customercategoryelement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newCategory = customercategoryelement.value.trim();
+        if (newCategory !== (currentCustomer.category || "")) {
+          editCustomerFiels(currentCustomer, 'category', newCategory);
+        }
+      });
+    }
+
+    if (customeraddressElement) {
+      customeraddressElement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newAddress = customeraddressElement.value.trim();
+        if (newAddress !== (currentCustomer.address || "")) {
+          editCustomerFiels(currentCustomer, 'address', newAddress);
+        }
+      });
+    }
+
+    if (customerpostcodeElement) {
+      customerpostcodeElement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newPostcode = customerpostcodeElement.value.trim();
+        if (newPostcode !== (currentCustomer.postcode || "")) {
+          editCustomerFiels(currentCustomer, 'postcode', newPostcode);
+        }
+      });
+    }
+
+    if (customercityElement) {
+      customercityElement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newCity = customercityElement.value.trim();
+        if (newCity !== (currentCustomer.city || "")) {
+          editCustomerFiels(currentCustomer, 'city', newCity);
+        }
+      });
+    }
+
+    if (phonenumberElement) {
+      phonenumberElement.addEventListener('blur', () => {
+        if (!currentCustomer) return;
+        const newPhoneNumber = phonenumberElement.value.trim();
+        if (newPhoneNumber !== (currentCustomer.phonenumber || "")) {
+          // Du brukte 'phone' før — hvis objektet ditt heter phonenumber, hold det konsistent
+          editCustomerFiels(currentCustomer, 'phonenumber', newPhoneNumber);
+        }
+      });
     }
   }
-  );
 
-  const customernumberelement = customerinfoconteiner.querySelector('.customernumber');
-  customernumberelement.value = customer.customernr || "";
-  customernumberelement.addEventListener('blur', function () {
-    const newNumber = customernumberelement.value.trim();
-    if (newNumber !== customer.customernr) {
-      editCustomerFiels(customer, 'customernr', newNumber);
-    }
-  });
-
-  const editselectcustomertypeSelector = customerinfoconteiner.querySelector('.editselectcustomertype');
-  editselectcustomertypeSelector.value = customer.type || "privat";
-  editselectcustomertypeSelector.addEventListener('change', function () {
-    const newType = editselectcustomertypeSelector.value;
-    if (newType !== customer.type) {
-      editCustomerFiels(customer, 'type', newType);
-    }
-  });
-
-
-  const customercategoryelement = customerinfoconteiner.querySelector('.customercategory');
-  customercategoryelement.value = customer.category || "";
-  customercategoryelement.addEventListener('blur', function () {
-    const newCategory = customercategoryelement.value.trim();
-    if (newCategory !== customer.category) {
-      editCustomerFiels(customer, 'category', newCategory);
-    }
-  });
-
-  const customeraddressElement = customerinfoconteiner.querySelector('.customeraddress');
-  customeraddressElement.value = customer.address || "";
-  
-  customeraddressElement.addEventListener('blur', function () {
-    const newAddress = customeraddressElement.value.trim();
-    if (newAddress !== customer.address) {
-      editCustomerFiels(customer, 'address', newAddress);
-    }
-  });
-
-  const customerpostcodeElement = customerinfoconteiner.querySelector('.customerpostcode');
-  customerpostcodeElement.value = customer.postcode || "";
-  
-  customerpostcodeElement.addEventListener('blur', function () {
-    const newPostcode = customerpostcodeElement.value.trim();
-    if (newPostcode !== customer.postcode) {
-      editCustomerFiels(customer, 'postcode', newPostcode);
-    }
-  });
-
-
-  const customercityElement = customerinfoconteiner.querySelector('.customercity');
- 
-  customercityElement.value = customer.city || "";
-  
-  customercityElement.addEventListener('blur', function () {
-    const newCity = customercityElement.value.trim();
-    if (newCity !== customer.city) {
-      editCustomerFiels(customer, 'city', newCity);
-    }
-  });
-
-  const phonenumberElement = customerinfoconteiner.querySelector('.phonenumber');
-  phonenumberElement.value = customer.phonenumber || "";
-  phonenumberElement.addEventListener('blur', function () {
-    const newPhoneNumber = phonenumberElement.value.trim();
-    if (newPhoneNumber !== customer.phonenumber) {
-      editCustomerFiels(customer, 'phone', newPhoneNumber);
-    }
-  });
-
-
-    //list opp anlegg/ systems
-    listSystemOnCustomer(customer);
+  // list opp anlegg/ systems
+  listSystemOnCustomer(customer);
 }
+
 
 
   

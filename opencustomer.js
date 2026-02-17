@@ -30,12 +30,14 @@ function openCustomer(customer) {
 
   const customernameelement = customerinfoconteiner.querySelector('.customernameelement');
   customernameelement.value = customer.name || "";
-  customernameelement.addEventListener('blur', function () {
+  
+  customernameelement.onblur = function () {
     const newName = customernameelement.value.trim();
-    if (newName !== customer.name) {
+    if (newName !== (customer.name || "")) {
       editCustomerFiels(customer, 'name', newName);
     }
-  });
+  };
+  
 
   const primarycontactelement = customerinfoconteiner.querySelector('.primarycontact');
   primarycontactelement.value = customer.primary_contact || "";

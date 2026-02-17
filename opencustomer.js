@@ -15,7 +15,6 @@ document.getElementById("fromCustomerToListButton").addEventListener("click", fu
 
 });
 
-  
 function openCustomer(customer) {
   isInCustomarpage = true;
   currentCustomer = customer;
@@ -166,6 +165,39 @@ function openCustomer(customer) {
   // list opp anlegg/ systems
   listSystemOnCustomer(customer);
 }
+
+
+function deleteCustomer() {
+  if (!currentCustomer) {
+    console.warn("Ingen kunde valgt for sletting.");
+    return;
+  }
+
+  const confirmation = confirm(`Er du sikker på at du vil slette kunden "${currentCustomer.name}"? Dette kan ikke angres.`);
+  if (!confirmation) return;
+
+  console.log("Sletter kunde:", currentCustomer);
+
+  // Send slettingsforespørsel til serveren
+  sendDeleteToServer(currentCustomer);
+
+  // Fjern kunden fra gCustomer-arrayet
+  gCustomer = gCustomer.filter(c => c.rawid !== currentCustomer.rawid);
+  
+
+  // Lukk kundesiden og gå tilbake til listen
+  const listTabButton = document.getElementById("listpagetabbutton");
+  if (listTabButton) listTabButton.click();
+
+
+}
+
+function sendDeleteToServer(customer) {
+  let rawid = customer.rawid;
+  console.log("Sender slettingsforespørsel til server for kunde", rawid);
+  DELETEairtable("appuUESr4s93SWaS7","tblB0ZV5s0oXiAP6x",rawid,"responseDeleteCustomer");
+}
+
 
 
 

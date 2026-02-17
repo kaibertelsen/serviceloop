@@ -20,6 +20,7 @@ function openCustomer(customer) {
   isInCustomarpage = true;
 
   currentCustomer = customer;
+  console.log("Åpner kunde:", customer);
 
   // Trykk på faneknappen for kunden
   const customerTabButton = document.getElementById("customertabbutton");

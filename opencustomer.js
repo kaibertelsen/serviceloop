@@ -15,10 +15,6 @@ document.getElementById("fromCustomerToListButton").addEventListener("click", fu
 });
 
   
-// Globale variabler (du har sikkert disse allerede)
-let currentCustomer = null;
-let isCustomerHandlersBound = false;
-
 function openCustomer(customer) {
   isInCustomarpage = true;
   currentCustomer = customer;

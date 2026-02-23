@@ -53,7 +53,7 @@ function openCustomer(customer) {
   if (customeraddressElement) customeraddressElement.value = customer.address || "";
   if (customerpostcodeElement) customerpostcodeElement.value = customer.postcode || "";
   if (customercityElement) customercityElement.value = customer.city || "";
-  if (phonenumberElement) phonenumberElement.value = customer.phonenumber || "";
+  if (phonenumberElement) phonenumberElement.value = customer.phone || "";
 
   // Bind event handlers kun én gang
   if (!isCustomerHandlersBound) {

@@ -156,7 +156,7 @@ function openCustomer(customer) {
         const newPhoneNumber = phonenumberElement.value.trim();
         if (newPhoneNumber !== (currentCustomer.phonenumber || "")) {
           // Du brukte 'phone' før — hvis objektet ditt heter phonenumber, hold det konsistent
-          editCustomerFiels(currentCustomer, 'phonenumber', newPhoneNumber);
+          editCustomerFiels(currentCustomer, 'phone', newPhoneNumber);
         }
       });
     }
